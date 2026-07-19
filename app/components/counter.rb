@@ -25,7 +25,7 @@ class Components::Counter < Components::Base
       button(**mix(on(:decrement), class: "btn btn-sm")) { "-" }
       span(class: "min-w-10 text-center text-2xl tabular-nums") { @count.to_s }
       button(**mix(on(:increment), class: "btn btn-sm btn-primary")) { "+" }
-      button(**mix(on(:reset), class: "btn btn-sm btn-ghost")) { "Reset" }
+      button(**mix(on(:reset), class: "btn btn-sm btn-ghost")) { "重设" }
     end
   end
 end
