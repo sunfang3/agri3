@@ -307,6 +307,8 @@ end
     a.published = true
   end
 end
+# Reindex so Litesearch sees rows created/updated before the FTS table existed.
+KnowledgeArticle.rebuild_search_index!
 
 # 每区县 1 个已发布案例（用该区第一名学员）
 District::JINAN_CODES.each_with_index do |code, idx|
