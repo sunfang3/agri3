@@ -1,0 +1,22 @@
+# SQLite via Litestack (Litedb).
+#
+# Litesupport.root(env) resolves under config.litestack.data_path (storage/)
+# or ENV["LITESTACK_DATA_PATH"], then ./db/<env>/ as a fallback.
+#
+# idle_timeout: 0 avoids recycling connections and losing the page cache.
+default: &default
+  adapter: litedb
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  idle_timeout: 0
+
+development:
+  <<: *default
+  database: <%= Litesupport.root("development").join("data.sqlite3") %>
+
+test:
+  <<: *default
+  database: <%= Litesupport.root("test").join("data.sqlite3") %>
+
+production:
+  <<: *default
+  database: <%= Litesupport.root("production").join("data.sqlite3") %>

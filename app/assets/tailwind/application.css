@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* DaisyUI plugin - loaded by the system Tailwind CLI via bin/tailwindcss. */
+@plugin "daisyui";
+
+/* Machine-independent gem sources, maintained by bin/setup symlinks. */
+@source "../../../vendor/daisyui-src/**/*.rb";
+@source "../../../vendor/phlex-forms-src/**/*.rb";
+
+/* DaisyUI classes declared as Ruby symbols need an explicit safelist. */
+@source inline("alert aura avatar badge breadcrumbs btn calendar card carousel chat checkbox collapse countdown diff divider dock drawer dropdown fab fieldset filter footer hero indicator input join kbd link list loading mask megamenu menu modal navbar otp progress radio range rating select skeleton stack status steps swap tab table tabs textarea timeline toast toggle tooltip validator");

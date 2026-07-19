@@ -1,0 +1,133 @@
+# frozen_string_literal: true
+
+# phlex-reactive configuration. The engine mounts POST /reactive/actions and
+# auto-pins the client runtime; these options are the ones you typically tune.
+
+# Inherit auth/CSRF/Current on the action endpoint (recommended for real apps).
+# Ensure the endpoint isn't force-redirected to a login page for logged-out
+# users if you have public reactive components.
+# Phlex::Reactive.base_controller_name = "ApplicationController"
+
+# Render components with your app's view context (helpers, Current, etc.).
+# Phlex::Reactive.renderer = ApplicationController
+
+# Render your authorization library's error as 403 from a reactive action.
+# Phlex::Reactive.authorization_errors = [Pundit::NotAuthorizedError]
+# Phlex::Reactive.authorization_errors = [ActionPolicy::Unauthorized]
+
+# verify_authorized (ON by default): an action that completes WITHOUT any
+# authorization call raises Phlex::Reactive::AuthorizationNotVerified inside the
+# transaction — the mutation rolls back (fail-closed). Satisfy it by calling one
+# of authorization_methods, calling `mark_authorized!` after a bespoke check, or
+# declaring `skip_verify_authorized` on a genuinely public component/action.
+# Set the method names to match your authorization library:
+# Phlex::Reactive.authorization_methods = %i[authorize! authorize allowed_to?]
+# Turn the guard off entirely (not recommended — you lose the fail-closed net):
+# Phlex::Reactive.verify_authorized = false
+
+# Diagnostic endpoint error bodies + dropped-param logging (statuses never
+# change). Defaults to Rails.env.local? — on in development AND test, off in production.
+# Phlex::Reactive.verbose_errors = true
+
+# Log one compact line per reactive event (action/render/broadcast) at DEBUG —
+# `[reactive] Counter#increment ok (3.1ms)`. Default off. The events fire for
+# your APM regardless (ActiveSupport::Notifications, `*.phlex_reactive`); this
+# flag only controls the gem's own log lines. See the README Observability section.
+# Phlex::Reactive.log_events = true
+
+# Turnkey APM integration. Set to :appsignal / :sentry / :datadog and each
+# reactive action shows in your APM as its OWN transaction ("Counter#increment"),
+# not one blurry ActionsController#create — and an action-body crash is reported
+# to the tracker WITH component/action tags (plus a flash to the user if you set
+# error_flash below). The SDK is runtime-detected: if it isn't loaded, this logs
+# one warning and no-ops (no gem dependency is added). Pass a custom object
+# responding to record_action(payload, duration_ms) / record_error(error, payload)
+# to integrate any other tool.
+# Phlex::Reactive.apm = :appsignal
+#
+# For a tracker with no built-in adapter, report errors yourself — this fires on
+# any previously-uncaught action-body error, with the name-only context:
+# Phlex::Reactive.on_action_error do |error, ctx|
+#   Honeybadger.notify(error, context: { component: ctx[:component], action: ctx[:action] })
+# end
+#
+# Show the user a flash when an action crashes (500) — the SAME hook the 4xx
+# errors already use; `kind` is :error for a crash:
+# Phlex::Reactive.error_flash = ->(kind) { "Something went wrong — please retry." }
+
+# Client debug mode (devtools-lite). When on, every reactive root carries
+# data-reactive-debug="true" and the browser console.groups EVERY dispatch —
+# action, param/collected field NAMES (never values), request encoding, HTTP
+# status, the response's stream actions + targets, whether a token refresh
+# arrived (never the token value), and the round-trip ms. Off by default; safe to
+# gate on development (off → one attribute check per dispatch, zero string building).
+# Phlex::Reactive.debug = Rails.env.development?
+
+# Sign identity tokens with a dedicated key instead of secret_key_base.
+# Phlex::Reactive.verifier = ActiveSupport::MessageVerifier.new(ENV["REACTIVE_KEY"])
+
+# Change the action endpoint path (default "/reactive/actions"). If you change
+# it, expose it to the client with:
+#   <meta name="phlex-reactive-action-path" content="<%= Phlex::Reactive.action_path %>">
+# Phlex::Reactive.action_path = "/_r/actions"
+
+# --- Deferred reply segments (reply.defer + reactive_lazy, issue #165) ------
+# PROFILE FIRST: an app-side N+1 looks exactly like framework lag — make the
+# synchronous path cheap before deferring a segment.
+#
+# How the deferred render reaches the actor (default :auto — a durable pgbus
+# one-shot stream + ActiveJob when both are available, else a parallel fetch to
+# the defer endpoint; :fetch forces the fetch lane, :stream requests push and
+# degrades to fetch with a warning when the capability is absent):
+# Phlex::Reactive.defer_transport = :auto
+#
+# Defer tokens are purpose-scoped and short-lived — the TTL only needs to cover
+# the reply→fetch gap (default 120 seconds):
+# Phlex::Reactive.defer_token_ttl = 120
+#
+# reply.defer tokens are ACTOR-BOUND: signed under the requesting session so a
+# leaked token can't be redeemed in another session. The default binding is the
+# session id; override to bind to your own actor identity (a user id, an API
+# token digest). Apps with no session middleware mint UNBOUND tokens — their
+# bound is then the TTL plus any authorization your component enforces AT RENDER
+# TIME. Note the defer endpoint runs NO action and calls NO authorize! itself
+# (it's a read); protection comes from the component raising a registered
+# authorization error from from_identity/render, or returning false from
+# render?, when it's rebuilt at the defer endpoint.
+# Phlex::Reactive.singleton_class.class_eval do
+#   def defer_binding_for(request) = Current.user&.id&.to_s
+# end
+#
+# The push lane's render job queue (default "default"). Point it at a FAST
+# queue in production — a deferred segment is a UX-latency render; letting it
+# starve behind heavy jobs defeats the point:
+# Phlex::Reactive.defer_job_queue = "latency"
+#
+# PUSH LANE QUEUE LIFECYCLE: each deferred segment on the push lane mints a
+# durable one-shot pgbus stream. Its queue is reclaimed by pgbus's age-based
+# orphan-stream sweep (pgbus >= 0.9.10) — make sure the pgbus Dispatcher runs
+# with streams_orphan_threshold set. We never drop it from the job (an eager
+# drop would destroy an unconsumed message and reopen the broadcast-before-
+# subscribe race). On pgbus <= 0.9.9, or if you don't run the reaper, force the
+# (universal, cleanup-free) fetch lane:
+# Phlex::Reactive.defer_transport = :fetch
+#
+# Change the defer endpoint path (default "/reactive/defer"). If you change it,
+# expose it to the client with:
+#   <meta name="phlex-reactive-defer-path" content="<%= Phlex::Reactive.defer_path %>">
+# Phlex::Reactive.defer_path = "/_r/defer"
+
+# Client request timeout (default 30s). There is NO server-side setting — a hung
+# request aborts client-side after this window (reactive:error kind "timeout"),
+# so the per-component queue never wedges. Override in your layout head:
+#   <meta name="phlex-reactive-timeout" content="15000"> 
+# A timed-out POST may have SUCCEEDED server-side — phlex-reactive never
+# auto-replays; make retryable actions idempotent.
+
+# Latency simulator (development only). On localhost the click→morph round trip is
+# ~5ms, so pending/loading/optimistic affordances (aria-busy, disable_with, busy_on,
+# optimistic hints) flash by too fast to see. Add this meta to your layout head IN
+# DEVELOPMENT ONLY to expose window.PhlexReactive.enableLatencySim(ms) /
+# disableLatencySim() in the browser console (importmap module exports aren't
+# reachable from the console, so this handle is how you toggle it):
+#   
