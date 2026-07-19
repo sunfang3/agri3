@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Student < ApplicationRecord
+  attribute :annual_income, :float
+  attribute :scale, :float
   attribute :profile, :json
   has_secure_password validations: false
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Attribution < ApplicationRecord
+  attribute :contribution, :float
   attribute :details, :json
   belongs_to :student
   belongs_to :matchable, polymorphic: true, optional: true

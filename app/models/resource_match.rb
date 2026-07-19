@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ResourceMatch < ApplicationRecord
+  attribute :cosine_similarity, :float
   attribute :reason_tags, :json
   belongs_to :student
   belongs_to :matchable, polymorphic: true

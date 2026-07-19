@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Course < ApplicationRecord
+  attribute :longitude, :float
+  attribute :latitude, :float
   attribute :published, :boolean
   attribute :deep_tags, :json
   belongs_to :district, optional: true

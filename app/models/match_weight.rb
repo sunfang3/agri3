@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MatchWeight < ApplicationRecord
+  attribute :weight, :float
   validates :tag_category, presence: true, uniqueness: true
   validates :weight, numericality: { greater_than: 0 }
 
