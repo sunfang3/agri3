@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Course < ApplicationRecord
+  attribute :published, :boolean
   attribute :deep_tags, :json
   belongs_to :district, optional: true
   belongs_to :mentor, optional: true

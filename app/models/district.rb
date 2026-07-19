@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class District < ApplicationRecord
+  attribute :active, :boolean
   has_many :students, dependent: :restrict_with_exception
   has_many :admins, dependent: :nullify
   has_many :courses, dependent: :nullify

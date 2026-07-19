@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TipsStageRule < ApplicationRecord
+  attribute :enabled, :boolean
   attribute :conditions, :json
   validates :stage, inclusion: { in: Student::TIPS_STAGES }
   validates :name, presence: true

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Policy < ApplicationRecord
+  attribute :published, :boolean
   attribute :parsed_fields, :json
   belongs_to :district, optional: true
   has_many :policy_tags, dependent: :destroy

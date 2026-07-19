@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Survey < ApplicationRecord
+  attribute :active, :boolean
   attribute :questions, :json
   belongs_to :course, optional: true
   has_many :survey_responses, dependent: :destroy
