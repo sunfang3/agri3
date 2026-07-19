@@ -1,7 +1,11 @@
 # Agri3
 
-Rails application scaffolded from the **Plexy** template (Litestack edition): Phlex UI, DaisyUI, Hotwire, and an all-SQLite data plane via [sunfang3/litestack](https://github.com/sunfang3/litestack).
+济南市农广校 · **齐鲁农创客全过程管理系统** 的实现仓库。
 
+产品设计见 [`docs/`](docs/README.md)（自 `react_demo_2` 迁入并改为 Litestack 运行时）。  
+应用底座：Rails scaffold from the **Plexy** template (Litestack edition) — Phlex UI, DaisyUI, Hotwire, and an all-SQLite data plane via [sunfang3/litestack](https://github.com/sunfang3/litestack).
+
+**业务代码移植状态：** 设计文档与移植计划已就位；领域实现按 [`docs/plans/litestack-port-plan.md`](docs/plans/litestack-port-plan.md) 推进（Unit 1+）。
 ## Stack
 
 | Layer | Choice |
