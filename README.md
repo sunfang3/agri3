@@ -5,7 +5,19 @@
 产品设计见 [`docs/`](docs/README.md)（自 `react_demo_2` 迁入并改为 Litestack 运行时）。  
 应用底座：Rails scaffold from the **Plexy** template (Litestack edition) — Phlex UI, DaisyUI, Hotwire, and an all-SQLite data plane via [sunfang3/litestack](https://github.com/sunfang3/litestack).
 
-**业务代码移植状态：** 设计文档与移植计划已就位；领域实现按 [`docs/plans/litestack-port-plan.md`](docs/plans/litestack-port-plan.md) 推进（Unit 1+）。
+**移植状态：** Phase 1–3 业务已在本仓库落地（Litestack AIO）。计划见 [`docs/plans/litestack-port-plan.md`](docs/plans/litestack-port-plan.md)。
+
+**演示登录（`bin/rails db:seed` 后）：**
+
+| 角色 | 账号 | 密码 |
+|------|------|------|
+| 市级管理员 | `city@jinan.local` | `password` |
+| 历城管理员 | `admin@licheng.local` | `password` |
+| 学员张三 | `13800000009` | `password` |
+
+**T+1 匹配：** Litejob 进程内执行；生产用 cron/timer 触发，例如  
+`0 2 * * * cd /path/to/current && bin/rails runner 'DailyMatchingJob.perform_later("rules")'`  
+（见 `config/initializers/litejob_schedule.rb`）。**不需要** pgbus / 独立 job 进程。
 ## Stack
 
 | Layer | Choice |

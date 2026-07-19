@@ -1,0 +1,2 @@
+# Install on the app host (adjust path and user). Litejob runs inside Puma — no pgbus unit.
+# 0 2 * * * web2 cd /home/web2/apps/agri3/current && bin/rails runner 'DailyMatchingJob.perform_later("rules")'

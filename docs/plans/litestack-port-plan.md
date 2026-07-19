@@ -2,7 +2,7 @@
 
 **Version:** 1.0  
 **Date:** 2026-07-19  
-**Status:** Ready for implementation  
+**Status:** Complete (U0–U9 landed on agri3/Litestack)  
 **Source app:** `../react_demo_2` (PostgreSQL + pgbus + solid_*)  
 **Target app:** this repo `agri3` (Litestack AIO — already scaffolded)  
 **Product authority:** `docs/product/*`, `docs/handbook.md`, `docs/er-diagram.md`  
