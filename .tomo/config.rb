@@ -56,7 +56,8 @@ set env_vars: {
   RUBY_YJIT_ENABLE: "1",
   BOOTSNAP_CACHE_DIR: "tmp/bootsnap-cache",
   APP_HOST: app_host,
-  SECRET_KEY_BASE: :generate_secret
+  SECRET_KEY_BASE: :generate_secret,
+  TAILWINDCSS_INSTALL_DIR: "/usr/local/bin/"
 }
 # storage/ is linked so Litestack SQLite (data_path) survives deploys.
 set linked_dirs: %w[
