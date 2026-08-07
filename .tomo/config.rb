@@ -17,10 +17,10 @@ class TomoRedactedValue
 end
 
 app_host = ENV.fetch("APP_HOST", "")
-application = "__PLEXY_APPLICATION__"
+application = "agri3"
 puma_host = "127.0.0.1"
-tomo_user = "__PLEXY_TOMO_USER__"
-puma_port = Integer("__PLEXY_PUMA_PORT__")
+tomo_user = "web2"
+puma_port = Integer("3001")
 git_source_repo = "/home/#{tomo_user}/repos/#{application}.git"
 github_packages_auth = ENV.fetch("BUNDLE_RUBYGEMS__PKG__GITHUB__COM") do
   pat = ENV.fetch("PAT", "")
