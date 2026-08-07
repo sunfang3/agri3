@@ -2,12 +2,31 @@ require "dotenv"
 
 Dotenv.load(File.expand_path("../.env", __dir__))
 
+class TomoRedactedValue
+  def initialize(value)
+    @value = value.to_s.freeze
+  end
+
+  def to_s
+    @value
+  end
+
+  def inspect
+    "#<TomoRedactedValue [FILTERED]>"
+  end
+end
+
 app_host = ENV.fetch("APP_HOST", "")
-application = "agri3"
+application = "__PLEXY_APPLICATION__"
 puma_host = "127.0.0.1"
-tomo_user = "web2"
-puma_port = Integer("3001")
+tomo_user = "__PLEXY_TOMO_USER__"
+puma_port = Integer("__PLEXY_PUMA_PORT__")
 git_source_repo = "/home/#{tomo_user}/repos/#{application}.git"
+github_packages_auth = ENV.fetch("BUNDLE_RUBYGEMS__PKG__GITHUB__COM") do
+  pat = ENV.fetch("PAT", "")
+  abort "AppEnvironmentMissing: set PAT or BUNDLE_RUBYGEMS__PKG__GITHUB__COM for GitHub Packages" if pat.empty?
+  "sunfang3:#{pat}"
+end
 
 hostname_pattern = /\A(?=.{1,253}\z)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\z/i
 application_pattern = /\A[a-z0-9][a-z0-9_-]{0,62}\z/
@@ -29,6 +48,7 @@ plugin "./plugins/runtime.rb"
 plugin "./plugins/database.rb"
 plugin "./plugins/assets.rb"
 plugin "./plugins/kamal_proxy.rb"
+plugin "./plugins/litestack.rb"
 
 host "#{tomo_user}@43.133.189.82", port: 22020
 set puma_host: puma_host
@@ -56,10 +76,12 @@ set env_vars: {
   RUBY_YJIT_ENABLE: "1",
   BOOTSNAP_CACHE_DIR: "tmp/bootsnap-cache",
   APP_HOST: app_host,
-  SECRET_KEY_BASE: :generate_secret,
-  TAILWINDCSS_INSTALL_DIR: "/usr/local/bin/"
+  # Bundler → rubygems.pkg.github.com/sunfang3 (litestack + honker).
+  BUNDLE_RUBYGEMS__PKG__GITHUB__COM: TomoRedactedValue.new(github_packages_auth),
+  SECRET_KEY_BASE: :generate_secret
 }
-# storage/ is linked so Litestack SQLite (data_path) survives deploys.
+# storage/ is linked so Litestack SQLite under data_path survives deploys
+# (Litedb / Litejob / Litecache / Litecable files).
 set linked_dirs: %w[
   log
   public/assets
@@ -85,7 +107,10 @@ setup do
   run "runtime:check_ruby"
   run "bundler:upgrade_bundler"
   run "bundler:config"
+  run "litestack:configure_packages_credentials"
   run "bundler:install"
+  run "litestack:fetch_extensions"
+  run "litestack:ensure_storage_dirs"
   run "database:create"
   run "rails:db_schema_load"
   run "rails:db_migrate"
@@ -99,7 +124,11 @@ deploy do
   run "git:create_release"
   run "core:symlink_shared"
   run "core:write_release_json"
+  run "bundler:config"
+  run "litestack:configure_packages_credentials"
   run "bundler:install"
+  run "litestack:fetch_extensions"
+  run "litestack:ensure_storage_dirs"
   run "rails:db_migrate"
   run "rails:db_seed"
   run "rails:assets_precompile"
