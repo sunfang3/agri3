@@ -145,7 +145,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 <body>
   <div class="toolbar">
     <strong>使用与运维手册</strong>
-    <span style="color:var(--muted)">HTML 版 · 系统中文字体</span>
+    <span style="color:var(--muted)">HTML 版 · 系统中文字体 · 修订 2026-08-08</span>
     <span style="flex:1"></span>
     <button type="button" onclick="window.print()">打印 / 另存 PDF</button>
     <a class="btn" href="../handbook.md">源 Markdown</a>
@@ -153,21 +153,27 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
   <div class="wrap">
     <header class="doc-head">
       <h1>齐鲁农创客全过程管理系统 · 使用与运维手册</h1>
-      <p>agri3 / Litestack · 含 seed 演示账号与各角色登录后能力说明</p>
+      <p>agri3 / Litestack · 功能上线时间已与 git / 生产 revisions 对齐</p>
     </header>
     <main>
 <h1
 id="齐鲁农创客全过程管理系统--使用与运维手册">齐鲁农创客全过程管理系统 ·
 使用与运维手册</h1>
-<p><strong>版本：</strong> 与 roadmap Phase 1–3
-产品设计对齐；<strong>运行时底座为 agri3 / Litestack</strong>（自
+<p><strong>版本：</strong> 2.1（功能上线时间与 git / 生产 revisions
+对齐）<br />
+<strong>手册修订日：</strong> 2026-08-08<br />
+<strong>运行时底座：</strong> agri3 / Litestack（自
 <code>react_demo_2</code> PG+pgbus 版迁入）<br />
 <strong>适用对象：</strong>
 系统架构读者、区县/市级管理员、学员、系统维护员<br />
 <strong>项目定位：</strong>
 济南市农广校内部管理平台（与省级齐鲁农云无关联）<br />
-<strong>仓库：</strong> 本手册以 <strong>agri3</strong> 为准；历史 PG
-版见 <code>../react_demo_2</code>（只读参考）</p>
+<strong>仓库：</strong> 本手册以 <strong>agri3</strong> 为准（GitHub
+<code>sunfang3/agri3</code>）；历史 PG 版见
+<code>../react_demo_2</code>（只读参考）<br />
+<strong>生产：</strong> <a
+href="https://agri3.fanglab.site（Tomo">https://agri3.fanglab.site（Tomo</a>
+· <code>web2</code>）</p>
 <hr />
 <h2 id="1-系统架构视角">1. 系统架构视角</h2>
 <h3 id="11-使命与价值主张">1.1 使命与价值主张</h3>
@@ -481,37 +487,161 @@ timer</strong>（或 job 自重排）每日 02:00 触发，参数
 </tr>
 </tbody>
 </table>
-<h3 id="18-分阶段交付对照">1.8 分阶段交付对照</h3>
+<h3 id="18-分阶段交付对照产品设计-vs-agri3-上线">1.8
+分阶段交付对照（产品设计 vs agri3 上线）</h3>
+<p>产品路线图仍按 <code>docs/product/roadmap.md</code> 分 Phase
+1–3。下表区分：<strong>设计目标</strong>、<strong>代码迁入 agri3
+的时间</strong>、<strong>生产可访问时间</strong>（以仓库 git 与服务器
+<code>revisions.log</code> 为准）。</p>
 <table>
 <thead>
 <tr class="header">
 <th>Phase</th>
 <th>主题</th>
-<th>已交付要点</th>
+<th>能力要点</th>
+<th>设计文档</th>
+<th>agri3 代码</th>
+<th>生产 agri3.fanglab.site</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>1 MVP</strong></td>
 <td>证明可用</td>
-<td>注册画像、Excel 导入、政策库、课程报名、规则匹配、PWA 2
-Tab、区县后台、埋点</td>
+<td>注册画像、Excel 导入、政策/课程、规则匹配、学员
+PWA、区县后台、埋点</td>
+<td>2026-06 ~ 2026-07（<code>mvp-plan</code> / 早期
+<code>react_demo_2</code>）</td>
+<td><strong>2026-07-19</strong> 整包迁入（U1–U9 当日合入 master）</td>
+<td><strong>2026-08-07</strong> 起 Tomo
+发布槽可用；<strong>2026-08-08</strong> 业务全量 deploy</td>
 </tr>
 <tr class="even">
 <td><strong>2 V1.1</strong></td>
 <td>可复制</td>
-<td>PDF 解析+校对、语音笔记、动态 T-I-P-S、多通道推送、签到
+<td>PDF 解析校对、语音笔记管线、动态 T-I-P-S、多通道推送适配器、签到
 GPS、水印、师资、学情调查、驾驶舱、反馈回流</td>
+<td>roadmap Phase 2</td>
+<td><strong>2026-07-19</strong> 随领域层/服务一并迁入（Fake
+适配器默认）</td>
+<td><strong>2026-08-08</strong>
+随主站上线（能力路径可用，真实厂商未接）</td>
 </tr>
 <tr class="odd">
 <td><strong>3 V1.2</strong></td>
 <td>规模化</td>
-<td>余弦匹配、物化视图驾驶舱、缺口+预警、归因、案例墙、知识库、导师语音答疑、全市区县种子</td>
+<td>余弦匹配、快照驾驶舱、缺口+预警、归因、案例墙、知识库
+FTS、导师答疑</td>
+<td>roadmap Phase 3</td>
+<td><strong>2026-07-19</strong> 迁入；知识库 FTS 当日补强</td>
+<td><strong>2026-08-08</strong> 随主站上线</td>
 </tr>
 </tbody>
 </table>
 <p>非目标（不在本系统交付范围）：红头文件现场运营指标、区块链证书、VR/AR、跨市协同等（见
 roadmap Deferred）。</p>
+<h3 id="19-agri3-开发与生产上线日志节选">1.9 agri3
+开发与生产上线日志（节选）</h3>
+<p>依据 <code>git log</code>（author date）与生产
+<code>~/apps/agri3/revisions.log</code>。</p>
+<h4 id="代码合入master">代码合入（master）</h4>
+<table>
+<thead>
+<tr class="header">
+<th>日期</th>
+<th>里程碑</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>2026-07-19</strong></td>
+<td>脚手架 + 全量移植</td>
+<td>Initial commit → Litestack 底座；docs 迁入；U1–U9（schema / 领域 /
+Litejob / 学员·管理 HTTP / Avo / Litesearch / 测试与运维文档）</td>
+</tr>
+<tr class="even">
+<td><strong>2026-07-19</strong></td>
+<td>知识库检索加固</td>
+<td>FTS ∪ LIKE，seed 后可搜中文</td>
+</tr>
+<tr class="odd">
+<td><strong>2026-08-07</strong></td>
+<td>部署配置</td>
+<td>Tomo / Tailwind 路径等生产就绪调整</td>
+</tr>
+<tr class="even">
+<td><strong>2026-08-08</strong></td>
+<td>市直 / 区办审核</td>
+<td>录取按开班主体分流；区备案；市只读区办班</td>
+</tr>
+<tr class="odd">
+<td><strong>2026-08-08</strong></td>
+<td>Seed / Excel 导入</td>
+<td>市直·区办课程种子；导入可选 <code>course_title</code></td>
+</tr>
+<tr class="even">
+<td><strong>2026-08-08</strong></td>
+<td>录取通知</td>
+<td>管理员确认后学员站内消息「报名已通过」；首页展示报名状态</td>
+</tr>
+<tr class="odd">
+<td><strong>2026-08-08</strong></td>
+<td>课程学员 CRUD</td>
+<td><code>/admin/courses/:id</code> 添加/录取/结业/移除学员</td>
+</tr>
+<tr class="even">
+<td><strong>2026-08-08</strong></td>
+<td>课程列表 500 修复</td>
+<td>Litedb datetime 字符串安全格式化</td>
+</tr>
+</tbody>
+</table>
+<h4 id="生产部署tomo--agri3fanglabsite">生产部署（Tomo →
+agri3.fanglab.site）</h4>
+<table>
+<thead>
+<tr class="header">
+<th>部署时间（+0800）</th>
+<th>提交</th>
+<th>上线内容摘要</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2026-08-07 16:32</td>
+<td><code>53afa78</code></td>
+<td>初始 agri3 应用槽 / 骨架</td>
+</tr>
+<tr class="even">
+<td>2026-08-08 00:43</td>
+<td><code>d1a6783</code></td>
+<td>应用信息与 Tomo 配置回补</td>
+</tr>
+<tr class="odd">
+<td>2026-08-08 17:49</td>
+<td><code>061cada</code></td>
+<td>两级班审核与备案、种子与导入、录取规则</td>
+</tr>
+<tr class="even">
+<td>2026-08-08 18:04</td>
+<td><code>0cdec52</code></td>
+<td>课程详情学员管理；录取站内通知</td>
+</tr>
+<tr class="odd">
+<td>2026-08-08 18:09</td>
+<td><code>f571f35</code></td>
+<td>修复 <code>/admin/courses</code> 时间字段 500</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>说明：</strong> 2026-07-19 完成的是
+<strong>代码与文档合入</strong>；对外生产域名与稳定业务能力以
+<strong>2026-08-07 ~ 2026-08-08</strong>
+部署为准。后续功能请继续在本节追加日期，并与 <code>git log</code> /
+<code>revisions.log</code> 交叉核对。</p>
+</blockquote>
 <hr />
 <h2 id="2-使用者视角">2. 使用者视角</h2>
 <h3 id="21-角色总览">2.1 角色总览</h3>
@@ -835,42 +965,87 @@ GPS 有效。</li>
 <tr class="odd">
 <td><strong>批量确认报名</strong></td>
 <td>勾选 pending → 批量 confirm</td>
-<td><code>pending</code> →
-<code>enrolled</code>（历城可对张三演示）</td>
+<td>仅<strong>本区开办的班</strong>（<code>course.district_id</code>）；<code>pending</code>
+→ <code>enrolled</code>。市直班不在此列</td>
 </tr>
 <tr class="even">
+<td><strong>市直班知会/备案</strong></td>
+<td>工作台「知会/备案」</td>
+<td>本区学员报的市直班：区只备案不录取；录取仍由市级</td>
+</tr>
+<tr class="odd">
 <td><strong>CSV 导出</strong></td>
 <td><code>/admin/export/students</code></td>
 <td>导出本区（市级则可为更广范围）学员列表</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Excel 导入</strong></td>
 <td><code>/admin/imports</code></td>
 <td>先 Dry-run 预览，再正式导入</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>政策维护</strong></td>
 <td><code>/admin/policies</code></td>
 <td>列表/新建；可走 PDF 解析 + 人工校对</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>课程维护</strong></td>
 <td><code>/admin/courses</code></td>
-<td>列表/新建</td>
+<td>列表/新建/编辑；<strong>详情页管理课程学员</strong>（添加、录取、结业、取消、移除）</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>学情调查</strong></td>
 <td><code>/admin/surveys</code></td>
 <td>创建训前/训中/训后问卷</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Avo 资源</strong></td>
 <td><code>/avo</code></td>
 <td>学员/政策/课程/标签等 CRUD（与自研后台互补）</td>
 </tr>
 </tbody>
 </table>
-<p>导入表头：<code>phone, name, district_code, primary_industry, scale, annual_income, honors</code>。</p>
+<p>导入表头：</p>
+<table>
+<thead>
+<tr class="header">
+<th>列</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>phone</code></td>
+<td>是</td>
+<td>11 位手机号</td>
+</tr>
+<tr class="even">
+<td><code>name</code></td>
+<td>是</td>
+<td>姓名</td>
+</tr>
+<tr class="odd">
+<td><code>district_code</code></td>
+<td>是</td>
+<td>区县 code（如 <code>licheng</code>）</td>
+</tr>
+<tr class="even">
+<td><code>primary_industry</code> / <code>scale</code> /
+<code>annual_income</code> / <code>honors</code></td>
+<td>否</td>
+<td>画像</td>
+</tr>
+<tr class="odd">
+<td><code>course_title</code></td>
+<td>否</td>
+<td>已发布课程<strong>全名</strong>；写入 pending
+报名。市直班→市级录取+户籍区备案；区办班→开班区录取</td>
+</tr>
+</tbody>
+</table>
+<p>Seed
+会生成样例：<code>tmp/seed_sample_student_import.xlsx</code>。</p>
 <h4 id="243-推荐操作节奏对齐-mvp-plan-gtm">2.4.3 推荐操作节奏（对齐
 mvp-plan GTM）</h4>
 <table>
@@ -920,16 +1095,16 @@ mvp-plan GTM）</h4>
 </tr>
 <tr class="odd">
 <td><strong>与区县差异</strong></td>
-<td><strong>全市</strong>学员与报名可见，不受单一
-<code>district_id</code> 限制</td>
+<td><strong>全市</strong>学员可见；<strong>录取</strong>只处理
+<strong>市直班</strong>；区办班仅<strong>只读</strong>列表</td>
 </tr>
 <tr class="even">
 <td>汇总 / 驾驶舱</td>
-<td>学员总量、分县、阶段、报名、匹配均分等全市视角</td>
+<td>学员总量、分县、阶段、匹配均分等全市视角</td>
 </tr>
 <tr class="odd">
 <td>运营能力</td>
-<td>与区县同类：导入、导出、政策/课程/问卷、批量审核，但范围为全市</td>
+<td>导入/导出/政策/课程/问卷；批量确认市直班录取；查看区办班报名（不可确认）</td>
 </tr>
 <tr class="even">
 <td>扩展视图</td>
@@ -1073,8 +1248,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="
 </tr>
 <tr class="odd">
 <td>数据隔离</td>
-<td>区县管理员 <code>scoped_students</code> /
-<code>scoped_enrollments</code></td>
+<td>区县看本区学员；报名审核按<strong>开班主体</strong>（市直→市，区办→开班区）</td>
 </tr>
 <tr class="even">
 <td>密钥</td>
@@ -1385,25 +1559,30 @@ commit、埋点、学情调查全路径、登录安全、T+1 Job
 <tbody>
 <tr class="odd">
 <td>2026-07-14</td>
-<td>初版：对齐 Phase 1–3 实现与 PostgreSQL/pgbus
-database.yml（react_demo_2）</td>
+<td>初版：对齐 Phase 1–3 实现与
+PostgreSQL/pgbus（<code>react_demo_2</code>）</td>
 </tr>
 <tr class="even">
 <td>2026-07-19</td>
-<td>迁入 agri3：技术栈改为 Litestack AIO；运维/备份/进程模型重写；去掉
+<td>迁入 agri3：Litestack AIO；运维/备份/进程模型重写；去掉
 chat/pgbus</td>
 </tr>
 <tr class="odd">
 <td>2026-07-19</td>
-<td>扩充 §2：seed 账号清单、各角色登录后能力表、最短演示路径；导出
-PDF</td>
+<td>扩充 §2：seed 账号、各角色能力；HTML 手册导出</td>
+</tr>
+<tr class="even">
+<td>2026-08-08</td>
+<td><strong>翻新功能上线时间</strong>：§1.8 区分设计/代码/生产；新增
+§1.9 开发与 revisions 部署日志（至 <code>f571f35</code>）</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <p><em>如文档与代码冲突，以仓库实现与最新
 <code>config/database.yml</code> 为准。产品范围以
-<code>docs/product/*</code> 为准。</em></p>
+<code>docs/product/*</code> 为准。功能上线日期以 §1.9 与生产
+<code>revisions.log</code> 为准。</em></p>
 
     </main>
   </div>
