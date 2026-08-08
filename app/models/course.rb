@@ -5,6 +5,9 @@ class Course < ApplicationRecord
   attribute :latitude, :float
   attribute :published, :boolean
   attribute :deep_tags, :json
+  # Litedb may surface datetime columns as String; cast for views/forms.
+  attribute :starts_at, :datetime
+  attribute :ends_at, :datetime
   belongs_to :district, optional: true
   belongs_to :mentor, optional: true
   has_many :course_tags, dependent: :destroy
@@ -37,5 +40,37 @@ class Course < ApplicationRecord
 
   def mentor_display
     mentor&.name.presence || mentor_name
+  end
+
+  def starts_on_label
+    format_date(starts_at)
+  end
+
+  def time_range_label
+    [ starts_at, ends_at ].compact.map { |t| format_datetime(t) }.join(" ~ ").presence || "—"
+  end
+
+  private
+
+  def format_date(value)
+    t = coerce_time(value)
+    t ? t.strftime("%Y-%m-%d") : "—"
+  end
+
+  def format_datetime(value)
+    t = coerce_time(value)
+    t ? t.strftime("%Y-%m-%d %H:%M") : nil
+  end
+
+  def coerce_time(value)
+    case value
+    when nil then nil
+    when Time, ActiveSupport::TimeWithZone, DateTime then value
+    when Date then value.to_time
+    else
+      Time.zone.parse(value.to_s)
+    end
+  rescue ArgumentError, TypeError
+    nil
   end
 end

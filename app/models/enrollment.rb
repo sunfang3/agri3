@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Enrollment < ApplicationRecord
+  attribute :confirmed_at, :datetime
+  attribute :district_acked_at, :datetime
+
   belongs_to :student
   belongs_to :course
   belongs_to :district_ack_admin, class_name: "Admin", optional: true

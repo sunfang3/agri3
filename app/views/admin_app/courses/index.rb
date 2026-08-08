@@ -36,7 +36,7 @@ class Views::AdminApp::Courses::Index < Views::Base
                   end
                   td { span(class: "badge badge-ghost badge-sm") { c.ownership_label } }
                   td(class: "text-xs") { c.place.to_s }
-                  td(class: "text-xs") { c.starts_at&.strftime("%Y-%m-%d") || "—" }
+                  td(class: "text-xs") { c.starts_on_label }
                   td { (@enrollment_counts[c.id] || 0).to_s }
                   td(class: "space-x-1") do
                     a(href: admin_course_path(c), class: "btn btn-ghost btn-xs") { "学员" }

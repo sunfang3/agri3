@@ -47,7 +47,7 @@ class Views::AdminApp::Courses::Show < Views::Base
         h2(class: "card-title text-base") { "课程信息" }
         p { plain "导师："; plain @course.mentor_display.to_s }
         p { plain "地点："; plain @course.place.to_s }
-        p { plain "时间："; plain [@course.starts_at, @course.ends_at].compact.map { |t| t.strftime("%Y-%m-%d %H:%M") }.join(" ~ ") }
+        p { plain "时间："; plain @course.time_range_label }
         p { plain "简介："; plain @course.description.to_s.presence || "—" }
         p do
           plain "录取权："
