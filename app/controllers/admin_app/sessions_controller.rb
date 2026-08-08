@@ -24,4 +24,3 @@ module AdminApp
     end
   end
 end
-

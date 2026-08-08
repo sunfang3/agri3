@@ -123,7 +123,7 @@ end
 # Client request timeout (default 30s). There is NO server-side setting — a hung
 # request aborts client-side after this window (reactive:error kind "timeout"),
 # so the per-component queue never wedges. Override in your layout head:
-#   <meta name="phlex-reactive-timeout" content="15000"> 
+#   <meta name="phlex-reactive-timeout" content="15000">
 # A timed-out POST may have SUCCEEDED server-side — phlex-reactive never
 # auto-replays; make retryable actions idempotent.
 
@@ -133,4 +133,4 @@ end
 # DEVELOPMENT ONLY to expose window.PhlexReactive.enableLatencySim(ms) /
 # disableLatencySim() in the browser console (importmap module exports aren't
 # reachable from the console, so this handle is how you toggle it):
-#   
+#

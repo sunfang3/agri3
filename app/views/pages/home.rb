@@ -109,4 +109,3 @@ class Views::Pages::Home < Views::Base
     end
   end
 end
-

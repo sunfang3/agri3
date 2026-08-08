@@ -34,4 +34,3 @@ module StudentApp
     end
   end
 end
-

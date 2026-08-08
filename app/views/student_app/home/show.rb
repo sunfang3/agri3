@@ -19,7 +19,6 @@ class Views::StudentApp::Home::Show < Views::Base
       header(class: "navbar bg-primary text-primary-content px-4") do
         div(class: "flex-1 font-semibold") { "首页 · 专属适配清单" }
         div(class: "flex-none flex items-center gap-1") do
-
           a(href: student_messages_path, class: "btn btn-ghost btn-sm relative") do
             plain "消息"
             if @unread_count.positive?
