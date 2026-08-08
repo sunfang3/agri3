@@ -537,7 +537,8 @@ bin/rails test
 |------|------|
 | 2026-07-14 | 初版：对齐 Phase 1–3 实现与 PostgreSQL/pgbus database.yml（react_demo_2） |
 | 2026-07-19 | 迁入 agri3：技术栈改为 Litestack AIO；运维/备份/进程模型重写；去掉 chat/pgbus |
-| 2026-07-19 | 扩充 §2：seed 账号清单、各角色登录后能力表、最短演示路径；导出 PDF |
+| 2026-07-19 | 扩充 §2：seed 账号清单、各角色登录后能力表、最短演示路径 |
+| 2026-07-19 | 导出 HTML 手册（`docs/exports/agri3-handbook.html`，系统 CJK 字体；弃用 PDF） |
 
 ---
 
