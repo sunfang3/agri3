@@ -135,20 +135,26 @@ class Views::AdminApp::Dashboard::Show < Views::Base
   def render_bulk_confirm
     section(class: "card bg-base-100 shadow") do
       div(class: "card-body") do
-        h2(class: "card-title text-lg") { "报名批量 confirm" }
+        h2(class: "card-title text-lg") { "待我审核的报名" }
+        p(class: "text-xs opacity-60 -mt-2 mb-2") do
+          "审核权跟随开班主体：市直班（无区县）由市级审；区办班由开班区县审（与学员户籍区无关）。"
+        end
         Form(url: admin_bulk_confirm_enrollments_path, method: :post, scope: false) do |f|
-          ul(class: "space-y-2 mb-3") do
+          ul(class: "space-y-2 mb-3", data: { testid: "pending-enrollments" }) do
             @pending_enrollments.each do |e|
               li(class: "flex items-center gap-2") do
                 input(type: "checkbox", name: "enrollment_ids[]", value: e.id, class: "checkbox checkbox-sm", checked: true)
-                span(class: "text-sm") { "#{e.student.name} → #{e.course.title} (#{e.status})" }
+                span(class: "text-sm") do
+                  plain "#{e.student.name}（#{e.student.district.name}）→ #{e.course.title} "
+                  span(class: "badge badge-ghost badge-sm") { e.course.ownership_label }
+                end
               end
             end
           end
           if @pending_enrollments.any?
             f.submit(:primary, class: "btn-sm") { "批量确认" }
           else
-            p(class: "text-sm opacity-60") { "暂无待审核报名" }
+            p(class: "text-sm opacity-60") { "暂无待你审核的报名" }
           end
         end
       end

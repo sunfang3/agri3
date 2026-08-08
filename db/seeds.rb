@@ -279,6 +279,20 @@ course_specs.each do |spec|
   course.tags = spec[:tags].map { |k| tags[k] }
 end
 
+# 市直班：district_id 为空，报名由市级管理员审核（非各区批准）
+city_direct = Course.find_or_create_by!(title: "市直·高素质农民培育示范班") do |c|
+  c.description = "济南市农广校市直班，各区学员均可报名，由市级管理员审核录取。"
+  c.mentor_name = "市农广校教研室"
+  c.starts_at = 10.days.from_now.change(hour: 9)
+  c.ends_at = 12.days.from_now.change(hour: 17)
+  c.place = "市农广校（市直）"
+  c.district = nil
+  c.published = true
+  c.deep_tags = %w[course_tech course_manage]
+end
+city_direct.update!(district: nil, published: true, place: "市农广校（市直）")
+city_direct.tags = [ tags[:course_tech], tags[:course_manage], tags[:object_farm] ].compact
+
 puts "==> 7/8 规则、知识库、案例、学情调查"
 [
   { name: "起步期-小规模", stage: "T", conditions: { "max_scale" => 49 }, priority: 5 },
@@ -348,14 +362,21 @@ licheng_course = Course.find_by!(title: "小麦高产技术培训")
   end
 end
 
-# 历城示范报名一条 pending，便于后台 bulk confirm 演示
+# 历城张三：区办班 pending → 历城管理员审；市直班 pending → 市级管理员审
 zhang = Student.find_by(phone: "13800000009")
 if zhang && licheng_course
   Enrollment.find_or_create_by!(student: zhang, course: licheng_course) do |e|
     e.status = "pending"
   end
+end
+if zhang && city_direct
+  Enrollment.find_or_create_by!(student: zhang, course: city_direct) do |e|
+    e.status = "pending"
+  end
+end
+if zhang
   AppMessage.find_or_create_by!(student: zhang, title: "欢迎使用农创客平台") do |m|
-    m.body = "您的专属适配清单已生成，请到首页查看推荐政策与课程。"
+    m.body = "您的专属适配清单已生成，请到首页查看推荐政策与课程。市直班由市级审核，区办班由开班区县审核。"
     m.message_type = "system"
   end
 end
@@ -376,4 +397,6 @@ puts "学员=#{Student.count} 管理员=#{Admin.count} 政策=#{Policy.count} �
 puts "师资=#{Mentor.count} 标签=#{Tag.count} 匹配=#{ResourceMatch.count} 案例=#{ShowcaseCase.count}"
 puts "登录示例: city@jinan.local / password ； admin@licheng.local / password"
 puts "学员示例: 13800000009 / password （历城·张三）"
+puts "审核规则: 市直班(course.district 空)→市级；区办班→开班区县（非学员户籍区）"
+puts "演示: 张三有历城小麦班(区审)+市直示范班(市审) 两条 pending"
 puts "================================"

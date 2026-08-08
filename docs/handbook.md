@@ -278,7 +278,7 @@ Seed 会写入：济南 **10 区 + 2 县**、标签库、政策/课程/师资、
 |------|-------------|------|
 | **区县汇总** | `/admin` | 本区学员数、T-I-P-S 分布、报名状态分布 |
 | **多维筛选** | 工作台筛选条 | 阶段、标签、报名状态 |
-| **批量确认报名** | 勾选 pending → 批量 confirm | `pending` → `enrolled`（历城可对张三演示） |
+| **批量确认报名** | 勾选 pending → 批量 confirm | 仅**本区开办的班**（`course.district_id`）；`pending` → `enrolled`。市直班不在此列 |
 | **CSV 导出** | `/admin/export/students` | 导出本区（市级则可为更广范围）学员列表 |
 | **Excel 导入** | `/admin/imports` | 先 Dry-run 预览，再正式导入 |
 | **政策维护** | `/admin/policies` | 列表/新建；可走 PDF 解析 + 人工校对 |
@@ -305,9 +305,9 @@ Seed 会写入：济南 **10 区 + 2 县**、标签库、政策/课程/师资、
 |----|------|
 | 账号 | `city@jinan.local` / `password`（`role=city`） |
 | 入口 | 同 `/admin/login`，工作台 `/admin` |
-| **与区县差异** | **全市**学员与报名可见，不受单一 `district_id` 限制 |
-| 汇总 / 驾驶舱 | 学员总量、分县、阶段、报名、匹配均分等全市视角 |
-| 运营能力 | 与区县同类：导入、导出、政策/课程/问卷、批量审核，但范围为全市 |
+| **与区县差异** | **全市**学员可见；**报名审核**只处理 **市直班**（`course.district_id` 为空） |
+| 汇总 / 驾驶舱 | 学员总量、分县、阶段、匹配均分等全市视角 |
+| 运营能力 | 导入/导出/政策/课程/问卷；批量确认市直班录取 |
 | 扩展视图 | 预警 / 资源缺口 / 案例墙等（Phase 2–3 能力） |
 | Avo | `/avo` 适合全资源快速 CRUD |
 
@@ -390,7 +390,7 @@ bin/rails runner 'DailyMatchingJob.perform_now("cosine")'
 | 导入账号 | 提交导入时若无密码，设置初始密码为手机号 |
 | 管理员 | `has_secure_password`；会话 `session[:admin_id]` |
 | 浏览器 | 非 test 环境启用 `allow_browser versions: :modern` |
-| 数据隔离 | 区县管理员 `scoped_students` / `scoped_enrollments` |
+| 数据隔离 | 区县看本区学员；报名审核按**开班主体**（市直→市，区办→开班区） |
 | 密钥 | `config/master.key`、生产 secrets / Tomo env 勿入库 |
 
 重置学员密码（控制台示例）：

@@ -19,6 +19,21 @@ class Course < ApplicationRecord
   validates :title, presence: true
 
   scope :published, -> { where(published: true) }
+  # 市直班：无归属区县；区办班：district_id 指向开班区县
+  scope :city_direct, -> { where(district_id: nil) }
+  scope :for_district, ->(district_id) { where(district_id: district_id) }
+
+  def city_direct?
+    district_id.nil?
+  end
+
+  def reviewer_label
+    city_direct? ? "市级管理员" : "区县管理员"
+  end
+
+  def ownership_label
+    city_direct? ? "市直班" : (district&.name.presence || "区办班")
+  end
 
   def mentor_display
     mentor&.name.presence || mentor_name

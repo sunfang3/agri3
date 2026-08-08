@@ -11,14 +11,15 @@ module StudentApp
       if enrollment.new_record?
         enrollment.status = "pending"
         enrollment.save!
-        track_action!("enroll", { course_id: course.id })
+        track_action!("enroll", { course_id: course.id, city_direct: course.city_direct? })
         AppMessage.create!(
           student: current_student,
           title: "报名已提交",
-          body: "课程「#{course.title}」待管理员审核"
+          body: "课程「#{course.title}」（#{course.ownership_label}）待#{course.reviewer_label}审核"
         )
       end
-      redirect_to student_home_path, notice: "报名已提交，等待审核"
+      notice = "报名已提交，等待#{course.reviewer_label}审核"
+      redirect_to student_home_path, notice: notice
     end
   end
 end

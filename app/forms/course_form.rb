@@ -20,9 +20,9 @@ class CourseForm < ApplicationForm
     field :place, label: "地点"
     field :latitude, :number, label: "纬度", step: :any
     field :longitude, :number, label: "经度", step: :any
-    field :district_id, label: "区县", as: :select,
+    field :district_id, label: "开班归属", as: :select,
       choices: District.jinan_active.order(:name).map { |d| [ d.name, d.id ] },
-      include_blank: "全市"
+      include_blank: "市直班（市级审核）"
     field :tag_ids, as: :checkbox_group,
       collection: @tags,
       value: :id,

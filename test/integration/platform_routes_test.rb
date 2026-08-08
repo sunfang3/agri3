@@ -7,7 +7,8 @@ class PlatformRoutesTest < ActionDispatch::IntegrationTest
     @district = District.create!(name: "路由区", code: "rt-#{SecureRandom.hex(3)}")
     @student = Student.create!(phone: "131#{rand(10_000_000..99_999_999)}", name: "路由学员", district: @district, password: "secret")
     @admin = Admin.create!(name: "管", email: "admin-#{SecureRandom.hex(3)}@test.local", password: "password", role: "district", district: @district)
-    @course = Course.create!(title: "路由课", published: true, mentor_name: "M", place: "校")
+    # 区办班：归属本区，由区县管理员审核
+    @course = Course.create!(title: "路由课", published: true, mentor_name: "M", place: "校", district: @district)
   end
 
   test "root is user entry portal" do
