@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_19_010000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
   create_table "admins", id: :integer, default: nil, force: :cascade do |t|
     t.text "created_at", limit: 6, null: false
     t.integer "district_id"
@@ -75,6 +75,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_010000) do
     t.index ["student_id"], name: "index_attributions_on_student_id"
   end
 
+  create_table "chat_messages", id: :integer, default: nil, force: :cascade do |t|
+    t.text "author", null: false
+    t.text "body", null: false
+    t.text "created_at", limit: 6, null: false
+    t.text "room", default: "lobby", null: false
+    t.text "updated_at", limit: 6, null: false
+    t.index ["room", "created_at", "id"], name: "index_chat_messages_on_room_and_created_at_and_id"
+  end
+
   create_table "check_ins", id: :integer, default: nil, force: :cascade do |t|
     t.text "checked_in_at", limit: 6, null: false
     t.integer "course_id", null: false
@@ -120,6 +129,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_010000) do
     t.text "updated_at", limit: 6, null: false
     t.index ["district_id"], name: "index_courses_on_district_id"
     t.index ["mentor_id"], name: "index_courses_on_mentor_id"
+  end
+
+  create_table "district_stats_snapshots", primary_key: "district_id", id: :integer, default: nil, force: :cascade do |t|
+    t.text "district_name", null: false
+    t.integer "enrolled_count", default: 0, null: false
+    t.text "refreshed_at"
+    t.integer "student_count", default: 0, null: false
   end
 
   create_table "districts", id: :integer, default: nil, force: :cascade do |t|
@@ -421,5 +437,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_010000) do
   add_foreign_key "voice_notes", "courses"
   add_foreign_key "voice_notes", "students"
 
-  # Litesearch FTS virtual tables are created at runtime by KnowledgeArticle (not dumped).
+  # Litesearch FTS virtual tables are created at runtime (not dumped).
 end

@@ -9,6 +9,10 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Public chat lobby (Litecable + Turbo Streams + phlex-reactive)
+  get "chat", to: "chat#show", as: :chat
+  patch "chat/identity", to: "chat_identities#update", as: :chat_identity
+
   scope path: "student", module: "student_app", as: "student" do
     get "login", to: "sessions#new"
     post "login", to: "sessions#create"

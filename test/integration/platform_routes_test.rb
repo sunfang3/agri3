@@ -69,8 +69,11 @@ class PlatformRoutesTest < ActionDispatch::IntegrationTest
     assert_includes [ 200, 302 ], response.status
   end
 
-  test "no chat or pgbus product routes" do
-    get "/chat"; assert_response :not_found
-    get "/stream"; assert_response :not_found
+  test "chat lobby is available; pgbus stream is not" do
+    get chat_path
+    assert_response :success
+    assert_select "[data-testid='nickname-gate']"
+    get "/stream"
+    assert_response :not_found
   end
 end

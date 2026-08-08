@@ -9,10 +9,18 @@ Dates are **author dates** from `git log` unless noted as **production deploy** 
 
 ## [Unreleased]
 
+### Added
+
+- **公共聊天大厅 `/chat`**（Litecable + Turbo Streams + phlex-reactive）
+  - 游客 session 昵称；已登录学员/管理员用系统姓名
+  - 单房间 `lobby`，最近 50 条历史，实时广播
+  - 表 `chat_messages`；首页入口链接
+
 ### Planned / backlog
 
 - Real ASR / LLM / SMS / WebPush / 微信 adapters (Fake 适配器已在库)
 - Production cron/timer for `DailyMatchingJob` (documented; host-specific)
+- 按课程分房聊天（第二迭代）
 
 ---
 

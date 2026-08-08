@@ -99,8 +99,8 @@ class Views::Pages::Home < Views::Base
     footer(class: "text-center text-xs text-base-content/50 space-y-1") do
       p do
         plain "交流大厅："
-        span(class: "opacity-60") { "agri3 · Litestack" }
-        plain "（已登录用户自动使用系统姓名；游客可自选昵称）"
+        a(href: chat_path, class: "link link-hover", data: { testid: "entry-chat" }) { "/chat" }
+        plain " · Litecable 实时（游客昵称 / 已登录用系统姓名）"
       end
       p do
         plain "健康检查："

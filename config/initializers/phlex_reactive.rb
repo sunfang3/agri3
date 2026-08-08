@@ -6,10 +6,13 @@
 # Inherit auth/CSRF/Current on the action endpoint (recommended for real apps).
 # Ensure the endpoint isn't force-redirected to a login page for logged-out
 # users if you have public reactive components.
-# Phlex::Reactive.base_controller_name = "ApplicationController"
+# Public chat / reactive actions share session + CSRF with normal requests.
+Phlex::Reactive.base_controller_name = "ApplicationController"
 
 # Render components with your app's view context (helpers, Current, etc.).
-# Phlex::Reactive.renderer = ApplicationController
+Rails.application.config.to_prepare do
+  Phlex::Reactive.renderer = ApplicationController
+end
 
 # Render your authorization library's error as 403 from a reactive action.
 # Phlex::Reactive.authorization_errors = [Pundit::NotAuthorizedError]

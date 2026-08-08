@@ -74,7 +74,7 @@
                           └──────────────────┘
 ```
 
-> **不移植：** 原 `react_demo_2` 的 `/chat` 演示（依赖 pgbus SSE），与 roadmap 产品无关。
+> **聊天：** `/chat` 公共大厅已基于 **Litecable** 重做（非 pgbus）。单房间 lobby，见 CHANGELOG Unreleased。
 ### 1.4 核心数据域
 
 | 域 | 主要模型 | 说明 |
@@ -139,7 +139,8 @@ pending ──confirm──► enrolled ──complete──► completed
 | `/admin/imports` | 管理员 | Excel dry-run / 正式导入 |
 | `/admin/policies` · `/courses` · `/surveys` | 管理员 | 政策/课程/问卷 |
 | `/avo` | 管理员 | Avo CRUD |
-| `/cable` | 实时 | Action Cable（WebSocket；非产品页） |
+| `/chat` | 公开 | 公共聊天大厅（Litecable 实时；游客昵称） |
+| `/cable` | 实时 | Action Cable / Litecable WebSocket 端点 |
 
 ### 1.8 分阶段交付对照（产品设计 vs agri3 上线）
 
