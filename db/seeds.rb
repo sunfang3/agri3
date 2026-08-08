@@ -214,7 +214,23 @@ local_policies.each do |spec|
   p.tags = spec[:tag_keys].map { |k| tags[k] }
 end
 
-puts "==> 6/8 师资与课程（覆盖主要区县）"
+puts "==> 6/8 师资与课程（市直班 + 区办班）"
+# -----------------------------------------------------------------------------
+# 开班主体规则（与 Admin#scoped_enrollments / 区备案 一致）：
+#   市直班  course.district_id = nil  → 市级录取；学员户籍区 知会/备案
+#   区办班  course.district_id = 区   → 开班区县录取；不要求区备案
+# -----------------------------------------------------------------------------
+
+# 市级师资（无区县归属）
+city_mentor = Mentor.find_or_create_by!(name: "市农广校教研室") do |m|
+  m.specialty = "高素质农民培育"
+  m.district = nil
+  m.phone = "13900000000"
+  m.deep_tags = [ "市直" ]
+end
+city_mentor.update!(district: nil, specialty: "高素质农民培育")
+
+# 区县师资
 mentor_specs = [
   { name: "王守粮", code: "licheng",   specialty: "小麦高产栽培" },
   { name: "刘葱香", code: "zhangqiu",  specialty: "大葱标准化种植" },
@@ -225,37 +241,69 @@ mentor_specs = [
   { name: "周山果", code: "changqing", specialty: "山地果树" },
   { name: "吴市农", code: "lixia",     specialty: "都市农业运营" }
 ]
-
 mentors = {}
-mentor_specs.each do |spec|
+mentor_specs.each_with_index do |spec, idx|
   district = by_code.fetch(spec[:code])
   m = Mentor.find_or_create_by!(name: spec[:name]) do |mentor|
     mentor.specialty = spec[:specialty]
     mentor.district = district
     mentor.deep_tags = [ spec[:specialty] ]
-    mentor.phone = format("139%08d", mentors.size + 1)
+    mentor.phone = format("139%08d", idx + 1)
   end
   m.update!(district: district, specialty: spec[:specialty])
   mentors[spec[:code]] = m
 end
 
+# kind: :city_direct | :district
+# code: 区办班必填区县 code；市直班为 nil
 course_specs = [
-  { title: "小麦高产技术培训", code: "licheng", mentor: "licheng", place: "历城区农广校", tags: [ :course_tech, :industry_grain ], days: 7 },
-  { title: "章丘大葱标准化种植班", code: "zhangqiu", mentor: "zhangqiu", place: "章丘区农业培训中心", tags: [ :course_tech, :industry_veg ], days: 14 },
-  { title: "平阴玫瑰精深加工研修", code: "pingyin", mentor: "pingyin", place: "平阴县玫瑰产业园", tags: [ :course_brand, :industry_flower ], days: 21 },
-  { title: "莱芜生姜绿色防控课堂", code: "laiwu", mentor: "laiwu", place: "莱芜区农广校", tags: [ :course_tech, :industry_spice ], days: 10 },
-  { title: "商河种粮大户经营管理", code: "shanghe", mentor: "shanghe", place: "商河县农业农村局", tags: [ :course_manage, :industry_grain ], days: 28 },
-  { title: "设施蔬菜水肥一体化", code: "jiyang", mentor: "jiyang", place: "济阳区蔬菜示范园", tags: [ :course_tech, :industry_veg ], days: 12 },
-  { title: "农创客品牌营销实务", code: "lixia", mentor: "lixia", place: "市农广校（历下）", tags: [ :course_brand, :course_manage ], days: 5 },
-  { title: "长清生态农旅运营实务", code: "changqing", mentor: "changqing", place: "长清区农广校", tags: [ :course_manage, :industry_eco ], days: 18 }
+  # —— 市直班（district 空）——
+  {
+    kind: :city_direct, title: "市直·高素质农民培育示范班",
+    place: "市农广校（市直）", mentor: :city, tags: [ :course_tech, :course_manage, :object_farm ], days: 10,
+    description: "济南市农广校市直班。各区学员可报；市级录取；户籍区知会/备案。"
+  },
+  {
+    kind: :city_direct, title: "市直·农创客品牌营销实务",
+    place: "市农广校（市直）", mentor: :city, tags: [ :course_brand, :course_manage ], days: 5,
+    description: "市直品牌营销班。市级录取；区县仅对辖区学员备案。"
+  },
+  {
+    kind: :city_direct, title: "市直·政策解读与申报辅导",
+    place: "市农广校（市直）", mentor: :city, tags: [ :course_manage, :object_farm ], days: 3,
+    description: "惠农政策与申报辅导市直班。"
+  },
+  # —— 区办班（district 指向开班区）——
+  { kind: :district, title: "小麦高产技术培训", code: "licheng", mentor: "licheng", place: "历城区农广校", tags: [ :course_tech, :industry_grain ], days: 7 },
+  { kind: :district, title: "章丘大葱标准化种植班", code: "zhangqiu", mentor: "zhangqiu", place: "章丘区农业培训中心", tags: [ :course_tech, :industry_veg ], days: 14 },
+  { kind: :district, title: "平阴玫瑰精深加工研修", code: "pingyin", mentor: "pingyin", place: "平阴县玫瑰产业园", tags: [ :course_brand, :industry_flower ], days: 21 },
+  { kind: :district, title: "莱芜生姜绿色防控课堂", code: "laiwu", mentor: "laiwu", place: "莱芜区农广校", tags: [ :course_tech, :industry_spice ], days: 10 },
+  { kind: :district, title: "商河种粮大户经营管理", code: "shanghe", mentor: "shanghe", place: "商河县农业农村局", tags: [ :course_manage, :industry_grain ], days: 28 },
+  { kind: :district, title: "设施蔬菜水肥一体化", code: "jiyang", mentor: "jiyang", place: "济阳区蔬菜示范园", tags: [ :course_tech, :industry_veg ], days: 12 },
+  { kind: :district, title: "长清生态农旅运营实务", code: "changqing", mentor: "changqing", place: "长清区农广校", tags: [ :course_manage, :industry_eco ], days: 18 },
+  { kind: :district, title: "历下都市农业运营入门", code: "lixia", mentor: "lixia", place: "历下区农广校", tags: [ :course_manage, :industry_urban ], days: 6 }
 ]
 
+courses_by_title = {}
 course_specs.each do |spec|
-  district = by_code.fetch(spec[:code])
-  mentor = mentors[spec[:mentor]]
-  lat, lng = COORDS.fetch(spec[:code])
+  city_direct = spec[:kind] == :city_direct
+  district = city_direct ? nil : by_code.fetch(spec[:code])
+  mentor =
+    if spec[:mentor] == :city
+      city_mentor
+    else
+      mentors.fetch(spec[:mentor])
+    end
+  lat, lng =
+    if city_direct
+      COORDS.fetch("lixia") # 市校近似坐标
+    else
+      COORDS.fetch(spec[:code])
+    end
+
+  ownership = city_direct ? "市直" : district.name
   course = Course.find_or_create_by!(title: spec[:title]) do |c|
-    c.description = "#{district.name}·#{spec[:title]}"
+    c.description = spec[:description].presence || "#{ownership}·#{spec[:title]}"
     c.mentor = mentor
     c.mentor_name = mentor.name
     c.starts_at = spec[:days].days.from_now.change(hour: 9)
@@ -268,30 +316,33 @@ course_specs.each do |spec|
     c.deep_tags = spec[:tags].map(&:to_s)
   end
   course.update!(
+    description: spec[:description].presence || "#{ownership}·#{spec[:title]}",
     mentor: mentor,
     mentor_name: mentor.name,
     place: spec[:place],
-    district: district,
+    district: district, # nil => 市直班
     latitude: lat,
     longitude: lng,
-    published: true
+    published: true,
+    deep_tags: spec[:tags].map(&:to_s)
   )
   course.tags = spec[:tags].map { |k| tags[k] }
+  courses_by_title[course.title] = course
+
+  kind_label = course.city_direct? ? "市直班" : "区办班(#{district.name})"
+  puts "    [#{kind_label}] #{course.title}"
 end
 
-# 市直班：district_id 为空，报名由市级管理员审核（非各区批准）
-city_direct = Course.find_or_create_by!(title: "市直·高素质农民培育示范班") do |c|
-  c.description = "济南市农广校市直班，各区学员均可报名，由市级管理员审核录取。"
-  c.mentor_name = "市农广校教研室"
-  c.starts_at = 10.days.from_now.change(hour: 9)
-  c.ends_at = 12.days.from_now.change(hour: 17)
-  c.place = "市农广校（市直）"
-  c.district = nil
-  c.published = true
-  c.deep_tags = %w[course_tech course_manage]
+city_direct = courses_by_title.fetch("市直·高素质农民培育示范班")
+licheng_course = courses_by_title.fetch("小麦高产技术培训")
+# 删除旧 seed 中误标为区办、实为市校班的课程归属（若仍存在）
+legacy = Course.find_by(title: "农创客品牌营销实务")
+if legacy && !legacy.city_direct?
+  # 并入市直·农创客品牌营销实务：若无人依赖则停用
+  legacy.update!(published: false) if courses_by_title.key?("市直·农创客品牌营销实务")
 end
-city_direct.update!(district: nil, published: true, place: "市农广校（市直）")
-city_direct.tags = [ tags[:course_tech], tags[:course_manage], tags[:object_farm] ].compact
+
+puts "    市直班=#{Course.city_direct.published.count} 区办班=#{Course.published.where.not(district_id: nil).count}"
 
 puts "==> 7/8 规则、知识库、案例、学情调查"
 [
@@ -339,7 +390,6 @@ District::JINAN_CODES.each_with_index do |code, idx|
   end
 end
 
-licheng_course = Course.find_by!(title: "小麦高产技术培训")
 %w[pre_training daily post_exam].each do |stype|
   titles = {
     "pre_training" => "训前需求调查（小麦班）",
@@ -362,45 +412,72 @@ licheng_course = Course.find_by!(title: "小麦高产技术培训")
   end
 end
 
-# 历城张三：区办班 pending → 历城管理员审；市直班 pending → 市级管理员审
+# —— 报名演示矩阵（落实两级审核 + 区备案）——
+# 张三(历城): 区办小麦 pending→历城录取；市直示范 pending→市录取 + 历城备案
+# 李四(市中): 报市直品牌班 → 市录取 + 市中备案；跨区报历城小麦 → 历城录取
 zhang = Student.find_by(phone: "13800000009")
-if zhang && licheng_course
-  Enrollment.find_or_create_by!(student: zhang, course: licheng_course) do |e|
-    e.status = "pending"
-  end
+lisi = Student.find_by(phone: "13800000003")
+city_brand = courses_by_title.fetch("市直·农创客品牌营销实务")
+
+def seed_enrollment!(student, course, status: "pending")
+  e = Enrollment.find_or_initialize_by(student: student, course: course)
+  e.status = status
+  e.district_ack_status = course.city_direct? ? "pending" : "not_required"
+  e.district_acked_at = nil
+  e.district_ack_admin_id = nil
+  e.save!
+  e
 end
-if zhang && city_direct
-  e_city = Enrollment.find_or_create_by!(student: zhang, course: city_direct) do |e|
-    e.status = "pending"
-  end
-  # 市直班：历城区知会/备案 pending（市级录取独立）
-  if e_city.district_ack_status == "not_required"
-    e_city.update!(district_ack_status: "pending")
-  end
-end
+
 if zhang
+  seed_enrollment!(zhang, licheng_course)
+  seed_enrollment!(zhang, city_direct)
   AppMessage.find_or_create_by!(student: zhang, title: "欢迎使用农创客平台") do |m|
-    m.body = "您的专属适配清单已生成，请到首页查看推荐政策与课程。市直班由市级审核，区办班由开班区县审核。"
+    m.body = "专属适配清单已生成。区办班由开班区县录取；市直班由市级录取，户籍区做知会/备案。"
     m.message_type = "system"
   end
 end
+if lisi
+  seed_enrollment!(lisi, city_brand)
+  seed_enrollment!(lisi, licheng_course) # 跨区报区办班 → 历城审，不经市中录取
+end
 
-puts "==> 8/8 动态阶段 + 全员规则匹配"
+puts "==> 8/9 动态阶段 + 全员规则匹配"
 evaluator = Tips::StageEvaluator.new
 Student.find_each { |s| evaluator.apply!(s) }
 Matching::Runner.run_all!(engine: :rules)
 
+puts "==> 9/9 生成示例 Excel 导入文件（含可选 course_title）"
+require "caxlsx"
+sample_path = Rails.root.join("tmp", "seed_sample_student_import.xlsx")
+FileUtils.mkdir_p(sample_path.dirname)
+Axlsx::Package.new.tap do |package|
+  package.workbook.add_worksheet(name: "students") do |sheet|
+    sheet.add_row %w[phone name district_code primary_industry scale annual_income honors course_title]
+    # 导入学员 + 报市直班
+    sheet.add_row [ "13700000001", "导入市直学员甲", "licheng", "粮油", 90, 200_000, "", "市直·高素质农民培育示范班" ]
+    # 导入学员 + 报区办班
+    sheet.add_row [ "13700000002", "导入区办学员乙", "zhangqiu", "蔬菜", 120, 300_000, "大葱示范", "章丘大葱标准化种植班" ]
+    # 仅导入学员，不报名
+    sheet.add_row [ "13700000003", "导入仅建档丙", "pingyin", "花卉", 40, 150_000, "", "" ]
+  end
+  package.serialize(sample_path.to_s)
+end
+puts "    sample import: #{sample_path}"
+
+city_pending = Enrollment.joins(:course).merge(Course.city_direct).pending.count
+district_pending = Enrollment.joins(:course).where.not(courses: { district_id: nil }).pending.count
+ack_pending = Enrollment.ack_pending.count
+
 puts ""
 puts "========== Seed 完成 =========="
 puts "区划: #{District.jinan_active.count}（正式 10 区 2 县）"
-District::JINAN_DISTRICTS.each do |meta|
-  d = by_code[meta[:code]]
-  puts "  [#{meta[:kind]}] #{d.name} (#{d.code}) 学员=#{d.students.count} 管理员=#{d.admins.count}"
-end
-puts "学员=#{Student.count} 管理员=#{Admin.count} 政策=#{Policy.count} 课程=#{Course.count}"
+puts "学员=#{Student.count} 管理员=#{Admin.count} 政策=#{Policy.count}"
+puts "课程: 市直=#{Course.city_direct.published.count} 区办=#{Course.published.where.not(district_id: nil).count} 合计发布=#{Course.published.count}"
+puts "报名 pending: 市直录取队列=#{city_pending} 区办录取队列=#{district_pending} 区备案队列=#{ack_pending}"
 puts "师资=#{Mentor.count} 标签=#{Tag.count} 匹配=#{ResourceMatch.count} 案例=#{ShowcaseCase.count}"
-puts "登录示例: city@jinan.local / password ； admin@licheng.local / password"
-puts "学员示例: 13800000009 / password （历城·张三）"
-puts "审核规则: 市直班(course.district 空)→市级；区办班→开班区县（非学员户籍区）"
-puts "演示: 张三有历城小麦班(区审)+市直示范班(市审) 两条 pending"
+puts "登录: city@jinan.local / password ； admin@licheng.local / password"
+puts "学员: 13800000009 张三(历城) ； 13800000003 李四(市中)"
+puts "规则: 市直班→市录取+户籍区备案；区办班→开班区录取"
+puts "导入样例: #{sample_path} （列含 course_title 可选）"
 puts "================================"

@@ -9,7 +9,11 @@ class Views::AdminApp::Imports::New < Views::Base
     div(class: "mx-auto max-w-2xl px-4 py-8 space-y-4") do
       h1(class: "text-xl font-bold") { "历史学员 Excel 导入" }
       p(class: "text-sm opacity-70") do
-        "列：phone, name, district_code, primary_industry, scale, annual_income, honors。先 dry-run 预览再 commit。"
+        plain "必填列：phone, name, district_code。"
+        plain "可选：primary_industry, scale, annual_income, honors, "
+        strong { "course_title" }
+        plain "（已发布课程全名；市直班→市级录取+户籍区备案，区办班→开班区录取）。"
+        plain " 先 dry-run 再 commit。Seed 样例：tmp/seed_sample_student_import.xlsx"
       end
 
       Form(url: admin_imports_path, method: :post, scope: false, class: "flex flex-col gap-3") do

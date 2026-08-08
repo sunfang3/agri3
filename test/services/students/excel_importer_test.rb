@@ -50,4 +50,50 @@ class Students::ExcelImporterTest < ActiveSupport::TestCase
     refute student.authenticate("")
     refute student.authenticate("wrong")
   end
+
+  test "optional course_title enrolls city_direct with district ack pending" do
+    city_course = Course.create!(title: "导入市直测试班", published: true, district: nil)
+    district_course = Course.create!(title: "导入区办测试班", published: true, district: @district)
+    path = Rails.root.join("tmp", "import-course-#{SecureRandom.hex(4)}.xlsx")
+    Axlsx::Package.new.tap do |package|
+      package.workbook.add_worksheet(name: "students") do |sheet|
+        sheet.add_row %w[phone name district_code primary_industry scale annual_income honors course_title]
+        sheet.add_row [ "13900001111", "市直导入", @district.code, "粮油", 50, 100_000, "", city_course.title ]
+        sheet.add_row [ "13900002222", "区办导入", @district.code, "蔬菜", 60, 110_000, "", district_course.title ]
+      end
+      package.serialize(path.to_s)
+    end
+
+    result = Students::ExcelImporter.new(path.to_s).commit!
+    assert_equal 2, result[:created]
+    assert result[:enrollments_created] >= 2
+
+    e_city = Enrollment.find_by!(student: Student.find_by!(phone: "13900001111"), course: city_course)
+    assert_equal "pending", e_city.status
+    assert_equal "pending", e_city.district_ack_status
+    assert e_city.course.city_direct?
+
+    e_dist = Enrollment.find_by!(student: Student.find_by!(phone: "13900002222"), course: district_course)
+    assert_equal "pending", e_dist.status
+    assert_equal "not_required", e_dist.district_ack_status
+    refute e_dist.course.city_direct?
+  ensure
+    File.delete(path) if path && File.exist?(path)
+  end
+
+  test "unknown course_title invalidates row" do
+    path = Rails.root.join("tmp", "import-bad-course-#{SecureRandom.hex(4)}.xlsx")
+    Axlsx::Package.new.tap do |package|
+      package.workbook.add_worksheet(name: "students") do |sheet|
+        sheet.add_row %w[phone name district_code primary_industry scale annual_income honors course_title]
+        sheet.add_row [ "13900003333", "坏课", @district.code, "粮油", 10, 1, "", "不存在的课程标题" ]
+      end
+      package.serialize(path.to_s)
+    end
+    result = Students::ExcelImporter.new(path.to_s).dry_run
+    assert_equal 1, result[:invalid]
+    assert_includes result[:rows].first.errors.join, "course_title"
+  ensure
+    File.delete(path) if path && File.exist?(path)
+  end
 end

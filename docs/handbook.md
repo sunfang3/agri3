@@ -287,7 +287,17 @@ Seed 会写入：济南 **10 区 + 2 县**、标签库、政策/课程/师资、
 | **学情调查** | `/admin/surveys` | 创建训前/训中/训后问卷 |
 | **Avo 资源** | `/avo` | 学员/政策/课程/标签等 CRUD（与自研后台互补） |
 
-导入表头：`phone, name, district_code, primary_industry, scale, annual_income, honors`。
+导入表头：
+
+| 列 | 必填 | 说明 |
+|----|------|------|
+| `phone` | 是 | 11 位手机号 |
+| `name` | 是 | 姓名 |
+| `district_code` | 是 | 区县 code（如 `licheng`） |
+| `primary_industry` / `scale` / `annual_income` / `honors` | 否 | 画像 |
+| `course_title` | 否 | 已发布课程**全名**；写入 pending 报名。市直班→市级录取+户籍区备案；区办班→开班区录取 |
+
+Seed 会生成样例：`tmp/seed_sample_student_import.xlsx`。
 
 #### 2.4.3 推荐操作节奏（对齐 mvp-plan GTM）
 
