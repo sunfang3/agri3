@@ -23,6 +23,7 @@ class CourseForm < ApplicationForm
     field :district_id, label: "开班归属", as: :select,
       choices: District.jinan_active.order(:name).map { |d| [ d.name, d.id ] },
       include_blank: "市直班（市级审核）"
+    field :published, as: :boolean, label: "发布"
     field :tag_ids, as: :checkbox_group,
       collection: @tags,
       value: :id,

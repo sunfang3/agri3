@@ -44,7 +44,9 @@ Rails.application.routes.draw do
         post :approve_parse
       end
     end
-    resources :courses, only: [ :index, :new, :create ]
+    resources :courses, only: %i[index show new create edit update] do
+      resources :enrollments, only: %i[create update destroy], controller: "course_enrollments"
+    end
     resources :surveys, only: [ :index, :new, :create ]
     get "export/students", to: "exports#students", as: :export_students
   end

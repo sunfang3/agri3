@@ -24,6 +24,25 @@ class Admin < ApplicationRecord
     city_admin? ? Student.all : Student.where(district_id: district_id)
   end
 
+  # Courses visible in admin course list.
+  # City: all courses (区办只读); District: own 区办班 only.
+  def scoped_courses
+    if city_admin?
+      Course.all
+    else
+      Course.for_district(district_id)
+    end
+  end
+
+  # Full manage (edit course + enrollments CRUD / admit).
+  def can_manage_course?(course)
+    if city_admin?
+      course.city_direct?
+    else
+      course.district_id.present? && course.district_id == district_id
+    end
+  end
+
   # Enrollments this admin is allowed to review/confirm (录取).
   # - 市直班 (course.district_id nil) → 市级管理员
   # - 区办班 (course.district_id set) → 对应开班区县管理员
