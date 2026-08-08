@@ -370,8 +370,12 @@ if zhang && licheng_course
   end
 end
 if zhang && city_direct
-  Enrollment.find_or_create_by!(student: zhang, course: city_direct) do |e|
+  e_city = Enrollment.find_or_create_by!(student: zhang, course: city_direct) do |e|
     e.status = "pending"
+  end
+  # 市直班：历城区知会/备案 pending（市级录取独立）
+  if e_city.district_ack_status == "not_required"
+    e_city.update!(district_ack_status: "pending")
   end
 end
 if zhang

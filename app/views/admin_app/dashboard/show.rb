@@ -5,6 +5,9 @@ class Views::AdminApp::Dashboard::Show < Views::Base
     students:,
     tags: [],
     pending_enrollments: [],
+    pending_district_acks: [],
+    district_courses_readonly: [],
+    city_admin: false,
     district_summary:,
     cockpit: nil,
     alerts: [],
@@ -15,6 +18,9 @@ class Views::AdminApp::Dashboard::Show < Views::Base
     @students = students
     @tags = tags
     @pending_enrollments = pending_enrollments
+    @pending_district_acks = pending_district_acks
+    @district_courses_readonly = district_courses_readonly
+    @city_admin = city_admin
     @district_summary = district_summary
     @cockpit = cockpit
     @alerts = alerts
@@ -30,6 +36,8 @@ class Views::AdminApp::Dashboard::Show < Views::Base
       render_cockpit if @cockpit
       render_students_filter
       render_bulk_confirm
+      render_district_acks unless @city_admin
+      render_city_readonly_district_courses if @city_admin
       render_alerts if @alerts.any? || @gaps.any?
       render_cases if @cases.any?
     end
@@ -39,7 +47,7 @@ class Views::AdminApp::Dashboard::Show < Views::Base
 
   def render_toolbar
     div(class: "flex flex-wrap items-center justify-between gap-2") do
-      h1(class: "text-2xl font-bold") { "区县管理后台" }
+      h1(class: "text-2xl font-bold") { @city_admin ? "市级管理后台" : "区县管理后台" }
       div(class: "flex flex-wrap gap-2") do
         a(href: new_admin_import_path, class: "btn btn-sm") { "Excel 导入" }
         a(href: admin_policies_path, class: "btn btn-sm") { "政策" }
@@ -55,10 +63,10 @@ class Views::AdminApp::Dashboard::Show < Views::Base
   def render_summary
     section(class: "card bg-base-100 shadow") do
       div(class: "card-body") do
-        h2(class: "card-title text-lg") { "区县汇总视图" }
+        h2(class: "card-title text-lg") { @city_admin ? "全市汇总视图" : "区县汇总视图" }
         div(class: "stats stats-vertical lg:stats-horizontal shadow") do
           div(class: "stat") do
-            div(class: "stat-title") { "本区学员" }
+            div(class: "stat-title") { @city_admin ? "学员总数" : "本区学员" }
             div(class: "stat-value text-primary") { @district_summary[:total_students].to_s }
           end
           div(class: "stat") do
@@ -68,7 +76,7 @@ class Views::AdminApp::Dashboard::Show < Views::Base
             end
           end
           div(class: "stat") do
-            div(class: "stat-title") { "报名状态" }
+            div(class: "stat-title") { "可审报名状态" }
             div(class: "stat-desc text-base") { @district_summary[:enrollments].map { |k, v| "#{k}:#{v}" }.join(" · ") }
           end
         end
@@ -88,7 +96,7 @@ class Views::AdminApp::Dashboard::Show < Views::Base
   def render_students_filter
     section(class: "card bg-base-100 shadow") do
       div(class: "card-body") do
-        h2(class: "card-title text-lg") { "本区学员 · 多维筛选" }
+        h2(class: "card-title text-lg") { @city_admin ? "学员 · 多维筛选" : "本区学员 · 多维筛选" }
 
         Form(url: admin_root_path, method: :get, scope: false, class: "flex flex-wrap gap-2 mb-4") do |f|
           select(name: "stage", class: "select select-bordered select-sm", data: { testid: "filter-stage" }) do
@@ -135,9 +143,13 @@ class Views::AdminApp::Dashboard::Show < Views::Base
   def render_bulk_confirm
     section(class: "card bg-base-100 shadow") do
       div(class: "card-body") do
-        h2(class: "card-title text-lg") { "待我审核的报名" }
+        h2(class: "card-title text-lg") { "待我审核录取" }
         p(class: "text-xs opacity-60 -mt-2 mb-2") do
-          "审核权跟随开班主体：市直班（无区县）由市级审；区办班由开班区县审（与学员户籍区无关）。"
+          if @city_admin
+            "市级录取：仅市直班。区办班见下方「只读」列表，不可在此确认。"
+          else
+            "区县录取：仅本区开办的班。本区学员报的市直班请到「知会/备案」处理，不可在此录取。"
+          end
         end
         Form(url: admin_bulk_confirm_enrollments_path, method: :post, scope: false) do |f|
           ul(class: "space-y-2 mb-3", data: { testid: "pending-enrollments" }) do
@@ -147,15 +159,80 @@ class Views::AdminApp::Dashboard::Show < Views::Base
                 span(class: "text-sm") do
                   plain "#{e.student.name}（#{e.student.district.name}）→ #{e.course.title} "
                   span(class: "badge badge-ghost badge-sm") { e.course.ownership_label }
+                  plain " · #{e.status}"
                 end
               end
             end
           end
           if @pending_enrollments.any?
-            f.submit(:primary, class: "btn-sm") { "批量确认" }
+            f.submit(:primary, class: "btn-sm") { "批量确认录取" }
           else
-            p(class: "text-sm opacity-60") { "暂无待你审核的报名" }
+            p(class: "text-sm opacity-60") { "暂无待你审核录取的报名" }
           end
+        end
+      end
+    end
+  end
+
+  def render_district_acks
+    section(class: "card bg-base-100 shadow border border-info/30") do
+      div(class: "card-body") do
+        h2(class: "card-title text-lg") { "市直班 · 知会 / 备案" }
+        p(class: "text-xs opacity-60 -mt-2 mb-2") do
+          "本区学员报名市直班后，市级负责录取；区县仅做知会与备案，不代替市级批准。"
+        end
+        Form(url: admin_bulk_ack_enrollments_path, method: :post, scope: false) do |f|
+          ul(class: "space-y-2 mb-3", data: { testid: "pending-district-acks" }) do
+            @pending_district_acks.each do |e|
+              li(class: "flex items-center gap-2") do
+                input(type: "checkbox", name: "enrollment_ids[]", value: e.id, class: "checkbox checkbox-sm", checked: true)
+                span(class: "text-sm") do
+                  plain "#{e.student.name} → #{e.course.title} "
+                  span(class: "badge badge-info badge-sm") { "市直班" }
+                  plain " · 录取状态 #{e.status}"
+                end
+              end
+            end
+          end
+          if @pending_district_acks.any?
+            f.submit(:primary, class: "btn-sm btn-info") { "批量知会/备案" }
+          else
+            p(class: "text-sm opacity-60") { "暂无待备案的市直班报名" }
+          end
+        end
+      end
+    end
+  end
+
+  def render_city_readonly_district_courses
+    section(class: "card bg-base-100 shadow border border-warning/30") do
+      div(class: "card-body") do
+        h2(class: "card-title text-lg") { "区办班报名（只读）" }
+        p(class: "text-xs opacity-60 -mt-2 mb-2") do
+          "各区开办班级的报名由开班区县审核录取。市级可查看，不可在此批量确认。"
+        end
+        if @district_courses_readonly.any?
+          div(class: "overflow-x-auto", data: { testid: "district-courses-readonly" }) do
+            table(class: "table table-sm") do
+              thead do
+                tr { %w[学员 学员区县 课程 开班区 录取状态 区备案].each { |h| th { h } } }
+              end
+              tbody do
+                @district_courses_readonly.each do |e|
+                  tr do
+                    td { e.student.name }
+                    td { e.student.district.name }
+                    td { e.course.title }
+                    td { e.course.district&.name.to_s }
+                    td { e.status }
+                    td { e.district_ack_status }
+                  end
+                end
+              end
+            end
+          end
+        else
+          p(class: "text-sm opacity-60") { "暂无区办班报名记录" }
         end
       end
     end

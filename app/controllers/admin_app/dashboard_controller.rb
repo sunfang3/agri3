@@ -8,7 +8,19 @@ module AdminApp
       render Views::AdminApp::Dashboard::Show.new(
         students:,
         tags: Tag.order(:category, :name),
-        pending_enrollments: current_admin.scoped_enrollments.pending.includes(:student, :course),
+        pending_enrollments: current_admin.scoped_enrollments.pending.includes(student: :district, course: :district),
+        pending_district_acks: current_admin.pending_district_acks.includes(student: :district, course: :district),
+        district_courses_readonly: (
+          if current_admin.city_admin?
+            current_admin.scoped_district_courses_readonly
+              .order(created_at: :desc)
+              .limit(50)
+              .includes(student: :district, course: :district)
+          else
+            []
+          end
+        ),
+        city_admin: current_admin.city_admin?,
         district_summary: district_summary,
         cockpit: (Dashboard::CityCockpit.new.summary if current_admin.city_admin?),
         alerts: Alert.open_alerts.limit(20),

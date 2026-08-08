@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_19_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_19_010000) do
   create_table "admins", id: :integer, default: nil, force: :cascade do |t|
     t.text "created_at", limit: 6, null: false
     t.integer "district_id"
@@ -135,10 +135,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_000001) do
     t.text "confirmed_at", limit: 6
     t.integer "course_id", null: false
     t.text "created_at", limit: 6, null: false
+    t.integer "district_ack_admin_id"
+    t.text "district_ack_status", default: "not_required", null: false
+    t.text "district_acked_at", limit: 6
     t.text "status", default: "pending", null: false
     t.integer "student_id", null: false
     t.text "updated_at", limit: 6, null: false
     t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["district_ack_status"], name: "index_enrollments_on_district_ack_status"
     t.index ["status"], name: "index_enrollments_on_status"
     t.index ["student_id", "course_id"], name: "index_enrollments_on_student_id_and_course_id", unique: true
     t.index ["student_id"], name: "index_enrollments_on_student_id"
@@ -416,4 +420,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_19_000001) do
   add_foreign_key "training_photos", "students"
   add_foreign_key "voice_notes", "courses"
   add_foreign_key "voice_notes", "students"
+
+  # Litesearch FTS virtual tables are created at runtime by KnowledgeArticle (not dumped).
 end

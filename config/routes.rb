@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     delete "logout", to: "sessions#destroy"
     root to: "dashboard#show"
     post "enrollments/bulk_confirm", to: "enrollments#bulk_confirm", as: :bulk_confirm_enrollments
+    post "enrollments/bulk_ack", to: "enrollments#bulk_ack", as: :bulk_ack_enrollments
     resources :imports, only: [ :new, :create ]
     resources :policies, only: [ :index, :new, :create ] do
       member do
