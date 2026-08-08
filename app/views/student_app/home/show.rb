@@ -7,9 +7,10 @@ class Views::StudentApp::Home::Show < Views::Base
     [ 3, "可了解", "border-base-300" ]
   ].freeze
 
-  def initialize(tier1: [], tier2: [], tier3: [], courses: [], unread_count: 0)
+  def initialize(tier1: [], tier2: [], tier3: [], courses: [], enrollments_by_course: {}, unread_count: 0)
     @tiers = { 1 => tier1, 2 => tier2, 3 => tier3 }
     @courses = courses
+    @enrollments_by_course = enrollments_by_course
     @unread_count = unread_count.to_i
   end
 
@@ -72,12 +73,22 @@ class Views::StudentApp::Home::Show < Views::Base
   end
 
   def render_course_row(course)
+    enrollment = @enrollments_by_course[course.id]
     li(class: "flex items-center justify-between gap-2 rounded-lg bg-base-200 p-3") do
       div do
         div(class: "font-medium") { course.title }
-        div(class: "text-xs opacity-70") { "#{course.mentor_display} · #{course.place}" }
+        div(class: "text-xs opacity-70") do
+          plain "#{course.ownership_label} · #{course.mentor_display} · #{course.place}"
+        end
       end
-      button_to "报名", student_enrollments_path(course_id: course.id), method: :post, class: "btn btn-sm btn-primary"
+      if enrollment
+        span(
+          class: "badge #{enrollment.status == "enrolled" ? "badge-success" : "badge-ghost"} badge-sm",
+          data: { testid: "enrollment-status-#{course.id}" }
+        ) { enrollment.status_label }
+      else
+        button_to "报名", student_enrollments_path(course_id: course.id), method: :post, class: "btn btn-sm btn-primary"
+      end
     end
   end
 end

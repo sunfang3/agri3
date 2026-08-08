@@ -44,6 +44,8 @@ class Enrollment < ApplicationRecord
 
   def confirm!
     transition_to!("enrolled")
+    notify_student_admission!
+    self
   end
 
   def complete!
@@ -81,6 +83,15 @@ class Enrollment < ApplicationRecord
     where(id: ids, status: "pending").find_each.map(&:confirm!)
   end
 
+  def status_label
+    {
+      "pending" => "审核中",
+      "enrolled" => "已录取",
+      "completed" => "已结业",
+      "dropped" => "已取消"
+    }[status] || status
+  end
+
   def self.bulk_ack!(ids, admin:)
     where(id: ids, district_ack_status: "pending").find_each.filter_map do |enrollment|
       enrollment.ack_by_district!(admin)
@@ -90,6 +101,16 @@ class Enrollment < ApplicationRecord
   end
 
   private
+
+  def notify_student_admission!
+    AppMessage.create!(
+      student: student,
+      title: "报名已通过",
+      body: "您报名的课程「#{course.title}」（#{course.ownership_label}）已审核通过，状态：已录取。" \
+            "请留意开班时间与地点：#{course.place.presence || "详见课程通知"}。",
+      message_type: "enrollment"
+    )
+  end
 
   def assign_district_ack_defaults
     return if district_ack_status.present? && district_ack_status != "not_required"

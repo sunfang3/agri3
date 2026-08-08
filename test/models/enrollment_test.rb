@@ -12,9 +12,15 @@ class EnrollmentTest < ActiveSupport::TestCase
 
   test "pending can transition to enrolled and completed" do
     assert @enrollment.can_transition_to?(:enrolled)
-    @enrollment.confirm!
+    assert_difference -> { AppMessage.where(student: @student).count }, 1 do
+      @enrollment.confirm!
+    end
     assert_equal "enrolled", @enrollment.status
     assert @enrollment.confirmed_at.present?
+    msg = AppMessage.where(student: @student, title: "报名已通过").last
+    assert msg
+    assert_includes msg.body, @course.title
+    assert_includes msg.body, "已录取"
 
     @enrollment.complete!
     assert_equal "completed", @enrollment.status
@@ -26,15 +32,18 @@ class EnrollmentTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { @enrollment.confirm! }
   end
 
-  test "bulk_confirm transitions pending only" do
+  test "bulk_confirm transitions pending only and notifies each student" do
+    other_student = Student.create!(phone: "138#{rand(10_000_000..99_999_999)}", name: "B", district: @district)
     other = Enrollment.create!(
-      student: Student.create!(phone: "138#{rand(10_000_000..99_999_999)}", name: "B", district: @district),
+      student: other_student,
       course: @course,
       status: "pending"
     )
-    confirmed = Enrollment.bulk_confirm!([ @enrollment.id, other.id ])
-    assert_equal 2, confirmed.size
-    assert confirmed.all? { |e| e.status == "enrolled" }
+    assert_difference -> { AppMessage.where(title: "报名已通过").count }, 2 do
+      confirmed = Enrollment.bulk_confirm!([ @enrollment.id, other.id ])
+      assert_equal 2, confirmed.size
+      assert confirmed.all? { |e| e.status == "enrolled" }
+    end
   end
 
   test "invalid transition raises" do
