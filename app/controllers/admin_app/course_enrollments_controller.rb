@@ -36,7 +36,7 @@ module AdminApp
       track_admin_action!("course_enrollment_create", {
         course_id: @course.id, student_id: student.id, status: enrollment.reload.status
       })
-      redirect_to admin_course_path(@course), notice: "已添加学员 #{student.name}（#{enrollment.status_label}）"
+      redirect_to admin_course_path(@course), notice: "#{student.name} 已加入课程（#{enrollment.status_label}）"
     rescue ActiveRecord::RecordInvalid => e
       redirect_to admin_course_path(@course), alert: e.record.errors.full_messages.to_sentence
     rescue ArgumentError => e
@@ -76,6 +76,8 @@ module AdminApp
         course_id: @course.id, enrollment_id: @enrollment.id, status: @enrollment.status
       })
       redirect_to admin_course_path(@course), notice: "#{@enrollment.student.name} → #{@enrollment.reload.status_label}"
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to admin_course_path(@course), alert: e.record.errors.full_messages.to_sentence
     rescue ArgumentError => e
       redirect_to admin_course_path(@course), alert: e.message
     end

@@ -23,6 +23,7 @@ class Enrollment < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :district_ack_status, inclusion: { in: ACK_STATUSES }
   validates :student_id, uniqueness: { scope: :course_id }
+  validate :available_seat, if: -> { status == "enrolled" && will_save_change_to_status? }
 
   before_validation :assign_district_ack_defaults, on: :create
 
@@ -46,8 +47,11 @@ class Enrollment < ApplicationRecord
   end
 
   def confirm!
-    transition_to!("enrolled")
-    notify_student_admission!
+    course.with_lock do
+      raise ArgumentError, "课程名额已满" if course.full?
+      transition_to!("enrolled")
+      notify_student_admission!
+    end
     self
   end
 
@@ -104,6 +108,13 @@ class Enrollment < ApplicationRecord
   end
 
   private
+
+  def available_seat
+    return unless course&.capacity.present?
+
+    occupied = course.enrollments.where(status: %w[enrolled completed]).where.not(id: id).count
+    errors.add(:course, "名额已满") if occupied >= course.capacity
+  end
 
   def notify_student_admission!
     AppMessage.create!(

@@ -20,6 +20,10 @@ class Course < ApplicationRecord
   has_many :voice_notes, dependent: :nullify
 
   validates :title, presence: true
+  validates :capacity, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+
+  def occupied_seats = enrollments.where(status: %w[enrolled completed]).count
+  def full? = capacity.present? && occupied_seats >= capacity
 
   scope :published, -> { where(published: true) }
   # 市直班：无归属区县；区办班：district_id 指向开班区县

@@ -101,7 +101,7 @@ module AdminApp
     def course_params
       params.require(:course).permit(
         :title, :description, :mentor_name, :mentor_id, :starts_at, :ends_at,
-        :place, :latitude, :longitude, :district_id, :published, tag_ids: []
+        :place, :capacity, :latitude, :longitude, :district_id, :published, tag_ids: []
       )
     end
 
