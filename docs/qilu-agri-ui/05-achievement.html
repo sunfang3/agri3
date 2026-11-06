@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 成果（价值验证）</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .val-hero{
+    border-radius:var(--r-lg);padding:20px 24px;position:relative;overflow:hidden;
+    background:linear-gradient(108deg,#2a2196,#3d2fc6 48%,#4d39dd);border:1px solid rgba(167,155,255,.26)
+  }
+  .val-hero::before{ content:"";position:absolute;inset:0;
+    background:radial-gradient(520px 240px at 88% -50%,rgba(237,184,28,.32),transparent 62%),
+               radial-gradient(400px 200px at 6% 150%,rgba(95,205,150,.24),transparent 60%) }
+  .val-hero .in{ position:relative;z-index:1;display:flex;gap:30px;align-items:center;flex-wrap:wrap }
+  .val-quote{ flex:1;min-width:300px }
+  .val-quote h3{ font-size:16px;letter-spacing:.4px;margin-bottom:9px }
+  .val-quote p{ font-size:12.5px;color:#cdc6f5;line-height:1.75 }
+  .val-quote p b{ color:#fff;font-weight:600 }
+  .val-kpi{ display:flex;gap:0 }
+  .val-kpi>div{ padding:0 22px;text-align:center;border-left:1px solid rgba(167,155,255,.22) }
+  .val-kpi>div:first-child{ border-left:none }
+  .val-kpi b{ display:block;font-family:var(--mono);font-size:27px;font-weight:600;line-height:1.2 }
+  .val-kpi span{ font-size:10.5px;color:#b6aee8 }
+
+  .hon{ display:grid;grid-template-columns:repeat(5,1fr);gap:11px;text-align:center }
+  .hon>div{ padding:13px 6px;border-radius:var(--r-lg);border:1px solid var(--line);
+    background:linear-gradient(170deg,rgba(30,24,96,.5),rgba(16,12,46,.6));transition:.15s;cursor:pointer }
+  .hon>div:hover{ border-color:rgba(237,184,28,.34);transform:translateY(-2px) }
+  .case{
+    display:flex;gap:12px;padding:11px 15px;border-bottom:1px solid rgba(124,111,255,.075);
+    cursor:pointer;transition:.13s;align-items:center
+  }
+  .case:hover{ background:rgba(124,111,255,.05) }
+  .case .th{ width:62px;height:44px;border-radius:6px;flex:0 0 auto;position:relative;overflow:hidden;
+    background:linear-gradient(140deg,#2b2378,#1a1450);display:grid;place-items:center }
+  .case .th i{ font-style:normal;font-family:var(--mono);font-size:15px;font-weight:700;color:#c9c0ff }
+  .case .t{ font-size:12.5px;font-weight:500 }
+  .case .m{ font-size:10.5px;color:var(--t3);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap }
+  .case .rt{ margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:9px }
+  .vdo{ aspect-ratio:16/9;border-radius:var(--r);position:relative;overflow:hidden;cursor:pointer;
+    background:linear-gradient(140deg,#332a8f,#1a1450);display:grid;place-items:center;border:1px solid var(--line) }
+  .vdo::after{ content:"";position:absolute;inset:0;background:radial-gradient(200px 100px at 70% 20%,rgba(237,184,28,.24),transparent 60%) }
+  .vdo .pl{ width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;z-index:1;
+    box-shadow:0 4px 16px rgba(0,0,0,.4) }
+  .vdo .pl svg{ width:15px;height:15px;color:#241a86;margin-left:2px }
+  .vdo .cap{ position:absolute;left:9px;bottom:7px;right:9px;z-index:1;font-size:11px;color:#e8e4ff;font-weight:500;line-height:1.4 }
+  .vdo .dur{ position:absolute;right:8px;top:8px;z-index:1;font-family:var(--mono);font-size:9.5px;
+    background:rgba(0,0,0,.6);padding:1px 5px;border-radius:3px;color:#ddd }
+  .vdo.two{ background:linear-gradient(140deg,#1f4a3f,#122b34) }
+  .vdo.three{ background:linear-gradient(140deg,#5a4415,#33280f) }
+  .vdo.four{ background:linear-gradient(140deg,#4a1f36,#2b1420) }
+  .vdo.five{ background:linear-gradient(140deg,#1f3a5a,#12203a) }
+  .track-i{ display:flex;gap:11px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(124,111,255,.075) }
+  .track-i:last-child{ border-bottom:none }
+  .track-i .mo{ width:44px;flex:0 0 auto;text-align:center;border-radius:6px;padding:5px 0;
+    background:rgba(124,111,255,.12);border:1px solid var(--line) }
+  .track-i .mo b{ display:block;font-family:var(--mono);font-size:12px }
+  .track-i .mo span{ font-size:9px;color:var(--t3) }
+  .cmp-i{ display:grid;grid-template-columns:1fr auto 1fr;gap:9px;align-items:center;padding:8px 0;font-size:11.5px }
+  .cmp-i .l{ text-align:right;font-family:var(--mono);color:var(--t2) }
+  .cmp-i .r{ font-family:var(--mono);font-weight:600 }
+  .cmp-i .mid{ width:76px;text-align:center;font-size:10.5px;color:var(--t3) }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>齐鲁农创客</b><span>Agri Creator</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">学员端 · App</div>
+        <a class="nav-i" href="02-student-home.html" id="nv-home"></a>
+        <a class="nav-i" href="04-course.html" id="nv-course"></a>
+        <a class="nav-i on" href="05-achievement.html" id="nv-res"></a>
+        <a class="nav-i" href="03-student-profile.html" id="nv-me"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">我的成效</div>
+        <div style="padding:2px 18px 0">
+          <div class="dl">
+            <dt>荣誉徽章</dt><dd style="color:var(--gold)">3 枚</dd>
+            <dt>社群贡献分</dt><dd>+46</dd>
+            <dt>案例被采纳</dt><dd>1 篇</dd>
+            <dt>实践转化分</dt><dd style="color:var(--green)">81</dd>
+            <dt>跟踪表提交</dt><dd>6 / 6</dd>
+          </div>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">切换角色视角</div>
+        <a class="nav-i" href="06-admin-city.html" id="nv-adm"></a>
+        <a class="nav-i" href="01-login.html" id="nv-out"></a>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">张</div><div class="who"><b>张长河</b><span><i class="dot"></i>商河县 · 成长期</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>成果 · 价值验证</b><i>/</i><span>成长档案 / 荣誉室 / 产业追踪 / 案例墙</span></div>
+      <div class="top-tools">
+        <button class="tbtn" id="btnReport">导出成效报告</button>
+        <button class="tbtn pri" id="btnUpload">上传新荣誉</button>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- value hero -->
+      <div class="val-hero">
+        <div class="in">
+          <div class="val-quote">
+            <h3>我的成长档案 · 系统带来的匹配价值总结</h3>
+            <p>系统为您精准推送了 <b>3 项适配政策</b>，您查看 <b>3 项</b>、收藏 <b>2 项</b>、实际申报 <b>1 项</b>并<b>获批 1 项</b>（市级家庭农场示范场）；推荐 <b>5 门课程</b>，您报名 <b>4 门</b>、完成 <b>2 门</b>，结业考试平均 <b>92 分</b>；技术能力分从 <b>61.2 提升至 73.8（+20.7%）</b>，实践转化增长 <b>+15%</b>。</p>
+          </div>
+          <div class="val-kpi">
+            <div><b style="color:var(--gold)">1</b><span>政策获批</span></div>
+            <div><b style="color:var(--green)">2</b><span>课程完成</span></div>
+            <div><b>+12.6</b><span>能力分提升</span></div>
+            <div><b>+15%</b><span>转化增长</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- achievement trend -->
+      <div class="row mt" style="gap:14px;align-items:stretch">
+        <div class="card" style="flex:1;min-width:0">
+          <div class="card-h"><i class="bar"></i><h3>能力成长曲线</h3><span class="sub">2026 年 1–10 月 · 综合能力分</span>
+            <div class="r"><span class="tag g">▲ +22.6 分</span></div></div>
+          <div class="card-b"><div id="trend"></div>
+            <div class="legend mt-s">
+              <span><i style="background:#6b5bf2"></i>综合能力分</span>
+              <span><i style="background:#45c4d8"></i>成长期学员均值</span>
+            </div></div>
+        </div>
+        <div class="card" style="flex:0 0 330px">
+          <div class="card-h"><i class="bar"></i><h3>成果构成</h3></div>
+          <div class="card-b">
+            <div style="display:grid;place-items:center"><div id="donut"></div></div>
+            <div class="legend mt-s" style="justify-content:center" id="dleg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- honors -->
+      <div class="card mt">
+        <div class="card-h"><i class="bar"></i><h3>我的荣誉室</h3><span class="sub">自主上传 · 审核通过后点亮徽章并更新 P 象限</span>
+          <div class="r"><span class="tag y">3 / 5 已点亮</span></div></div>
+        <div class="card-b">
+          <div class="hon" id="hon"></div>
+          <div class="why y mt">荣誉直接影响匹配度：「省级示范家庭农场」已为您的示范创建类政策匹配度贡献 <b>+12 分</b>；获批「市级示范场」后预计再 <b>+15 分</b>。</div>
+        </div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:flex-start">
+        <!-- tracking -->
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>产业动态追踪</h3><span class="sub">系统定期推送跟踪表，自动计算实践转化分</span>
+              <div class="r"><span class="tag g">已提交 6 / 6</span></div></div>
+            <div class="card-b">
+              <div class="tbl-wrap"><table class="tbl">
+                <thead><tr><th>月份</th><th class="num">经营规模</th><th class="num">年收入</th><th class="num">带动农户</th><th class="num">实践转化分</th><th>状态</th></tr></thead>
+                <tbody id="trkTbl"></tbody></table></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>成效对比 · 我 vs 同阶段均值</h3></div>
+            <div class="card-b" id="cmpBox"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>产品短视频展播</h3><span class="sub">优质作品可获得社群贡献分</span>
+              <div class="r"><button class="tbtn">上传我的作品</button></div></div>
+            <div class="card-b">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <div class="vdo"><span class="dur">02:14</span><span class="pl" id="p1"></span><div class="cap">商河黄河大米 · 一年三季的稻田</div></div>
+                <div class="vdo two"><span class="dur">01:48</span><span class="pl" id="p2"></span><div class="cap">机械化条播效率实录</div></div>
+                <div class="vdo three"><span class="dur">03:02</span><span class="pl" id="p3"></span><div class="cap">粮食高产创建田间课堂</div></div>
+                <div class="vdo four"><span class="dur">01:26</span><span class="pl" id="p4"></span><div class="cap">我的家庭农场 20 周年</div></div>
+              </div>
+              <div class="row mt-s" style="gap:8px;align-items:center">
+                <span class="tag">我的作品 1 个</span><span class="tag y">待审核 1</span>
+                <span class="tag g">已发布 6</span>
+                <span style="margin-left:auto;font-size:11px;color:var(--t3)">社群贡献分 <b style="color:var(--green);font-family:var(--mono)">+46</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- side -->
+        <aside style="flex:0 0 356px;display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>案例展示墙</h3><span class="sub">优秀学员故事</span>
+              <div class="r"><span class="tag">全市 1,284 篇</span></div></div>
+            <div id="caseList"></div>
+            <div style="padding:10px 15px;border-top:1px solid var(--line);text-align:center">
+              <button class="mini-btn" style="width:100%;justify-content:center">查看全部案例</button></div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>成果时间轴</h3></div>
+            <div class="card-b" id="tlBox"></div>
+          </div>
+
+          <div class="card" style="border-color:rgba(237,184,28,.24)">
+            <div class="card-h"><i class="bar" style="background:var(--gold)"></i><h3>下一步建议</h3>
+              <div class="r"><span class="tag y">系统生成</span></div></div>
+            <div class="card-b">
+              <div style="font-size:12px;line-height:1.7;color:var(--t2)">您已具备申报市级示范场的全部条件，建议本季度内完成材料提交；<br>同时补齐 <b style="color:var(--gold)">电商运营</b>短板，预计可带动综合能力分再提升 <b style="color:var(--green)">6–8 分</b>。</div>
+              <div class="row mt-s" style="gap:7px">
+                <button class="mini-btn pri" style="flex:1;justify-content:center">开始申报</button>
+                <button class="mini-btn" style="flex:1;justify-content:center">看补短板课</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>成效归因</b> 系统回溯画像与匹配记录，计算匹配模型贡献度</span>
+        <span><b>模型优化</b> 依据反馈持续调整标签权重，越用越准</span>
+        <span><b>数据时点</b> 2026-10-12</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['nv-home','首页','home'],['nv-course','课程 · 报名','book'],['nv-res','成果','trophy'],['nv-me','我的 · 画像','radar'],['nv-adm','管理端 Web','grid'],['nv-out','退出登录','out']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+$('#btnReport').innerHTML=I.down+'<span>导出成效报告</span>';
+$('#btnUpload').innerHTML=I.plus+'<span>上传新荣誉</span>';
+[1,2,3,4].forEach(i=>$('#p'+i).innerHTML=I.fire);
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* trend */
+Chart.line($('#trend'),{w:640,h:196,labels:D.months,
+  series:[{name:'综合能力分',color:'#6b5bf2',data:D.growth.data},
+          {name:'成长期均值',color:'#45c4d8',data:[52.4,53.8,55.6,57.1,58.4,59.8,61.2,62.6,63.8,64.9],w:1.6,dash:'4 3',o:.8}],
+  min:40,max:85});
+
+/* donut */
+Chart.donut($('#donut'),{size:172,sw:20,center:'81',centerSub:'实践转化分',
+  data:[{k:'政策获批',v:1,c:'#edb81c'},{k:'课程完成',v:2,c:'#4737cc'},{k:'荣誉点亮',v:3,c:'#5fcd96'},{k:'案例贡献',v:1,c:'#45c4d8'}]});
+$('#dleg').innerHTML=[['政策获批','#edb81c'],['课程完成','#4737cc'],['荣誉点亮','#5fcd96'],['案例贡献','#45c4d8']]
+  .map(([k,c])=>`<span><i style="background:${c}"></i>${k}</span>`).join('');
+
+/* honors */
+const HON=[
+  {n:'市级种粮大户',d:'2025-11',on:1},{n:'省级示范家庭农场',d:'2025-06',on:1},{n:'高产创建先进单位',d:'2024-12',on:1},
+  {n:'市级示范场',d:'申报中',on:0},{n:'农业科技带头人',d:'未申请',on:0},
+];
+$('#hon').innerHTML=HON.map(h=>`<div>
+  <div class="badge ${h.on?'':'off'}">${I.medal}</div>
+  <div style="font-size:11.5px;margin-top:8px;line-height:1.35;color:${h.on?'var(--t1)':'var(--t3)'}">${h.n}</div>
+  <div style="font-size:9.5px;color:${h.on?'var(--gold)':'var(--t4)'};margin-top:2px">${h.d}</div></div>`).join('');
+
+/* tracking table */
+const TRK=[
+  ['05 月','1,050','262','18','74','已确认'],['06 月','1,120','268','21','76','已确认'],
+  ['07 月','1,180','271','24','78','已确认'],['08 月','1,220','274','26','79','已确认'],
+  ['09 月','1,260','277','28','80','已确认'],['10 月','1,280','280','31','81','待提交'],
+];
+$('#trkTbl').innerHTML=TRK.map((r,i)=>`<tr>
+  <td style="font-weight:500">${r[0]}</td>
+  <td class="num">${r[1]} <span class="sm">亩</span></td>
+  <td class="num">${r[2]} <span class="sm">万</span></td>
+  <td class="num">${r[3]} <span class="sm">户</span></td>
+  <td class="num"><b style="color:var(--green)">${r[4]}</b></td>
+  <td>${i<5?'<span class="tag g">已确认</span>':'<span class="tag y">待提交</span>'}</td></tr>`).join('');
+
+/* comparison */
+const CMP=[
+  ['技术能力分','74','62',true],['经营管理分','68','60',true],['政策申报分','81','64',true],
+  ['品牌营销分','55','58',false],['电商运营分','47','55',false],['联农带农分','52','57',false],
+];
+$('#cmpBox').innerHTML=CMP.map(([k,a,b,up])=>`<div class="cmp-i">
+  <span class="l">${a}</span><span class="mid">${k}</span>
+  <span class="r" style="color:${up?'var(--green)':'var(--red)'}">${b}</span></div>`).join('')
+  +`<div class="why ${CMP.filter(c=>c[3]).length>=3?'y':''} mt-s">6 项能力中 <b>3 项</b>高于成长期均值，技术、经营、政策申报优势明显；<b>品牌营销</b>与<b>电商运营</b>仍低于均值，是下阶段提升重点。</div>`;
+
+/* case list */
+$('#caseList').innerHTML=D.cases.slice(0,5).map((c,i)=>`<div class="case">
+  <div class="th" style="${['background:linear-gradient(140deg,#2b2378,#1a1450)','background:linear-gradient(140deg,#1f4a3f,#122b34)','background:linear-gradient(140deg,#5a4415,#33280f)','background:linear-gradient(140deg,#4a1f36,#2b1420)','background:linear-gradient(140deg,#1f3a5a,#12203a)'][i]}"><i>${c.sc}</i></div>
+  <div style="flex:1;min-width:0"><div class="t">${c.t}</div>
+  <div class="m"><span>贡献分 ${c.sc}</span><span class="tag dim">${['粮食','玫瑰','林果','大蒜','黄瓜'][i]}</span></div></div>
+  <div class="rt"><button class="mini-btn">查看</button></div></div>`).join('');
+
+/* timeline */
+const TL=[
+  {t:'2026-10',k:'市直·高素质农民培育示范班候补第 2 位',ic:'book',c:'c'},
+  {t:'2026-09-18',k:'「农创客品牌营销实务」结业考试 92 分',ic:'medal',c:'y'},
+  {t:'2026-07-18',k:'发展阶段变更为「成长期」',ic:'trend',c:'g'},
+  {t:'2026-06-15',k:'获评「省级示范家庭农场」',ic:'trophy',c:'y'},
+  {t:'2026-03-20',k:'首条政策获批：家庭农场示范户补助',ic:'checkc',c:'g'},
+];
+$('#tlBox').innerHTML=TL.map(t=>`<div class="track-i">
+  <div class="mo" style="width:auto;padding:5px 8px"><b style="font-size:10.5px">${t.t}</b></div>
+  <div class="ico ${t.c}" style="width:26px;height:26px">${I[t.ic]}</div>
+  <div style="flex:1;font-size:11.5px;line-height:1.45">${t.k}</div></div>`).join('');
+</script>
+</body>
+</html>

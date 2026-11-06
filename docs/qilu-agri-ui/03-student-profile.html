@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 我的全息画像</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .grid2{ display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px }
+  .quad{ display:grid;grid-template-columns:repeat(2,1fr);gap:14px }
+  .q{ border-radius:var(--r-lg);border:1px solid var(--line);overflow:hidden;
+      background:linear-gradient(168deg,rgba(30,24,96,.55),rgba(16,12,46,.72));position:relative }
+  .q::before{ content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(240px 120px at 100% 0,var(--qc,rgba(71,55,204,.16)),transparent 62%) }
+  .q-h{ padding:11px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;position:relative }
+  .q-h .k{ font-family:var(--mono);font-size:19px;font-weight:700;width:26px;height:26px;border-radius:6px;
+    display:grid;place-items:center;background:var(--qc);color:#fff;letter-spacing:0 }
+  .q-h b{ font-size:13px;letter-spacing:.3px }
+  .q-h span{ font-size:10px;color:var(--t3);display:block }
+  .q-b{ padding:13px 14px;position:relative }
+  .q .f{ display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed rgba(124,111,255,.1);font-size:11.5px }
+  .q .f:last-child{ border-bottom:none }
+  .q .f dt{ color:var(--t3) } .q .f dd{ font-family:var(--mono);text-align:right }
+  .tagbox{ display:flex;flex-wrap:wrap;gap:6px;margin-top:9px }
+  .tg{ font-size:11px;padding:3px 9px;border-radius:12px;cursor:pointer;
+    background:rgba(124,111,255,.12);border:1px solid rgba(124,111,255,.22);color:var(--brand-lite);transition:.13s;display:inline-flex;align-items:center;gap:5px }
+  .tg:hover{ background:rgba(124,111,255,.24) }
+  .tg .x{ font-size:9px;opacity:.5 }
+  .tg.add{ border-style:dashed;color:var(--t3);background:transparent }
+  .stage-pick{ display:flex;gap:8px;margin-top:9px }
+  .sp{ flex:1;text-align:center;padding:8px 4px;border-radius:var(--r);cursor:pointer;
+    border:1px solid var(--line);background:rgba(10,7,32,.4);transition:.14s }
+  .sp b{ display:block;font-size:12px } .sp span{ font-size:9.5px;color:var(--t3) }
+  .sp.on{ background:rgba(237,184,28,.13);border-color:rgba(237,184,28,.45);color:var(--gold) }
+  .sp.on span{ color:rgba(237,184,28,.7) }
+  .tp{ width:74px;height:74px;flex:0 0 auto }
+  .kv{ display:flex;gap:14px;align-items:center }
+  .archive-i{ display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(124,111,255,.075);align-items:center }
+  .archive-i:last-child{ border-bottom:none }
+  .badge{
+    width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+    background:radial-gradient(circle at 34% 28%,#f6d97a,#c8901a 62%,#8a6410);
+    box-shadow:0 0 0 1px rgba(255,220,120,.4),0 3px 10px rgba(201,144,26,.34);
+  }
+  .badge.off{ background:radial-gradient(circle at 34% 28%,#2e2760,#1a1450);box-shadow:inset 0 0 0 1px rgba(124,111,255,.24) }
+  .badge svg{ width:18px;height:18px;color:#4a3403 }
+  .badge.off svg{ color:#4a4478 }
+  .srch{ display:flex;gap:7px;margin-bottom:11px }
+  .srch .field{ flex:1 }
+  .fillrow{ display:flex;align-items:center;gap:10px;padding:7px 0 }
+  .fillrow .n{ font-size:11.5px;width:88px;color:var(--t2);flex:0 0 auto }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>齐鲁农创客</b><span>Agri Creator</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">学员端 · App</div>
+        <a class="nav-i" href="02-student-home.html" id="nv-home"></a>
+        <a class="nav-i" href="04-course.html" id="nv-course"></a>
+        <a class="nav-i" href="05-achievement.html" id="nv-res"></a>
+        <a class="nav-i on" href="03-student-profile.html" id="nv-me"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">画像引擎</div>
+        <div style="padding:2px 18px 0">
+          <div class="dl">
+            <dt>画像版本</dt><dd>v1.2.4</dd>
+            <dt>标签命中数</dt><dd>14 / 6 类</dd>
+            <dt>准确度自评</dt><dd style="color:var(--green)">91.4%</dd>
+            <dt>上次重算</dt><dd>10-12 02:00</dd>
+            <dt>下次重算</dt><dd style="color:var(--brand-lite)">10-13 02:00</dd>
+          </div>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">切换角色视角</div>
+        <a class="nav-i" href="06-admin-city.html" id="nv-adm"></a>
+        <a class="nav-i" href="01-login.html" id="nv-out"></a>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">张</div><div class="who"><b>张长河</b><span><i class="dot"></i>商河县 · 成长期</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>我的 · 全息画像</b><i>/</i><span>T-I-P-S 四象限数据本体</span></div>
+      <div class="top-tools">
+        <span class="clock" id="clk"></span>
+        <button class="tbtn" id="btnEdit">编辑画像</button>
+        <button class="tbtn pri" id="btnSubmit">提交更新</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="note" style="margin-bottom:14px">
+        <span id="icAlert"></span>
+        <div><b>发展阶段诊断：您当前处于「成长期」</b> —— 规模扩展中，有明确技术与资金需求。系统将优先为您匹配<b>规模扩大类补贴</b>与<b>进阶技术课程</b>。</div>
+        <div class="r"><button class="mini-btn gold">查看推荐依据</button></div>
+      </div>
+
+      <!-- header card -->
+      <div class="card" style="border-color:var(--line-2)">
+        <div class="card-b" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+          <div class="avatar" style="width:58px;height:58px;border-radius:14px;font-size:22px">张</div>
+          <div style="min-width:150px">
+            <div style="font-size:19px;font-weight:700;letter-spacing:.5px">张长河 <span class="tag y" style="vertical-align:3px;margin-left:5px">成长期</span></div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:4px">13912345678 · 商河县 370126 · 已实名认证</div>
+          </div>
+          <div style="display:flex;gap:0;margin-left:auto">
+            <div style="padding:0 20px;text-align:right;border-right:1px solid var(--line)">
+              <b style="display:block;font-family:var(--mono);font-size:22px;font-weight:600">1,280<i style="font-size:11px;color:var(--t3);font-style:normal"> 亩</i></b><span style="font-size:10.5px;color:var(--t3)">经营规模</span></div>
+            <div style="padding:0 20px;text-align:right;border-right:1px solid var(--line)">
+              <b style="display:block;font-family:var(--mono);font-size:22px;font-weight:600">280<i style="font-size:11px;color:var(--t3);font-style:normal"> 万</i></b><span style="font-size:10.5px;color:var(--t3)">年收入</span></div>
+            <div style="padding:0 20px;text-align:right;border-right:1px solid var(--line)">
+              <b style="display:block;font-family:var(--mono);font-size:22px;font-weight:600;color:var(--gold)">3</b><span style="font-size:10.5px;color:var(--t3)">已获荣誉</span></div>
+            <div style="padding:0 20px;text-align:right">
+              <b style="display:block;font-family:var(--mono);font-size:22px;font-weight:600;color:var(--green)">+12.6</b><span style="font-size:10.5px;color:var(--t3)">本季能力提升</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2 mt">
+        <!-- T -->
+        <div class="q" style="--qc:rgba(71,55,204,.3)">
+          <div class="q-h"><div class="k" style="background:linear-gradient(145deg,#6b5bf2,#4737cc)">T</div>
+            <div><b>身份与基础</b><span>Type · 注册信息 / 审核更新</span></div>
+            <div style="margin-left:auto"><span class="tag g">完整度 100%</span></div></div>
+          <div class="q-b">
+            <dl class="f"><dt>姓名</dt><dd>张长河</dd></dl>
+            <dl class="f"><dt>主营产业</dt><dd>粮食种植</dd></dl>
+            <dl class="f"><dt>经营规模</dt><dd>1,280 亩</dd></dl>
+            <dl class="f"><dt>年收入水平</dt><dd>高收入</dd></dl>
+            <dl class="f"><dt>所在区县</dt><dd>商河县 · 370126</dd></dl>
+            <dl class="f"><dt>主体类型</dt><dd>家庭农场主</dd></dl>
+            <div class="tagbox">
+              <span class="tg">家庭农场主 <span class="x">✕</span></span>
+              <span class="tg">粮食种植 <span class="x">✕</span></span>
+              <span class="tg">大型 <span class="x">✕</span></span>
+              <span class="tg">高收入 <span class="x">✕</span></span>
+              <span class="tg add">+ 添加标签</span>
+            </div>
+          </div>
+        </div>
+        <!-- I -->
+        <div class="q" style="--qc:rgba(237,184,28,.26)">
+          <div class="q-h"><div class="k" style="background:linear-gradient(145deg,#e8c14a,#c8901a)">I</div>
+            <div><b>需求与意向</b><span>Intent · 自主填报 / 搜索 / 学情调查</span></div>
+            <div style="margin-left:auto"><span class="tag y">4 条待响应</span></div></div>
+          <div class="q-b">
+            <div style="font-size:10.5px;color:var(--t3);letter-spacing:.8px;margin-bottom:4px">主动提交的需求</div>
+            <div class="archive-i"><span class="tag y" style="min-width:44px;justify-content:center">10-11</span>
+              <div style="flex:1"><div style="font-size:12px">急需大棚补光灯技术方案</div><div class="sm" style="font-size:10.5px;color:var(--t3)">已触发匹配 · 命中 2 项资源</div></div>
+              <span class="tag g">已响应</span></div>
+            <div class="archive-i"><span class="tag c" style="min-width:44px;justify-content:center">10-08</span>
+              <div style="flex:1"><div style="font-size:12px">意向申报市级家庭农场示范场</div><div class="sm" style="font-size:10.5px;color:var(--t3)">已推送政策 95% 匹配</div></div>
+              <span class="tag g">已响应</span></div>
+            <div class="archive-i"><span class="tag dim" style="min-width:44px;justify-content:center">09-26</span>
+              <div style="flex:1"><div style="font-size:12px">希望对接商河农资团购</div><div class="sm" style="font-size:10.5px;color:var(--t3)">服务对接中</div></div>
+              <span class="tag y">处理中</span></div>
+            <div class="archive-i"><span class="tag dim" style="min-width:44px;justify-content:center">09-14</span>
+              <div style="flex:1"><div style="font-size:12px">咨询短视频直播转型</div><div class="sm" style="font-size:10.5px;color:var(--t3)">待匹配服务供给</div></div>
+              <span class="tag r">缺口</span></div>
+            <button class="mini-btn mt-s" style="width:100%;justify-content:center" id="btnAddNeed">+ 提交新需求</button>
+          </div>
+        </div>
+        <!-- P -->
+        <div class="q" style="--qc:rgba(95,205,150,.24)">
+          <div class="q-h"><div class="k" style="background:linear-gradient(145deg,#6fdba6,#3fa876)">P</div>
+            <div><b>能力与绩效</b><span>Performance · 考勤 / 考试 / 互动 / 转化</span></div>
+            <div style="margin-left:auto"><span class="tag g">▲ 本季 +12.6</span></div></div>
+          <div class="q-b">
+            <div style="display:grid;place-items:center;margin-bottom:6px"><div id="radarBox"></div></div>
+            <div class="fillrow"><span class="n">考勤出勤率</span><div class="bar-t" style="flex:1"><div class="bar-f g" style="width:94%"></div></div><span style="font-family:var(--mono);font-size:11px;width:38px;text-align:right">94%</span></div>
+            <div class="fillrow"><span class="n">考试通过率</span><div class="bar-t" style="flex:1"><div class="bar-f" style="width:88%"></div></div><span style="font-family:var(--mono);font-size:11px;width:38px;text-align:right">88%</span></div>
+            <div class="fillrow"><span class="n">互动参与度</span><div class="bar-t" style="flex:1"><div class="bar-f c" style="width:76%"></div></div><span style="font-family:var(--mono);font-size:11px;width:38px;text-align:right">76%</span></div>
+            <div class="fillrow"><span class="n">实践转化增长</span><div class="bar-t" style="flex:1"><div class="bar-f y" style="width:61%"></div></div><span style="font-family:var(--mono);font-size:11px;width:38px;text-align:right">+15%</span></div>
+          </div>
+        </div>
+        <!-- S -->
+        <div class="q" style="--qc:rgba(69,196,216,.26)">
+          <div class="q-h"><div class="k" style="background:linear-gradient(145deg,#5fd3e4,#2a9fb3)">S</div>
+            <div><b>状态与阶段</b><span>Stage · 由 T-I-P 综合判定</span></div>
+            <div style="margin-left:auto"><span class="tag c">规则引擎</span></div></div>
+          <div class="q-b">
+            <div style="font-size:10.5px;color:var(--t3);margin-bottom:6px">发展阶段（点击可切换，切换后将触发重新匹配）</div>
+            <div class="stage-pick">
+              <div class="sp"><b>起步期</b><span>规模 ≤30% 均值</span></div>
+              <div class="sp on"><b>成长期</b><span>能力 60–80</span></div>
+              <div class="sp"><b>成熟期</b><span>规模稳定</span></div>
+              <div class="sp"><b>转型期</b><span>主业变更</span></div>
+            </div>
+            <div class="why y mt">判定依据：规模 <b>1,280 亩</b>（高于商河县均值 31%）· 技术/经营能力 <b>68 / 74</b> 落在 60–80 区间 · 近 90 天提交 <b>2 条</b>明确需求意向 → 判定为<b>成长期</b>。</div>
+            <dl class="f mt-s"><dt>阶段变更时间</dt><dd>2026-07-18</dd></dl>
+            <dl class="f"><dt>置信度</dt><dd style="color:var(--green)">94.2%</dd></dl>
+            <dl class="f"><dt>匹配策略</dt><dd>规模扩大类补贴 + 进阶技术</dd></dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="quad mt">
+        <!-- my tags -->
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>我的匹配标签</h3><span class="sub">系统用于匹配的关键标签，支持修正</span>
+            <div class="r"><span class="tag">14 个</span></div></div>
+          <div class="card-b">
+            <div style="font-size:10.5px;color:var(--t3);letter-spacing:.8px;margin-bottom:2px">身份 identity</div>
+            <div class="tagbox"><span class="tg">家庭农场主 <span class="x">✕</span></span><span class="tg">返乡创业青年 <span class="x">✕</span></span><span class="tg add">+</span></div>
+            <div style="font-size:10.5px;color:var(--t3);letter-spacing:.8px;margin:11px 0 2px">产业 industry</div>
+            <div class="tagbox"><span class="tg">粮食种植 <span class="x">✕</span></span><span class="tg">农机服务 <span class="x">✕</span></span><span class="tg add">+</span></div>
+            <div style="font-size:10.5px;color:var(--t3);letter-spacing:.8px;margin:11px 0 2px">规模 / 收入</div>
+            <div class="tagbox"><span class="tg">大型 <span class="x">✕</span></span><span class="tg">高收入 <span class="x">✕</span></span><span class="tg add">+</span></div>
+            <div style="font-size:10.5px;color:var(--t3);letter-spacing:.8px;margin:11px 0 2px">阶段 / 时效</div>
+            <div class="tagbox"><span class="tg">成长期 <span class="x">✕</span></span><span class="tg">当季 <span class="x">✕</span></span><span class="tg add">+</span></div>
+            <div class="why mt">标签越完整，匹配越精准。当前画像完整度 <b>86.4%</b>，补充「是否加入合作社」与「是否有农机具」可进一步提升准确度。</div>
+          </div>
+        </div>
+
+        <!-- capability detail -->
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>能力明细与短板</h3>
+            <div class="r"><button class="tbtn">与同阶段对比</button></div></div>
+          <div class="card-b">
+            <div id="cmpBox"></div>
+            <div class="legend mt-s">
+              <span><i style="background:#4737cc"></i>我</span>
+              <span><i style="background:#edb81c"></i>成长期学员均值</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- learning archive -->
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>我的学习档案</h3><span class="sub">终身数字档案 · 全文检索</span></div>
+          <div class="card-b">
+            <div class="srch">
+              <input class="field" placeholder="检索语音笔记、照片、课程记录…">
+              <button class="tbtn">检索</button>
+            </div>
+            <div class="archive-i"><div class="ico c" id="i1"></div>
+              <div style="flex:1"><div style="font-size:12px">语音笔记 · 政策申报要点问答</div>
+              <div style="font-size:10.5px;color:var(--t3)">市直·政策解读与申报辅导 · 10-15 · ASR 已结构化</div></div>
+              <span class="tag c">AI</span></div>
+            <div class="archive-i"><div class="ico g" id="i2"></div>
+              <div style="flex:1"><div style="font-size:12px">现场照片 12 张 · 课程公共相册</div>
+              <div style="font-size:10.5px;color:var(--t3)">小麦高产技术培训 · 已加水印</div></div>
+              <span class="tag">照片墙</span></div>
+            <div class="archive-i"><div class="ico y" id="i3"></div>
+              <div style="flex:1"><div style="font-size:12px">结业考试 · 品牌营销实务 92 分</div>
+              <div style="font-size:10.5px;color:var(--t3)">2026-09-18 · 已计入 P 象限</div></div>
+              <span class="tag g">已归档</span></div>
+            <div class="archive-i"><div class="ico" id="i4"></div>
+              <div style="flex:1"><div style="font-size:12px">学情调查 · 训后满意度 5.0</div>
+              <div style="font-size:10.5px;color:var(--t3)">2026-09-18 · 计入互动分</div></div>
+              <span class="tag dim">表单</span></div>
+            <div class="why mt">已沉淀 <b>38</b> 条结构化记录，其中 <b>14</b> 条经人工校核后汇入全市「农技知识库」，向全体学员开放搜索。</div>
+          </div>
+        </div>
+
+        <!-- honors -->
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>我的荣誉室</h3><span class="sub">审核通过后点亮徽章并更新 P 象限</span>
+            <div class="r"><button class="tbtn pri">上传荣誉</button></div></div>
+          <div class="card-b">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center">
+              <div><div class="badge" id="b1"></div><div style="font-size:10.5px;margin-top:6px;color:var(--t2)">市级种粮<br>大户</div><div style="font-size:9.5px;color:var(--gold)">2025-11</div></div>
+              <div><div class="badge" id="b2"></div><div style="font-size:10.5px;margin-top:6px;color:var(--t2)">省级示范<br>家庭农场</div><div style="font-size:9.5px;color:var(--gold)">2025-06</div></div>
+              <div><div class="badge" id="b3"></div><div style="font-size:10.5px;margin-top:6px;color:var(--t2)">高产创建<br>先进单位</div><div style="font-size:9.5px;color:var(--gold)">2024-12</div></div>
+              <div><div class="badge off" id="b4"></div><div style="font-size:10.5px;margin-top:6px;color:var(--t3)">市级示范场<br>（申报中）</div><div style="font-size:9.5px;color:var(--t4)">进行中</div></div>
+            </div>
+            <div class="why y mt">已获荣誉 <b>3 项</b>，其中「省级示范家庭农场」直接提升您在示范创建类政策中的匹配度 <b>+12 分</b>。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>数据保护</b> 手机号、收入等隐私字段加密存储 · 画像数据仅用于培育服务</span>
+        <span><b>标签权重</b> identity 1.0 / industry 1.2 / scale 0.8 / income 0.6 / stage 1.0 / deadline 0.5</span>
+        <span><b>匹配算法</b> 标签余弦相似度 + 规则过滤</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['nv-home','首页','home'],['nv-course','课程 · 报名','book'],['nv-res','成果','trophy'],['nv-me','我的 · 画像','radar'],['nv-adm','管理端 Web','grid'],['nv-out','退出登录','out']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+$('#icAlert').innerHTML=I.alert;
+$('#btnEdit').innerHTML=I.edit+'<span>编辑画像</span>';
+$('#btnSubmit').innerHTML=I.check+'<span>提交更新</span>';
+$('#btnAddNeed').insertAdjacentHTML('afterbegin','+ ');
+[['i1','mic'],['i2','cam'],['i3','checkc'],['i4','doc']].forEach(([id,ic])=>$('#'+id).innerHTML=I[ic]);
+[1,2,3,4].forEach(i=>$('#b'+i).innerHTML=I.medal);
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+Chart.radar($('#radarBox'),Object.assign({size:186},D.radar));
+Chart.radar($('#cmpBox'),Object.assign({size:216},D.radarCity));
+
+$$('.sp').forEach(s=>s.onclick=()=>{$$('.sp').forEach(x=>x.classList.remove('on'));s.classList.add('on');});
+</script>
+</body>
+</html>

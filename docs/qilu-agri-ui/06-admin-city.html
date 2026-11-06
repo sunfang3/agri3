@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 市级管理后台 全市汇总视图</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .topbar.admin{ background:linear-gradient(180deg,rgba(28,22,80,.94),rgba(12,8,38,.78)) }
+  .ctl{ display:flex;gap:7px;align-items:center }
+  .sum-hd{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);
+    border-radius:var(--r-lg);overflow:hidden;background:linear-gradient(168deg,rgba(30,24,96,.55),rgba(16,12,46,.72))
+  }
+  .sum-hd>div{ padding:16px 20px;border-right:1px solid var(--line);position:relative }
+  .sum-hd>div:last-child{ border-right:none }
+  .sum-hd .l{ font-size:11.5px;color:var(--t2) }
+  .sum-hd .v{ font-family:var(--mono);font-size:34px;font-weight:600;line-height:1.2;margin-top:5px;letter-spacing:-1px }
+  .sum-hd .f{ font-size:10.5px;color:var(--t3);margin-top:4px;display:flex;gap:7px;align-items:center }
+  .sum-hd .v small{ font-size:13px;color:var(--t2);font-weight:400;letter-spacing:0 }
+  .mrow td:first-child{ font-weight:500 }
+  .mbar{ display:flex;align-items:center;gap:8px }
+  .mbar .bar-t{ flex:1;min-width:52px }
+  .dchip{ display:inline-flex;align-items:center;gap:5px;font-size:11.5px }
+  .dchip i{ width:6px;height:6px;border-radius:2px;display:inline-block }
+  .act{ display:flex;gap:6px }
+  .btn-s{ height:24px;padding:0 9px;border-radius:4px;font-size:11px;cursor:pointer;border:1px solid var(--line-2);
+    background:rgba(124,111,255,.1);color:var(--t2);display:inline-flex;align-items:center;gap:4px;font-family:var(--sans);transition:.12s }
+  .btn-s svg{ width:11px;height:11px }
+  .btn-s:hover{ background:rgba(124,111,255,.2);color:var(--t1) }
+  .btn-s.pri{ background:linear-gradient(180deg,var(--brand-2),var(--brand));border-color:rgba(167,155,255,.4);color:#fff;font-weight:600 }
+  .tl-i{ display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(124,111,255,.075);align-items:flex-start }
+  .tl-i:last-child{ border-bottom:none }
+  .tl-i .tm{ font-family:var(--mono);font-size:10.5px;color:var(--t3);flex:0 0 40px;padding-top:1px }
+  .tl-i .cc{ flex:1;min-width:0;font-size:11.5px;line-height:1.5 }
+  .tl-i .cc em{ font-style:normal;color:var(--brand-lite) }
+  .dot{ width:6px;height:6px;border-radius:50%;flex:0 0 auto;margin-top:6px }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>Avo 管理后台</b><span>齐鲁农创客</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">总览</div>
+        <a class="nav-i on" href="06-admin-city.html" id="n1"></a>
+        <a class="nav-i" href="07-admin-cockpit.html" id="n2"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">资源管理</div>
+        <a class="nav-i" href="08-admin-students.html" id="n3"></a>
+        <a class="nav-i" href="08-admin-students.html#enroll" id="n4"></a>
+        <a class="nav-i" href="09-admin-resource.html" id="n5"></a>
+        <a class="nav-i" href="09-admin-resource.html#tags" id="n6"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">引擎运维</div>
+        <a class="nav-i" href="07-admin-cockpit.html#engine" id="n7"></a>
+        <a class="nav-i" href="09-admin-resource.html#queue" id="n8"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">主数据</div>
+        <a class="nav-i" href="#" id="n9"></a>
+        <a class="nav-i" href="#" id="n10"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">切换到学员端</div>
+        <a class="nav-i" href="02-student-home.html" id="n11"></a>
+        <a class="nav-i" href="01-login.html" id="n12"></a>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">市</div><div class="who"><b>济南市农广校</b><span><i class="dot"></i>city_admin · 跨区权限</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar admin">
+      <div class="crumb"><b>市级管理后台 · 全市汇总视图</b><i>/</i><span>/avo · city_admin</span></div>
+      <div class="top-tools">
+        <div class="ctl">
+          <button class="tbtn" id="b1"></button>
+          <button class="tbtn" id="b2"></button>
+          <button class="tbtn" id="b3"></button>
+          <button class="tbtn" id="b4"></button>
+          <button class="tbtn pri" id="b5"></button>
+        </div>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- 全市汇总视图 -->
+      <div class="sum-hd">
+        <div>
+          <div class="l">全市学员总数</div>
+          <div class="v" style="color:var(--brand-lite)">2,884<small> 人</small></div>
+          <div class="f"><span class="delta up">▲ 186</span> 较上月 · 覆盖 12 区县</div>
+        </div>
+        <div>
+          <div class="l">成长阶段分布</div>
+          <div class="v" style="font-size:22px;padding-top:6px">成长期 986<span style="font-size:14px;color:var(--t2)"> ·  </span>起步期 682<span style="font-size:14px;color:var(--t2)"> ·  </span>成熟期 461<span style="font-size:14px;color:var(--t2)"> ·  </span>转型期 213</div>
+          <div class="f"><span class="delta up">成长期占 34.2%</span> 较上期 +2.4pt</div>
+        </div>
+        <div>
+          <div class="l">可审报名状态</div>
+          <div class="v" style="font-size:22px;padding-top:6px"><span style="color:var(--green)">enrolled 924</span> · <span style="color:var(--gold)">pending 47</span></div>
+          <div class="f">pending 待区县审核确认</div>
+        </div>
+        <div>
+          <div class="l">画像完整度</div>
+          <div class="v" style="color:var(--green)">86.4<small>%</small></div>
+          <div class="f"><span class="delta dn">▼ 1.2pt</span> 长清区 41 人待补充</div>
+        </div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:stretch">
+        <div class="card" style="flex:1;min-width:0">
+          <div class="card-h"><i class="bar"></i><h3>区县学员规模对比</h3><span class="sub">按在册学员数排序</span>
+            <div class="r"><button class="tbtn" id="bExp">导出 CSV</button></div></div>
+          <div class="card-b"><div id="distChart"></div></div>
+        </div>
+        <div class="card" style="flex:0 0 306px">
+          <div class="card-h"><i class="bar"></i><h3>成长阶段分布</h3>
+            <div class="r"><span class="tag">全市</span></div></div>
+          <div class="card-b">
+            <div style="display:grid;place-items:center"><div id="stageDonut"></div></div>
+            <div class="legend mt-s" style="justify-content:center" id="stageLeg"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:flex-start">
+        <div class="card" style="flex:1;min-width:0">
+          <div class="card-h"><i class="bar"></i><h3>区县综合概览</h3><span class="sub">学员数 · 平均能力分 · 政策触达率 · 报名完成率</span>
+            <div class="r">
+              <div class="seg" id="segSort"><button class="on" data-k="s">按学员数</button><button data-k="c">按能力分</button><button data-k="r">按触达率</button></div>
+            </div></div>
+          <div class="card-b flush">
+            <div class="tbl-wrap" style="max-height:404px;overflow-y:auto">
+              <table class="tbl">
+                <thead><tr>
+                  <th style="width:34px">#</th><th>区县</th><th class="num">学员数</th>
+                  <th style="width:110px">规模占比</th><th class="num">平均能力分</th>
+                  <th class="num">政策触达率</th><th class="num">报名完成率</th><th class="num">待审</th><th>状态</th>
+                </tr></thead>
+                <tbody id="distTbl"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <aside style="flex:0 0 348px;display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>报名状态月度分布</h3><span class="sub">2026 年</span></div>
+            <div class="card-b">
+              <div id="stackChart"></div>
+              <div class="legend mt-s" id="stackLeg"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>实时动态</h3>
+              <div class="r"><span class="tag g"><i class="sq"></i>Live</span></div></div>
+            <div class="card-b" id="liveBox"></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- 区县管理员概览 -->
+      <div class="card mt">
+        <div class="card-h"><i class="bar"></i><h3>区县管理员账户</h3><span class="sub">由市级创建并绑定区县，学员访问 /avo 会被拦截</span>
+          <div class="r"><button class="tbtn pri" id="bNew">创建管理员账户</button></div></div>
+        <div class="card-b flush">
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th>手机号</th><th>姓名</th><th>绑定区县</th><th>角色</th><th class="num">操作次数</th><th>最近登录</th><th>状态</th><th class="num">操作</th></tr></thead>
+            <tbody id="mgrTbl"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>数据隔离</b> district_manager 仅本区 · city_admin / super_admin 跨区全量</span>
+        <span><b>当前视角</b> 全市（12 区县 / 2,884 名学员）</span>
+        <span><b>数据时点</b> 2026-10-12 09:00</span>
+        <span><b>导出</b> 学员 / 报名 / 政策 / 课程 均支持按当前筛选导出 CSV</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['n1','区县汇总 · 全市视图','gauge'],['n2','精准匹配驾驶舱','radar'],['n3','学员档案','users'],
+ ['n4','报名记录 Enrollments','checkc'],['n5','政策库 Policies','doc'],['n6','课程 Courses','book'],
+ ['n7','推荐引擎运维','bolt'],['n8','GoodJob 队列','layers'],['n9','区县主数据 Districts','pin'],
+ ['n10','用户账户 Users','gear'],['n11','学员端首页','home'],['n12','退出登录','out']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+$('#b1').innerHTML=I.upload+'<span>Excel 导入</span>';
+$('#b2').innerHTML=I.doc+'<span>政策</span>';
+$('#b3').innerHTML=I.book+'<span>课程</span>';
+$('#b4').innerHTML=I.search+'<span>学情调查</span>';
+$('#b5').innerHTML=I.down+'<span>CSV 导出学员</span>';
+$('#bExp').innerHTML=I.down+'<span>导出 CSV</span>';
+$('#bNew').innerHTML=I.plus+'<span>创建管理员账户</span>';
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* district chart */
+Chart.bar($('#distChart'),{w:700,h:210,labels:D.districts.map(d=>d.n.replace(/[区县县]/,'')),
+  series:[{name:'学员数',color:'#4737cc',data:D.districts.map(d=>d.s)}],avg:240,avgLabel:'全市均值 240'});
+
+/* stage donut */
+Chart.donut($('#stageDonut'),{size:186,sw:21,center:'2,884',centerSub:'全市学员',
+  data:D.stage});
+$('#stageLeg').innerHTML=D.stage.map(s=>`<span><i style="background:${s.c}"></i>${s.k} <b style="font-family:var(--mono);color:#edeaff">${s.v}</b></span>`).join('');
+
+/* district table */
+const EXTRA={'历城区':['78.4',76.2,88,12],'章丘区':['74.1',72.8,85,9],'济阳区':['70.2',68.4,82,6],
+ '平阴县':['81.6',74.2,91,4],'商河县':['69.8',71.6,79,5],'长清区':['64.3',58.1,74,7],
+ '莱芜区':['76.5',70.3,86,3],'钢城区':[null,54.2,68,1],'市中区':['66.1',62.7,77,0],
+ '天桥区':[null,60.4,75,0],'历下区':['72.8',66.9,83,0],'槐荫区':[null,57.8,71,0]};
+let sortK='s';
+function renderDist(){
+  const rows=D.districts.map(d=>({n:d.n,s:d.s,c:EXTRA[d.n][0],r:EXTRA[d.n][1],done:EXTRA[d.n][2],pend:EXTRA[d.n][3]}));
+  rows.sort((a,b)=>sortK==='s'?b.s-a.s:(sortK==='c'?(b.c||-1)-(a.c||-1):b.r-a.r));
+  const mx=rows[0].s;
+  $('#distTbl').innerHTML=rows.map((r,i)=>`<tr class="mrow">
+    <td><span class="rank ${i<3?'top':''}">${String(i+1).padStart(2,'0')}</span></td>
+    <td><span class="dchip"><i style="background:${['#edb81c','#c9a13a','#a58c5e'][i]||'rgba(124,111,255,.3)'}"></i>${r.n}</span></td>
+    <td class="num" style="font-weight:600">${r.s}</td>
+    <td><div class="mbar"><div class="bar-t"><div class="bar-f" style="width:${r.s/mx*100}%"></div></div>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--t3)">${(r.s/2884*100).toFixed(1)}%</span></div></td>
+    <td class="num">${r.c?`<b style="color:${r.c>=75?'var(--green)':r.c>=65?'var(--gold)':'var(--red)'}">${r.c}</b>`:'<span class="sm">—</span>'}</td>
+    <td class="num">${r.r}%</td>
+    <td class="num">${r.done}%</td>
+    <td class="num">${r.pend?'<b style="color:var(--gold)">'+r.pend+'</b>':'<span class="sm">0</span>'}</td>
+    <td>${r.pend>=9?'<span class="tag y">待审偏多</span>':r.c&&r.c<60?'<span class="tag r">能力待提升</span>':'<span class="tag g">正常</span>'}</td>
+  </tr>`).join('');
+}
+renderDist();
+$$('#segSort button').forEach(b=>b.onclick=()=>{$$('#segSort button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sortK=b.dataset.k;renderDist();});
+
+/* stacked */
+Chart.bar($('#stackChart'),{w:348,h:186,labels:D.months.map(m=>m.replace('月','')),
+  series:D.stack,showVal:false});
+$('#stackLeg').innerHTML=D.stack.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join('');
+
+/* live */
+const CLR={open:'#6b5bf2',push:'#edb81c',enroll:'#4737cc',policy:'#45c4d8',warn:'#e5615f',done:'#5fcd96',job:'#9b6bf0',import:'#45c4d8'};
+$('#liveBox').innerHTML=D.timeline.map(t=>`<div class="tl-i">
+  <span class="dot" style="background:${CLR[t.s]}"></span>
+  <span class="tm">${t.t}</span>
+  <span class="cc">${t.k.replace(/^(.+?)(（|$)/,'<em>$1</em>$2')}</span>
+  <span class="tag dim">${t.tag}</span></div>`).join('');
+
+/* managers */
+const MGRS=[
+  ['13905311234','刘建国','历城区','district_manager',1842,'10-12 08:41','正常'],
+  ['13905311456','王志强','章丘区','district_manager',1628,'10-12 08:12','正常'],
+  ['13905311578','李秀兰','济阳区','district_manager',1402,'10-11 17:56','正常'],
+  ['13905312412','张明远','平阴县','district_manager',986,'10-12 09:02','正常'],
+  ['13905312634','陈美玲','商河县','district_manager',1204,'10-11 16:30','正常'],
+  ['13905311322','赵国强','长清区','district_manager',764,'10-10 15:48','长期未登录'],
+  ['13905311688','孙丽华','莱芜区','district_manager',598,'10-12 08:05','正常'],
+  ['13905311799','周建平','钢城区','district_manager',412,'10-09 11:20','正常'],
+];
+$('#mgrTbl').innerHTML=MGRS.map(m=>`<tr>
+  <td style="font-family:var(--mono)">${m[0]}</td><td style="font-weight:500">${m[1]}</td>
+  <td><span class="tag dim">${m[2]}</span></td>
+  <td><span class="tag">${m[3]}</span></td>
+  <td class="num">${m[4]}</td>
+  <td class="sm">${m[5]}</td>
+  <td>${m[6]==='正常'?'<span class="tag g">正常</span>':'<span class="tag y">长期未登录</span>'}</td>
+  <td class="num"><div class="act" style="justify-content:flex-end">
+    <button class="btn-s">${I.edit}编辑</button><button class="btn-s">${I.refresh}重置密码</button></div></td></tr>`).join('');
+</script>
+</body>
+</html>

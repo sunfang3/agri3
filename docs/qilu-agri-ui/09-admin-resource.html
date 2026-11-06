@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 政策资源库与标签管理</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .tagcat{ border-radius:var(--r-lg);border:1px solid var(--line);overflow:hidden;
+    background:linear-gradient(168deg,rgba(30,24,96,.5),rgba(16,12,46,.68)) }
+  .tagcat .h{ padding:10px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px }
+  .tagcat .h b{ font-size:12.5px }
+  .tagcat .h .en{ font-family:var(--mono);font-size:9.5px;color:var(--t4);letter-spacing:.6px }
+  .tagcat .b{ padding:11px 13px;display:flex;flex-wrap:wrap;gap:6px }
+  .tl{ font-size:11px;padding:3px 9px;border-radius:12px;cursor:pointer;transition:.13s;
+    background:rgba(124,111,255,.12);border:1px solid rgba(124,111,255,.22);color:var(--brand-lite);display:inline-flex;align-items:center;gap:5px }
+  .tl:hover{ background:rgba(124,111,255,.26) }
+  .tl .n{ font-family:var(--mono);font-size:9px;opacity:.65 }
+  .tl.off{ opacity:.34;text-decoration:line-through }
+  .tl .x{ font-size:9px;opacity:.5;margin-left:1px }
+  .tl.add{ border-style:dashed;background:transparent;color:var(--t3) }
+  .pv-i{ padding:11px 13px;border-bottom:1px solid rgba(124,111,255,.075) }
+  .pv-i:last-child{ border-bottom:none }
+  .pv-i .t{ font-size:12px;font-weight:500;line-height:1.45 }
+  .pv-i .m{ display:flex;gap:8px;flex-wrap:wrap;margin-top:5px;font-size:10px;color:var(--t3);align-items:center }
+  .pv-i .tg2{ display:flex;gap:5px;flex-wrap:wrap;margin-top:7px }
+  .btn-s{ height:24px;padding:0 9px;border-radius:4px;font-size:11px;cursor:pointer;border:1px solid var(--line-2);
+    background:rgba(124,111,255,.1);color:var(--t2);display:inline-flex;align-items:center;gap:4px;font-family:var(--sans);transition:.12s }
+  .btn-s svg{ width:11px;height:11px }
+  .btn-s:hover{ background:rgba(124,111,255,.2);color:var(--t1) }
+  .btn-s.pri{ background:linear-gradient(180deg,var(--brand-2),var(--brand));border-color:rgba(167,155,255,.4);color:#fff;font-weight:600 }
+  .parse-i{ display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed rgba(124,111,255,.11) }
+  .parse-i:last-child{ border-bottom:none }
+  .parse-i .n{ font-family:var(--mono);font-size:9.5px;color:var(--t4);width:44px;flex:0 0 auto;padding-top:1px;letter-spacing:.3px }
+  .parse-i .v{ flex:1;font-size:11.5px }
+  .parse-i .v b{ color:var(--brand-lite);font-weight:500 }
+  .drop{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;transition:.15s;
+    background:rgba(10,7,32,.35) }
+  .drop:hover{ border-color:var(--brand-lite);background:rgba(71,55,204,.12) }
+  .drop svg{ width:22px;height:22px;color:var(--t3);margin-bottom:6px }
+  .drop:hover svg{ color:var(--brand-lite) }
+  .q-i{ display:flex;gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(124,111,255,.075);font-size:11.5px }
+  .q-i:last-child{ border-bottom:none }
+  .q-i .s{ font-family:var(--mono);flex:0 0 62px }
+  .q-i .bar-t{ flex:1 }
+  .cmd{ font-family:var(--mono);font-size:10.5px;background:rgba(9,6,34,.6);border:1px solid var(--line);
+    border-radius:4px;padding:6px 9px;color:var(--brand-lite);overflow-x:auto;white-space:nowrap }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>Avo 管理后台</b><span>齐鲁农创客</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">资源管理</div>
+        <a class="nav-i on" href="09-admin-resource.html" id="n1"></a>
+        <a class="nav-i" href="08-admin-students.html" id="n2"></a>
+        <a class="nav-i" href="06-admin-city.html" id="n3"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">本页</div>
+        <a class="nav-i" href="#lib" id="n4"></a>
+        <a class="nav-i" href="#parse" id="n5"></a>
+        <a class="nav-i" href="#tags" id="n6"></a>
+        <a class="nav-i" href="#queue" id="n7"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">看板</div>
+        <a class="nav-i" href="07-admin-cockpit.html" id="n8"></a>
+        <a class="nav-i" href="07-admin-cockpit.html#engine" id="n9"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">供给池容量</div>
+        <div style="padding:2px 18px 0">
+          <div class="dl">
+            <dt>政策 Policies</dt><dd>168 <span style="color:var(--t4)">/ 141 有效</span></dd>
+            <dt>课程 Courses</dt><dd>96</dd>
+            <dt>服务供给</dt><dd>73</dd>
+            <dt>标签 Tag</dt><dd>312</dd>
+            <dt>解析待校准</dt><dd style="color:var(--gold)">6</dd>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">市</div><div class="who"><b>济南市农广校</b><span><i class="dot"></i>city_admin</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>政策资源库与标签管理</b><i>/</i><span>PDF 解析校准 / 六类标签库 / 触达转化效果</span></div>
+      <div class="top-tools">
+        <button class="tbtn" id="bNewPol"></button>
+        <button class="tbtn" id="bNewCourse"></button>
+        <button class="tbtn" id="bNewTag"></button>
+        <button class="tbtn pri" id="bRunAll"></button>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="g4">
+        <div class="kpi gold"><div class="k-lbl" id="k1"></div><div class="k-val">168<small> 条</small></div>
+          <div class="k-foot">有效 141 · 过期 27</div></div>
+        <div class="kpi"><div class="k-lbl" id="k2"></div><div class="k-val">96<small> 门</small></div>
+          <div class="k-foot"><span class="delta up">▲ 11</span> 本年度新增</div></div>
+        <div class="kpi cyan"><div class="k-lbl" id="k3"></div><div class="k-val">312<small> 条</small></div>
+          <div class="k-foot">6 大类标签库</div></div>
+        <div class="kpi green"><div class="k-lbl" id="k4"></div><div class="k-val">78.3<small>%</small></div>
+          <div class="k-foot">匹配学员数均值 226 人/条</div></div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:flex-start">
+        <!-- 政策库 -->
+        <div class="card" style="flex:1;min-width:0" id="lib">
+          <div class="card-h"><i class="bar"></i><h3>政策库 Policies</h3>
+            <span class="sub">标签决定推送给哪些学员 · score &gt; 80 自动 push 并生成红点</span>
+            <div class="r">
+              <input class="field" placeholder="搜索标题 / 文号" style="width:160px">
+              <select class="field" style="width:118px"><option>全部状态</option><option>有效</option><option>已过期</option></select>
+              <select class="field" style="width:118px"><option>截止时间 ↑</option><option>匹配度 ↓</option><option>触达转化 ↓</option></select>
+              <button class="btn-s" id="bExp">导出</button>
+              <button class="btn-s pri" id="bCreate">新建政策</button>
+            </div></div>
+          <div class="card-b flush">
+            <div class="tbl-wrap" style="max-height:466px;overflow-y:auto">
+              <table class="tbl">
+                <thead><tr><th style="width:32px"></th><th>标题 / 文号</th><th>发文单位</th><th>标签</th>
+                  <th class="num">匹配学员</th><th>触达转化漏斗</th><th>状态</th><th class="num">操作</th></tr></thead>
+                <tbody id="polTbl"></tbody></table></div>
+          </div>
+          <div style="padding:9px 15px;border-top:1px solid var(--line);display:flex;gap:14px;font-size:10.5px;color:var(--t3);flex-wrap:wrap">
+            <span>共 168 条 · 显示 10 条</span>
+            <span style="margin-left:auto">有效性完全由 <b style="color:var(--t2)">valid_until</b> 控制，过期政策不进推荐</span></div>
+        </div>
+
+        <!-- 解析面板 -->
+        <div style="flex:0 0 342px;display:flex;flex-direction:column;gap:14px">
+          <div class="card" id="parse">
+            <div class="card-h"><i class="bar" style="background:var(--gold)"></i><h3>PDF 智能解析</h3>
+              <div class="r"><span class="tag y">6 条待校准</span></div></div>
+            <div class="card-b">
+              <div class="drop" id="drop2">
+                <div id="icUp"></div>
+                <div style="font-size:11.5px;color:var(--t2)">上传政策 PDF，系统自动抽取要素</div>
+                <div style="font-size:10px;color:var(--t4);margin-top:3px">NLP 信息抽取 + 正则规则混合方案</div>
+              </div>
+              <div style="font-size:11px;font-weight:600;margin:13px 0 3px;color:var(--t2)">解析结果预览 · 人工校准</div>
+              <div style="font-size:10px;color:var(--t4);margin-bottom:5px">《关于申报 2026 年市级家庭农场示范场的通知》</div>
+              <div class="parse-i"><span class="n">适用对象</span><span class="v"><b>家庭农场</b></span></div>
+              <div class="parse-i"><span class="n">产业标签</span><span class="v"><b>种植类</b></span></div>
+              <div class="parse-i"><span class="n">规模门槛</span><span class="v"><b>≥ 100 亩</b></span></div>
+              <div class="parse-i"><span class="n">收入门槛</span><span class="v"><b>年收入 ≥ 50 万</b></span></div>
+              <div class="parse-i"><span class="n">内容类型</span><span class="v"><b>荣誉申报</b></span></div>
+              <div class="parse-i"><span class="n">截止日期</span><span class="v"><b style="color:var(--gold)">2026-08-31</b> <span style="font-size:10px;color:var(--red)">（需修正为 10-28）</span></span></div>
+              <div class="row mt-s" style="gap:7px">
+                <button class="btn-s" style="flex:1;justify-content:center">重新解析</button>
+                <button class="btn-s pri" style="flex:1;justify-content:center">校准并入库</button>
+              </div>
+              <div class="why mt-s">初始阶段采用 <b>人工校对</b> 保障准确率；数据积累后逐步过渡到 AI 自动解析。</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>触达转化效果 TOP</h3><span class="sub">申报量 ÷ 推送量</span></div>
+            <div class="card-b" id="convBox"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 标签库 -->
+      <div class="card mt" id="tags">
+        <div class="card-h"><i class="bar"></i><h3>资源标签库</h3>
+          <span class="sub">6 大类 · 匹配引擎的"供给池" · 删除标签会级联删除所有 Tagging 关联，请谨慎操作</span>
+          <div class="r"><button class="btn-s" id="bSeed">重新载入种子数据</button><button class="btn-s pri" id="bAddTag">新增标签</button></div></div>
+        <div class="card-b">
+          <div class="g3" id="tagBox"></div>
+          <div class="why y mt">标签权重：<b>identity 1.0</b> · <b>industry 1.2</b> · <b>scale 0.8</b> · <b>income 0.6</b> · <b>stage 1.0</b> · <b>deadline 0.5</b>。学员画像标签与资源标签做交集打分：score = (源集 ∩ 政策标签) / 源集 × 100。</div>
+        </div>
+      </div>
+
+      <!-- 引擎运维 -->
+      <div class="row mt" style="gap:14px;align-items:flex-start" id="queue">
+        <div class="card" style="flex:1;min-width:0">
+          <div class="card-h"><i class="bar"></i><h3>推荐引擎与队列监控</h3><span class="sub">GoodJob dashboard · 仅管理员可访问</span>
+            <div class="r"><span class="tag g"><i class="sq"></i>healthy</span></div></div>
+          <div class="card-b">
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th>检查项</th><th>当前值</th><th>正常状态</th><th>说明</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:500">Jobs 队列长度</td><td class="mono">enqueued 0</td><td class="sm">接近 0</td><td class="sm">无积压任务</td><td><span class="tag g">正常</span></td></tr>
+                <tr><td style="font-weight:500">失败任务</td><td class="mono">failed 0</td><td class="sm">无大量失败</td><td class="sm">近 7 日 0 条</td><td><span class="tag g">正常</span></td></tr>
+                <tr><td style="font-weight:500">Cron 定时任务</td><td class="mono">recommendation_refresh</td><td class="sm">enabled</td><td class="sm">最近成功 10-12 02:04</td><td><span class="tag g">正常</span></td></tr>
+                <tr><td style="font-weight:500">Worker 进程</td><td class="mono">2 active</td><td class="sm">1+ active</td><td class="sm">heartbeat 12 秒前</td><td><span class="tag g">正常</span></td></tr>
+                <tr><td style="font-weight:500">标签库种子</td><td class="mono">312 条</td><td class="sm">幂等写入</td><td class="sm">db:seed 可重复执行</td><td><span class="tag g">正常</span></td></tr>
+              </tbody></table></div>
+            <div class="why mt-s">生产环境需确认 <b>config.good_job.enable_cron = true</b>（test 环境为保持确定性会关闭），且 job worker 进程在跑。</div>
+          </div>
+        </div>
+
+        <div style="flex:0 0 342px;display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>课程资源 Courses</h3><span class="sub">96 门 · 容量 0 表示不限</span>
+              <div class="r"><button class="btn-s pri" id="bCreate2">新建课程</button></div></div>
+            <div class="card-b" id="courseBox"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>命令速查</h3></div>
+            <div class="card-b" style="display:flex;flex-direction:column;gap:7px">
+              <div class="cmd">bin/rails runner 'RecommendationEngineService.new.refresh_all'</div>
+              <div class="cmd">bin/rails runner 'puts Recommendation.group(:status).count'</div>
+              <div class="cmd">bin/rails db:seed</div>
+              <div class="cmd">bin/kamal deploy / logs -r job</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>政策有效性</b> valid_until &lt; 今天 即失效，自动退出推荐池</span>
+        <span><b>幂等</b> 重复跑批不会产生重复 Recommendation 记录</span>
+        <span><b>数据安全</b> 全站 HTTPS · 隐私字段加密 · 画像数据仅用于培育服务</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['n1','政策库 Policies','doc'],['n2','学员档案','users'],['n3','全市汇总视图','gauge'],
+ ['n4','政策列表','doc'],['n5','PDF 智能解析','scan'],['n6','资源标签库','tag'],
+ ['n7','引擎运维监控','bolt'],['n8','精准匹配驾驶舱','radar'],['n9','资源缺口','alert']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+[['k1','在库政策','doc'],['k2','课程资源','book'],['k3','标签库容量','tag'],['k4','匹配率','target']].forEach(([id,t,ic])=>$('#'+id).innerHTML=I[ic]+t);
+$('#bNewPol').innerHTML=I.plus+'<span>新建政策</span>';
+$('#bNewCourse').innerHTML=I.plus+'<span>新建课程</span>';
+$('#bNewTag').innerHTML=I.tag+'<span>新增标签</span>';
+$('#bRunAll').innerHTML=I.bolt+'<span>跑全量匹配</span>';
+$('#bCreate').innerHTML=I.plus+'<span>新建政策</span>';
+$('#bCreate2').innerHTML=I.plus+'<span>新建课程</span>';
+$('#bAddTag').innerHTML=I.plus+'<span>新增标签</span>';
+$('#bSeed').innerHTML=I.refresh+'<span>重新载入种子数据</span>';
+$('#bExp').innerHTML=I.down+'<span>导出</span>';
+$('#bRunAll').innerHTML=I.bolt+'<span>跑全量匹配</span>';
+$('#icUp').innerHTML=I.upload;
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* policy table */
+$('#polTbl').innerHTML=D.policies.map((p,i)=>`<tr>
+  <td><div style="width:13px;height:13px;border-radius:3px;border:1px solid ${i<3?'var(--brand-lite)':'var(--line-3)'};background:${i<3?'linear-gradient(180deg,var(--brand-2),var(--brand))':'transparent'};cursor:pointer"></div></td>
+  <td style="max-width:290px">
+    <div style="font-weight:500;line-height:1.4">${p.t}</div>
+    <div style="font-size:10px;color:var(--t3);margin-top:3px;font-family:var(--mono)">${p.w} · 截止 ${p.d}</div>
+  </td>
+  <td class="sm" style="max-width:120px">${p.u}</td>
+  <td style="max-width:150px"><div style="display:flex;gap:4px;flex-wrap:wrap">
+    ${p.tag.map(t=>`<span class="tl" style="font-size:9.5px;padding:1px 7px">${t}</span>`).join('')}</div></td>
+  <td class="num"><b style="color:var(--brand-lite)">${p.reach}</b><div class="sm">人</div></td>
+  <td style="min-width:150px">
+    <div style="display:flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);color:var(--t3);margin-bottom:3px">
+      <span style="color:var(--brand-lite)">${p.reach}</span><span>→</span><span>${p.read}</span><span>→</span>
+      <span style="color:var(--gold)">${p.apply}</span>
+      <span style="margin-left:auto">${(p.apply/p.reach*100).toFixed(1)}%</span></div>
+    <div class="bar-t"><div class="bar-f ${p.apply/p.reach>0.3?'g':'y'}" style="width:${p.apply/p.reach*100}%"></div></div>
+  </td>
+  <td>${p.sc>=85?'<span class="tag g">高适配</span>':p.sc>=75?'<span class="tag">中适配</span>':'<span class="tag dim">低适配</span>'}
+    ${p.gap?'<div style="margin-top:4px"><span class="tag r">触达不足</span></div>':''}</td>
+  <td class="num"><div style="display:flex;gap:5px;justify-content:flex-end">
+    <button class="btn-s">${I.edit}编辑</button><button class="btn-s">${I.tag}标签</button></div></td></tr>`).join('');
+
+/* conversion ranking */
+const CONV=D.policies.slice().sort((a,b)=>b.apply/b.reach-a.apply/a.reach).slice(0,7);
+$('#convBox').innerHTML=CONV.map(c=>`<div class="q-i">
+  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2)">${c.t.replace(/（.*?）/,'').slice(0,14)}</span>
+  <div class="bar-t"><div class="bar-f ${c.apply/c.reach>0.3?'g':'y'}" style="width:${c.apply/c.reach*100*2.6}%"></div></div>
+  <span class="s" style="text-align:right;color:${c.apply/c.reach>0.3?'var(--green)':'var(--gold)'}">${(c.apply/c.reach*100).toFixed(1)}%</span>
+</div>`).join('');
+
+/* tag library */
+const CC=['#4737cc','#edb81c','#5fcd96','#45c4d8','#9b6bf0','#e5615f'];
+const USE={'identity':1420,'industry':2864,'scale':2884,'income':2146,'stage':2884,'deadline':986};
+$('#tagBox').innerHTML=D.tagLib.map((c,i)=>`<div class="tagcat">
+  <div class="h"><span style="width:3px;height:13px;background:${CC[i]};border-radius:2px"></span>
+    <b>${c.n}</b><span class="en">${c.c}</span>
+    <span class="tag dim" style="margin-left:auto">${c.items.length} 条</span></div>
+  <div class="b">${c.items.map((t,k)=>`<span class="tl" style="${k>3&&i>2?'opacity:.62':''}">${t}<span class="n">${Math.round(USE[c.c]/(c.items.length)*((k%3)+1)/2.4)}</span><span class="x">✕</span></span>`).join('')}
+    <span class="tl add">+ 新增</span></div></div>`).join('');
+
+/* courses */
+$('#courseBox').innerHTML=D.courses.slice(0,6).map(c=>`<div class="q-i">
+  <span style="flex:1;min-width:0"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.t}</span>
+  <span style="font-size:10px;color:var(--t3)">${c.d} · ${c.en}/${c.cap}</span></span>
+  <span class="tag ${c.en/c.cap>0.85?'r':c.en/c.cap>0.6?'y':'g'}" style="height:17px;font-size:9.5px">${c.en/c.cap>0.85?'将满':c.en/c.cap>0.6?'过半':'有余'}</span>
+</div>`).join('');
+</script>
+</body>
+</html>

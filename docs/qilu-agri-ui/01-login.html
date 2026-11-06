@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 门户入口</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  body{ overflow:auto }
+  .lp{ min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1 }
+  .lp-top{ display:flex;align-items:center;gap:11px;padding:20px 34px }
+  .lp-top .bt b{ display:block;font-size:15px;letter-spacing:.6px }
+  .lp-top .bt span{ display:block;font-size:9.5px;color:var(--t3);letter-spacing:1.8px;text-transform:uppercase }
+  .lp-top .rt{ margin-left:auto;display:flex;gap:9px;align-items:center }
+  .lp-body{ flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 34px 40px }
+  .lp-eyebrow{ display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:2.2px;color:var(--brand-lite);
+    border:1px solid rgba(167,155,255,.3);padding:4px 12px;border-radius:20px;background:rgba(9,6,34,.42);margin-bottom:14px }
+  .lp-eyebrow i{ width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);font-style:normal }
+  .lp-h1{ font-size:40px;font-weight:700;letter-spacing:-.6px;text-align:center;line-height:1.18 }
+  .lp-h1 span{ background:linear-gradient(92deg,#fff,#c9c0ff 58%,#edb81c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text }
+  .lp-sub{ text-align:center;color:var(--t2);font-size:13px;margin-top:11px;max-width:600px;line-height:1.7 }
+
+  .gate{ display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;max-width:860px;margin-top:32px }
+  .gate-c{ border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;position:relative;overflow:hidden;
+    background:linear-gradient(168deg,rgba(30,24,96,.62),rgba(16,12,46,.76));
+    box-shadow:0 14px 42px rgba(0,0,0,.34);transition:.2s }
+  .gate-c::before{ content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(320px 180px at 100% -20%,var(--gc,rgba(71,55,204,.24)),transparent 64%) }
+  .gate-c:hover{ transform:translateY(-3px);border-color:var(--line-3) }
+  .gate-h{ display:flex;align-items:center;gap:11px;position:relative }
+  .gate-h .ic{ width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;
+    background:var(--gc);box-shadow:0 4px 16px rgba(0,0,0,.34) }
+  .gate-h .ic svg{ width:19px;height:19px;color:#fff }
+  .gate-h b{ font-size:16px;letter-spacing:.4px }
+  .gate-h .kd{ font-size:10px;color:var(--t3);letter-spacing:1.4px;text-transform:uppercase }
+  .gate-c p{ font-size:12px;color:var(--t2);line-height:1.7;margin-top:13px;position:relative }
+  .gate-c ul{ margin-top:13px;display:flex;flex-direction:column;gap:8px;position:relative }
+  .gate-c li{ list-style:none;display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--t1) }
+  .gate-c li i{ width:5px;height:5px;border-radius:50%;background:var(--gc);flex:0 0 auto;margin-top:7px }
+  .gate-c .btns{ display:flex;gap:9px;margin-top:17px;position:relative;flex-wrap:wrap }
+  .gbtn{ height:34px;padding:0 18px;border-radius:7px;border:1px solid var(--line-2);background:rgba(124,111,255,.12);
+    color:var(--t1);font-size:12.5px;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px;transition:.14s;text-decoration:none }
+  .gbtn svg{ width:14px;height:14px }
+  .gbtn:hover{ background:rgba(124,111,255,.24);transform:translateY(-1px) }
+  .gbtn.pri{ background:linear-gradient(180deg,var(--brand-2),var(--brand));border-color:rgba(167,155,255,.42);color:#fff;font-weight:600;
+    box-shadow:0 5px 18px rgba(71,55,204,.44) }
+  .gbtn.pri:hover{ filter:brightness(1.13) }
+  .gbtn.mag{ background:linear-gradient(180deg,#e34a86,#c62f6c);border-color:rgba(255,150,190,.4);color:#fff;font-weight:600;
+    box-shadow:0 5px 18px rgba(198,47,108,.4) }
+  .gbtn.mag:hover{ filter:brightness(1.13) }
+
+  .lp-stats{ display:grid;grid-template-columns:repeat(5,1fr);gap:1px;width:100%;max-width:860px;margin-top:26px;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--line) }
+  .lp-stats>div{ background:linear-gradient(168deg,rgba(30,24,96,.5),rgba(16,12,46,.66));padding:15px 12px;text-align:center }
+  .lp-stats b{ display:block;font-family:var(--mono);font-size:24px;font-weight:600;line-height:1.2 }
+  .lp-stats span{ font-size:10.5px;color:var(--t3) }
+
+  .lp-flow{ display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:24px;
+    font-size:11.5px;color:var(--t2) }
+  .lp-flow .st{ background:rgba(9,6,34,.42);border:1px solid rgba(167,155,255,.26);border-radius:20px;padding:5px 13px }
+  .lp-flow .st b{ color:#fff }
+  .lp-flow .ar{ color:var(--brand-lite);opacity:.6 }
+
+  .lp-foot{ padding:16px 34px 22px;text-align:center;font-size:10.5px;color:var(--t4);line-height:1.8 }
+  .lp-foot b{ color:var(--t3) }
+  @media(max-width:820px){ .gate{grid-template-columns:1fr} .lp-h1{font-size:29px} .lp-stats{grid-template-columns:repeat(2,1fr)} }
+</style>
+</head>
+<body>
+<div class="lp">
+  <div class="lp-top">
+    <div class="mark" id="brandMark"></div>
+    <div class="bt"><b>齐鲁农创客</b><span>Agri Creator Platform</span></div>
+    <div class="rt">
+      <span class="clock" id="clk"></span>
+      <a class="tbtn" href="00-index.html" id="bAll">设计稿总览</a>
+    </div>
+  </div>
+
+  <div class="lp-body">
+    <div class="lp-eyebrow"><i></i>济南市农广校内部平台 · 精准培育与政策滴灌决策引擎</div>
+    <h1 class="lp-h1">齐鲁农创客学员全过程管理系统<br><span>让每一项政策，找到对的人</span></h1>
+    <div class="lp-sub">请选择您的身份进入：学员查看专属适配清单与选课；区县 / 市级管理员处理报名、导入与汇总。</div>
+
+    <div class="lp-flow">
+      <span class="st"><b>评估</b> Evaluate</span><span class="ar">▸</span>
+      <span class="st"><b>匹配</b> Match</span><span class="ar">▸</span>
+      <span class="st"><b>触达</b> Reach</span><span class="ar">▸</span>
+      <span class="st"><b>反馈</b> Feedback</span>
+    </div>
+
+    <div class="gate">
+      <!-- 学员 -->
+      <div class="gate-c" style="--gc:rgba(71,55,204,.34)">
+        <div class="gate-h">
+          <div class="ic" id="icS"></div>
+          <div><b>学员入口</b><div class="kd">Student · PWA</div></div>
+        </div>
+        <p>注册 / 登录后进入双 Tab：首页推荐清单与选课，我的画像与知识库。</p>
+        <ul>
+          <li><i></i>专属政策 / 课程匹配，看得到每一条的匹配理由</li>
+          <li><i></i>报名与 App 内消息，学习过程全程留痕</li>
+          <li><i></i>学情调查与知识库，AI 语音笔记自动沉淀</li>
+        </ul>
+        <div class="btns">
+          <a class="gbtn pri" href="02-student-home.html">登录<span id="ar1"></span></a>
+          <a class="gbtn" href="02-student-home.html">注册</a>
+        </div>
+      </div>
+
+      <!-- 管理员 -->
+      <div class="gate-c" style="--gc:rgba(229,97,95,.26)">
+        <div class="gate-h">
+          <div class="ic" id="icA"></div>
+          <div><b>管理员入口</b><div class="kd">Admin · /avo</div></div>
+        </div>
+        <p>区县管理员处理本区学员与报名审核；市级账号可看全市驾驶舱。</p>
+        <ul>
+          <li><i></i>学员筛选 / 批量确认报名 / Excel 导入与 CSV 导出</li>
+          <li><i></i>Excel 导入与 CSV 导出</li>
+          <li><i></i>政策、课程与学情调查</li>
+        </ul>
+        <div class="btns">
+          <a class="gbtn mag" href="06-admin-city.html">管理后台登录<span id="ar2"></span></a>
+          <a class="gbtn" href="00-index.html">Avo 资源管理</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="lp-stats">
+      <div><b style="color:var(--brand-lite)">12</b><span>区县</span></div>
+      <div><b style="color:var(--brand-lite)">2,884</b><span>在册学员</span></div>
+      <div><b style="color:var(--gold)">168</b><span>在库政策</span></div>
+      <div><b style="color:var(--cyan)">96</b><span>开班课程</span></div>
+      <div><b style="color:var(--green)">78.3%</b><span>精准匹配率</span></div>
+    </div>
+
+    <div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:26px;max-width:860px">
+      <a class="gbtn" href="02-student-home.html" style="font-size:11.5px;height:30px;padding:0 13px">学员首页 · 专属适配</a>
+      <a class="gbtn" href="03-student-profile.html" style="font-size:11.5px;height:30px;padding:0 13px">我的全息画像</a>
+      <a class="gbtn" href="04-course.html" style="font-size:11.5px;height:30px;padding:0 13px">课程与留痕</a>
+      <a class="gbtn" href="05-achievement.html" style="font-size:11.5px;height:30px;padding:0 13px">成果与档案</a>
+      <a class="gbtn" href="06-admin-city.html" style="font-size:11.5px;height:30px;padding:0 13px">市级汇总</a>
+      <a class="gbtn" href="07-admin-cockpit.html" style="font-size:11.5px;height:30px;padding:0 13px">驾驶舱</a>
+      <a class="gbtn" href="08-admin-students.html" style="font-size:11.5px;height:30px;padding:0 13px">学员审核台</a>
+      <a class="gbtn" href="09-admin-resource.html" style="font-size:11.5px;height:30px;padding:0 13px">政策与标签</a>
+    </div>
+  </div>
+
+  <div class="lp-foot">
+    <div><b>交流大厅：</b>agri3 · Litestack（已登录用户自动使用系统姓名；游客可自选昵称）　健康检查：/up</div>
+    <div style="margin-top:4px">齐鲁农创客学员全过程管理系统 V1.2 · 移动端 PWA + Web 管理后台　|　数据安全：全站 HTTPS · 隐私字段加密存储</div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+$('#icS').innerHTML=I.leaf;$('#icA').innerHTML=I.gear;
+$('#ar1').innerHTML=I.link;$('#ar2').innerHTML=I.link;
+$('#bAll').innerHTML=I.grid+'<span>设计稿总览</span>';
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 课程（选-学主阵地）</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .main-col{ display:flex;flex-direction:column;gap:14px;min-width:0 }
+  .ccard{ border-bottom:1px solid rgba(124,111,255,.075);padding:12px 15px;cursor:pointer;transition:.13s }
+  .ccard:hover{ background:rgba(124,111,255,.05) }
+  .ccard .l1{ display:flex;gap:11px;align-items:flex-start }
+  .ccard .t{ font-size:13.5px;font-weight:500;flex:1;min-width:0;line-height:1.4 }
+  .ccard .rt{ flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px }
+  .ccard .meta{ display:flex;gap:9px;flex-wrap:wrap;margin-top:5px;font-size:10.5px;color:var(--t3);align-items:center }
+  .star{ color:var(--gold);letter-spacing:1px;font-size:11px }
+  .cap{ width:118px;margin-top:8px }
+  .cap .l{ display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px }
+  .cap .bar-t{ height:4px }
+  .cal{ display:grid;grid-template-columns:repeat(7,1fr);gap:3px }
+  .cal .h{ font-size:9.5px;color:var(--t4);text-align:center;padding:4px 0;letter-spacing:.5px }
+  .cal .d{ aspect-ratio:1;display:grid;place-items:center;border-radius:4px;font-family:var(--mono);font-size:11px;
+    position:relative;background:rgba(10,7,32,.4);color:var(--t2);border:1px solid transparent }
+  .cal .d.out{ opacity:.28 }
+  .cal .d.today{ border-color:var(--brand-lite);color:#fff;background:rgba(71,55,204,.24) }
+  .cal .d.has::after{ content:"";position:absolute;bottom:3px;width:3px;height:3px;border-radius:50%;background:var(--gold) }
+  .cal .d.has2::after{ background:var(--green) }
+  .cal .d.sel{ background:var(--brand);color:#fff;border-color:var(--brand-2);box-shadow:0 0 0 2px rgba(107,91,242,.3) }
+  .trk{ display:flex;gap:0;position:relative;margin-top:6px }
+  .trk::before{ content:"";position:absolute;left:11px;right:11px;top:9px;height:1px;background:var(--line-2) }
+  .trk .s{ flex:1;text-align:center;position:relative;z-index:1 }
+  .trk .s i{ display:block;width:18px;height:18px;border-radius:50%;margin:0 auto;background:var(--s3);border:2px solid var(--s2);
+    display:grid;place-items:center;font-style:normal;font-size:9px;color:var(--t4) }
+  .trk .s.done i{ background:var(--green);border-color:var(--green);color:#06281a }
+  .trk .s.now i{ background:var(--brand-2);border-color:var(--brand-lite);box-shadow:0 0 0 4px rgba(71,55,204,.28);color:#fff }
+  .trk .s b{ display:block;font-size:10px;font-weight:500;margin-top:5px;color:var(--t2) }
+  .trk .s span{ font-size:9px;color:var(--t4) }
+  .gal{ display:grid;grid-template-columns:repeat(4,1fr);gap:6px }
+  .gal div{ aspect-ratio:1;border-radius:5px;position:relative;overflow:hidden;cursor:pointer;
+    background:linear-gradient(140deg,#2b2378,#1a1450);border:1px solid var(--line) }
+  .gal div::after{ content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6),transparent 60%) }
+  .gal div span{ position:absolute;left:5px;bottom:4px;z-index:1;font-size:9px;color:#e6e2ff;font-family:var(--mono) }
+  .gal div.two{ background:linear-gradient(140deg,#1f4a3f,#122b34) }
+  .gal div.three{ background:linear-gradient(140deg,#5a4415,#33280f) }
+  .gal div.four{ background:linear-gradient(140deg,#4a1f36,#2b1420) }
+  .gal div i{ position:absolute;inset:0;display:grid;place-items:center;font-style:normal;opacity:.22 }
+  .gal div i svg{ width:22px;height:22px;color:#fff }
+  .note-i{ display:flex;gap:9px;padding:9px 0;border-bottom:1px solid rgba(124,111,255,.075);align-items:flex-start }
+  .note-i:last-child{ border-bottom:none }
+  .note-i .tm{ font-family:var(--mono);font-size:10.5px;color:var(--gold);flex:0 0 44px;padding-top:1px }
+  .note-i .cc{ font-size:11.5px;line-height:1.55;color:var(--t1) }
+  .note-i .cc em{ font-style:normal;color:var(--brand-lite) }
+  .rec-btn{ width:70px;height:27px;border-radius:5px;font-size:11.5px;cursor:pointer;border:none;font-family:var(--sans);font-weight:600;
+    background:linear-gradient(180deg,var(--brand-2),var(--brand));color:#fff;transition:.13s }
+  .rec-btn:hover{ filter:brightness(1.14) }
+  .rec-btn.dis{ background:rgba(124,111,255,.12);color:var(--t4);border:1px solid var(--line);cursor:not-allowed;filter:none }
+  .rec-btn.ok{ background:var(--green-soft);color:var(--green);border:1px solid rgba(95,205,150,.3);cursor:default;filter:none }
+  .rec-btn.aud{ background:var(--gold-soft);color:var(--gold);border:1px solid rgba(237,184,28,.3);cursor:default;filter:none }
+  .survey-row{ display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(124,111,255,.075) }
+  .survey-row:last-child{ border-bottom:none }
+  .stars{ display:flex;gap:2px }
+  .stars svg{ width:14px;height:14px;color:var(--gold) }
+  .stars svg.off{ color:rgba(124,111,255,.2) }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>齐鲁农创客</b><span>Agri Creator</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">学员端 · App</div>
+        <a class="nav-i" href="02-student-home.html" id="nv-home"></a>
+        <a class="nav-i on" href="04-course.html" id="nv-course"></a>
+        <a class="nav-i" href="05-achievement.html" id="nv-res"></a>
+        <a class="nav-i" href="03-student-profile.html" id="nv-me"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">我的学习</div>
+        <div style="padding:2px 18px 0">
+          <div class="dl">
+            <dt>已选课程</dt><dd>4 门</dd>
+            <dt>已完成</dt><dd style="color:var(--green)">2 门</dd>
+            <dt>本月学时</dt><dd>18.5 h</dd>
+            <dt>出勤率</dt><dd style="color:var(--green)">94%</dd>
+            <dt>语音笔记</dt><dd>14 条</dd>
+            <dt>累计留痕</dt><dd>38 项</dd>
+          </div>
+        </div>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">切换角色视角</div>
+        <a class="nav-i" href="06-admin-city.html" id="nv-adm"></a>
+        <a class="nav-i" href="01-login.html" id="nv-out"></a>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">张</div><div class="who"><b>张长河</b><span><i class="dot"></i>商河县 · 成长期</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>课程 · 选学主阵地</b><i>/</i><span>选课中心 / 课表 / 考勤 / 留痕 / 学情调查</span></div>
+      <div class="top-tools">
+        <input class="field" placeholder="搜索课程 / 导师 / 产业…" style="width:200px">
+        <div class="seg" id="segYr"><button class="on">2026 年度</button><button>2025 年度</button></div>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="wrap" style="display:grid;grid-template-columns:1fr 356px;gap:14px;align-items:start">
+        <div class="main-col">
+
+          <!-- 选课中心 -->
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>选课中心</h3><span class="sub">按年度、类型浏览，每门课标注与您的匹配度与推荐理由</span>
+              <div class="r">
+                <div class="seg" id="segType">
+                  <button class="on" data-t="all">全部</button>
+                  <button data-t="市直班">市直班</button>
+                  <button data-t="区县">区县班</button>
+                  <button data-t="实训">实训</button>
+                </div>
+              </div></div>
+            <div id="courseList"></div>
+          </div>
+
+          <!-- 课表 -->
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>日历课表</h3><span class="sub">2026 年 10 月</span>
+              <div class="r"><button class="tbtn">‹</button><button class="tbtn">今天</button><button class="tbtn">›</button></div></div>
+            <div class="card-b">
+              <div class="cal" id="cal"></div>
+              <div class="legend mt-s">
+                <span><i style="background:var(--gold)"></i>已报名课程日</span>
+                <span><i style="background:var(--green)"></i>已完成课程日</span>
+                <span><i style="background:var(--brand)"></i>选定日期</span>
+              </div>
+              <div class="mt" style="border-top:1px solid var(--line);padding-top:12px">
+                <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="dayTitle">10-15（周三）课程安排</div>
+                <div id="dayDetail"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 过程留痕 -->
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>现场全息记录</h3><span class="sub">扫码考勤 · 照片时间轴 · AI 语音笔记</span>
+              <div class="r">
+                <button class="tbtn" id="btnScan">扫码考勤</button>
+                <button class="tbtn" id="btnMic">发起语音笔记</button>
+                <button class="tbtn pri" id="btnUpload">上传实操照片</button>
+              </div></div>
+            <div class="card-b">
+              <div class="trk" id="trk"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+              <div style="border-right:1px solid var(--line)">
+                <div style="padding:12px 15px 10px;font-size:11.5px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:6px">
+                  <span id="icGal"></span>照片时间轴 · 课程公共相册</div>
+                <div class="gal" style="padding:0 15px 14px" id="gal"></div>
+              </div>
+              <div>
+                <div style="padding:12px 15px 10px;font-size:11.5px;font-weight:600;color:var(--t2);display:flex;align-items:center;gap:6px">
+                  <span id="icMic"></span>AI 语音笔记 · 结构化提炼</div>
+                <div style="padding:0 15px 14px">
+                  <div class="note-i"><span class="tm">09:12</span><div class="cc"><em>Q：</em>市级家庭农场示范场申报，材料需要准备哪些？<br>
+                    <em>A：</em>营业执照、流转合同、上一年度台账与收入证明，<br>系统已自动归入「政策申报」知识条目</div></div>
+                  <div class="note-i"><span class="tm">09:41</span><div class="cc"><em>要点：</em>申报截止 <em>10-28</em>，需提前 15 日提交预审</div></div>
+                  <div class="note-i"><span class="tm">10:05</span><div class="cc"><em>待办：</em>补充农机购置发票复印件（未完成）</div></div>
+                  <div class="why mt-s">已转写 <b>1,842</b> 字 · 提炼关键问答 <b>7</b> 条 · 待办 <b>2</b> 项 · 支持山东方言识别</div>
+                  <button class="mini-btn mt-s" style="width:100%;justify-content:center">查看完整笔记与检索</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========== side ========== -->
+        <aside style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>报名状态统计</h3>
+              <div class="r"><span class="tag">我的</span></div></div>
+            <div class="card-b">
+              <div style="display:grid;place-items:center"><div id="donut"></div></div>
+              <div class="legend mt-s" style="justify-content:center" id="donutLeg"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>学习档案检索</h3><span class="sub">跨课程全文</span></div>
+            <div class="card-b">
+              <div class="srch" style="display:flex;gap:7px;margin-bottom:10px">
+                <input class="field" placeholder="搜索笔记 / 照片 / 考试…" style="flex:1">
+              </div>
+              <div id="archList"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>学情调查</h3><span class="sub">训前 / 训中 / 训后</span>
+              <div class="r"><span class="tag g">已完成 8/8</span></div></div>
+            <div class="card-b" id="survey"></div>
+          </div>
+
+          <div class="card" style="border-color:rgba(237,184,28,.24)">
+            <div class="card-h"><i class="bar" style="background:var(--gold)"></i><h3>推荐课程（补短板）</h3></div>
+            <div class="card-b">
+              <div class="why y" style="margin-bottom:10px">基于您的 <b>电商运营 47 分</b>短板与<b>成长期</b>阶段，以下课程经匹配引擎推荐：</div>
+              <div class="note-i" style="border-bottom:1px dashed rgba(124,111,255,.12)">
+                <div class="ico c" id="r1" style="margin-top:2px"></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:500">短视频直播实操训练营（第九期）</div>
+                <div style="font-size:10.5px;color:var(--t3);margin-top:2px">市农广校 · 11-20 开班 · 余 18/40</div>
+                <div style="margin-top:5px"><span class="score hi">82%</span> <span style="font-size:10px;color:var(--t3)">补齐电商短板</span></div></div>
+                <button class="rec-btn" style="margin-top:2px">报名</button></div>
+              <div class="note-i" style="border-bottom:none;padding-bottom:0">
+                <div class="ico g" id="r2" style="margin-top:2px"></div>
+                <div style="flex:1"><div style="font-size:12px;font-weight:500">农产品品牌塑造与溢价经营</div>
+                <div style="font-size:10.5px;color:var(--t3);margin-top:2px">商河县农广校 · 12-02 · 余 26/50</div>
+                <div style="margin-top:5px"><span class="score mid">76%</span> <span style="font-size:10px;color:var(--t3)">基于品牌营销 55 分</span></div></div>
+                <button class="rec-btn" style="margin-top:2px">报名</button></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>容量控制</b> 有效报名数（已报名+已完成）达容量即显示"课程已满"，退课释放座位</span>
+        <span><b>状态流转</b> enrolled → completed / dropped（终态不可逆）</span>
+        <span><b>数据留痕</b> 考勤 GPS + 照片水印 + 语音转写，全部计入画像 P 象限</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['nv-home','首页','home'],['nv-course','课程 · 报名','book'],['nv-res','成果','trophy'],['nv-me','我的 · 画像','radar'],['nv-adm','管理端 Web','grid'],['nv-out','退出登录','out']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+$('#icGal').innerHTML=I.cam;$('#icMic').innerHTML=I.mic;$('#r1').innerHTML=I.book;$('#r2').innerHTML=I.trophy;
+$('#btnScan').innerHTML=I.qr+'<span>扫码考勤</span>';
+$('#btnMic').innerHTML=I.mic+'<span>发起语音笔记</span>';
+$('#btnUpload').innerHTML=I.cam+'<span>上传实操照片</span>';
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* ---- course list ---- */
+const stars=n=>'★'.repeat(Math.max(1,Math.round(n/20)))+'☆'.repeat(5-Math.max(1,Math.round(n/20)));
+function stCls(st){return st==='已录取'?['ok','已录取']:st==='审核中'?['aud','审核中']:st==='已满'?['dis','课程已满']:st==='候补'?['aud','候补']:['','报名'];}
+let curT='all';
+function renderC(){
+  const box=$('#courseList');box.innerHTML='';
+  D.courses.filter(c=>curT==='all'||(curT==='市直班'?c.l.includes('市直'):curT==='区县'?c.l.split(' · ')[0].length>3&&!c.l.includes('市直'):true))
+  .forEach(c=>{
+    const [cls,lb]=stCls(c.st);
+    const pct=Math.min(100,c.en/c.cap*100);
+    const d=document.createElement('div');d.className='ccard';
+    d.innerHTML=`<div class="l1">
+      <div class="ico ${c.st==='已录取'?'g':c.st==='审核中'?'y':'c'}" style="margin-top:1px">${I.book}</div>
+      <div style="flex:1;min-width:0">
+        <div class="t">${c.t}</div>
+        <div class="meta"><span class="star">${stars(c.sc)}</span><span style="color:var(--brand-lite)">与您的匹配度 ${c.sc}%</span>
+          <span style="opacity:.3">|</span><span>${c.l}</span></div>
+        <div class="meta"><span>${I.cal.replace('<svg','<svg width="11" height="11" style="vertical-align:-2px"')}${c.d}</span>
+          <span>${I.pin.replace('<svg','<svg width="11" height="11" style="vertical-align:-2px"')}${c.p}</span></div>
+        <div class="why ${c.sc>=85?'y':''}" style="margin-top:7px">推荐理由：${c.sc>=90?'您已具备该课程所需的<b>政策申报</b>与<b>经营管理</b>基础，属高匹配必修':c.sc>=80?'匹配您的<b>'+c.l.split(' · ')[0]+'</b>产业方向与<b>成长期</b>阶段能力需求':'与您主业相关，通勤与时间成本使匹配度下调'}</div>
+      </div>
+      <div class="rt">
+        <span class="score ${c.sc>=85?'hi':c.sc>=70?'mid':'lo'}">${c.sc}%</span>
+        <div class="cap">
+          <div class="l"><span>已报</span><span style="font-family:var(--mono)">${c.en} / ${c.cap}</span></div>
+          <div class="bar-t"><div class="bar-f ${pct>85?'r':pct>60?'y':'g'}" style="width:${pct}%"></div></div>
+        </div>
+        <button class="rec-btn ${cls}">${lb}</button>
+      </div></div>`;
+    box.appendChild(d);
+  });
+}
+renderC();
+$$('#segType button').forEach(b=>b.onclick=()=>{$$('#segType button').forEach(x=>x.classList.remove('on'));b.classList.add('on');curT=b.dataset.t;renderC();});
+$$('#segYr button').forEach(b=>b.onclick=()=>{$$('#segYr button').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+
+/* ---- calendar ---- */
+const EVT={15:['市直·政策解读与申报辅导','09:00-12:00 · 市农广校三号报告厅','王守粮','已录取'],
+  17:['市直·农创客品牌营销实务','09:00-12:00 · 市农广校三号报告厅','陈玫香','已录取'],
+  22:['小麦高产技术培训','08:30-12:00 · 历城区农技推广中心','王守粮','审核中'],
+  24:['莱芜生姜绿色防控课堂','09:00-12:00 · 莱芜区农广校','张姜农','未报名'],
+  29:['结业考试 · 品牌营销实务','14:00-16:00 · 线上','—','待参加']};
+const DONE={2:1,9:1,14:1,18:1,26:1,30:1};
+function renderCal(){
+  const c=$('#cal');let h='';
+  ['一','二','三','四','五','六','日'].forEach(d=>h+=`<div class="h">${d}</div>`);
+  for(let i=0;i<2;i++)h+=`<div class="d out">${29+i}</div>`;
+  for(let d=1;d<=31;d++){
+    const has=EVT[d]?'has':(DONE[d]?'has2':'');
+    const sel=d===15?'sel':'';
+    h+=`<div class="d ${has} ${d===12?'today':''} ${sel}" data-d="${d}">${d}</div>`;
+  }
+  for(let i=1;i<=2;i++)h+=`<div class="d out">${i}</div>`;
+  c.innerHTML=h;
+  $$('#cal .d[data-d]').forEach(x=>x.onclick=()=>{$$('#cal .d').forEach(y=>y.classList.remove('sel'));x.classList.add('sel');showDay(+x.dataset.d);});
+}
+function showDay(d){
+  $('#dayTitle').textContent=`10-${String(d).padStart(2,'0')}（周${'一二三四五六日'[new Date(2026,9,d).getDay()===0?6:new Date(2026,9,d).getDay()-1]}）课程安排`;
+  const e=EVT[d];
+  $('#dayDetail').innerHTML=e
+   ? `<div class="note-i" style="border-bottom:none;padding-bottom:0">
+        <div class="ico ${e[3]==='已录取'?'g':e[3]==='审核中'?'y':'c'}">${I.book}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:500">${e[0]}</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:3px">${e[1]} · 导师 ${e[2]}</div></div>
+        <span class="tag ${e[3]==='已录取'?'g':e[3]==='审核中'?'y':''}">${e[3]}</span></div>`
+   : `<div style="font-size:11.5px;color:var(--t3);padding:6px 0">当日无课程安排 · 可查看 AI 语音笔记与照片留痕</div>`;
+}
+renderCal();showDay(15);
+
+/* ---- training tracker ---- */
+const STEPS=[
+  {t:'训前需求问卷',s:'done',d:'09-12'},
+  {t:'扫码考勤',s:'done',d:'09-15'},
+  {t:'训中每日评价',s:'done',d:'09-15'},
+  {t:'照片留痕',s:'done',d:'09-15'},
+  {t:'AI 语音笔记',s:'done',d:'09-15'},
+  {t:'结业考试',s:'done',d:'09-18'},
+  {t:'满意度调查',s:'now',d:'09-18'},
+  {t:'能力分入库',s:'',d:'10-01'},
+];
+$('#trk').innerHTML=STEPS.map(s=>`<div class="s ${s.s}"><i>${s.s==='done'?'✓':s.s==='now'?'•':''}</i><b>${s.t}</b><span>${s.d}</span></div>`).join('');
+
+/* ---- gallery ---- */
+const GAL=[['08:52','一'],['09:14','two'],['09:33',''],['09:47','three'],['10:02','four'],['10:18','two'],['10:31',''],['10:44','three']];
+$('#gal').innerHTML=GAL.map(([t,c])=>`<div class="${c}"><i>${I.cam}</i><span>${t}</span></div>`).join('');
+
+/* ---- donut ---- */
+Chart.donut($('#donut'),{size:172,sw:20,center:'4',centerSub:'门课程',
+  data:[{k:'已完成',v:2,c:'#5fcd96'},{k:'已录取',v:2,c:'#4737cc'},{k:'审核中',v:1,c:'#edb81c'},{k:'候补',v:1,c:'#45c4d8'}]});
+$('#donutLeg').innerHTML=[['已完成','#5fcd96','2 门'],['已录取','#4737cc','2 门'],['审核中','#edb81c','1 门'],['候补','#45c4d8','1 门']]
+  .map(([k,c,v])=>`<span><i style="background:${c}"></i>${k} <b style="font-family:var(--mono);color:#edeaff">${v}</b></span>`).join('');
+
+/* ---- archive list ---- */
+const ARCH=[
+  {ic:'mic',c:'c',t:'语音笔记 · 政策申报要点问答',m:'市直·政策解读与申报辅导 · 10-15'},
+  {ic:'cam',c:'g',t:'现场照片 12 张',m:'小麦高产技术培训 · 已加水印'},
+  {ic:'checkc',c:'y',t:'结业考试 92 分',m:'品牌营销实务 · 09-18'},
+  {ic:'doc',c:'',t:'学情调查 满意度 5.0',m:'训后 · 已计入互动分'},
+  {ic:'book',c:'c',t:'课程课件包（12 份）',m:'市直班 · 可下载'},
+  {ic:'trend',c:'g',t:'实践转化跟踪表',m:'9 月 · 规模 1,280 亩'},
+];
+$('#archList').innerHTML=ARCH.map(a=>`<div class="archive-i">
+  <div class="ico ${a.c}">${I[a.ic]}</div>
+  <div style="flex:1;min-width:0"><div style="font-size:11.5px">${a.t}</div><div style="font-size:10px;color:var(--t3);margin-top:1px">${a.m}</div></div>
+  ${I.search.replace('<svg','<svg width="12" height="12" style="color:var(--t4)"')}</div>`).join('');
+
+/* ---- survey ---- */
+const SV=[
+  {t:'训前需求问卷',d:'10-15 前置',s:5,st:'已提交'},
+  {t:'训中每日评价',d:'10-15 现场',s:5,st:'已提交'},
+  {t:'训中每日评价',d:'10-17 现场',s:4,st:'已提交'},
+  {t:'训后结业考试',d:'09-18',s:5,st:'92 分'},
+  {t:'训后满意度调查',d:'09-18',s:5,st:'已提交'},
+];
+const sv=h=>{let x='';for(let i=0;i<5;i++)x+=(i<h?I.star:I.star).replace('<svg','<svg class="'+(i>=h?'off':'')+'"');return `<span class="stars">${x}</span>`;};
+$('#survey').innerHTML=SV.map(v=>`<div class="survey-row">
+  <div style="flex:1"><div style="font-size:11.5px">${v.t}</div><div style="font-size:10px;color:var(--t3)">${v.d}</div></div>
+  ${sv(v.s)}<span class="tag dim" style="min-width:52px;justify-content:center">${v.st}</span></div>`).join('');
+</script>
+</body>
+</html>

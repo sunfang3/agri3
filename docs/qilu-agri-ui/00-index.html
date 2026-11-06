@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客学员全过程管理系统 · 设计稿总览</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .page{max-width:1360px;margin:0 auto;padding:34px 26px 70px}
+  .hero{
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;position:relative;
+    background:linear-gradient(135deg,#1a1460 0%,#241b7d 42%,#3a2ab0 100%);
+    padding:40px 40px 34px;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(680px 380px at 88% -30%, rgba(237,184,28,.24), transparent 62%),
+      radial-gradient(520px 320px at 12% 130%, rgba(95,205,150,.2), transparent 62%);
+  }
+  .hero-in{ position:relative; z-index:1; display:flex; gap:34px; align-items:flex-end; flex-wrap:wrap }
+  .hero-l{ flex:1; min-width:320px }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:2.4px;
+    color:var(--brand-lite);border:1px solid rgba(167,155,255,.34);
+    padding:4px 11px;border-radius:20px;background:rgba(9,6,34,.4);margin-bottom:16px;
+  }
+  .eyebrow i{ width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);font-style:normal }
+  .hero h1{ font-size:36px; line-height:1.2; letter-spacing:-.5px; font-weight:700 }
+  .hero h1 span{ background:linear-gradient(92deg,#fff,#c9c0ff 60%,#edb81c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+  .hero p{ color:#c3bcf0; font-size:13.5px; margin-top:11px; max-width:660px; line-height:1.7 }
+  .hero-stats{ display:flex; gap:26px; flex-wrap:wrap; padding-top:4px }
+  .hero-stats div b{ display:block; font-family:var(--mono); font-size:25px; font-weight:600; line-height:1.2 }
+  .hero-stats div span{ font-size:11px; color:#a99fe0 }
+  .flow{ margin-top:22px;padding-top:18px;border-top:1px solid rgba(167,155,255,.2);
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:11.5px;color:#cfc8f5 }
+  .flow b{ color:#fff;font-weight:600 }
+  .flow .st{ background:rgba(9,6,34,.42);border:1px solid rgba(167,155,255,.26);border-radius:20px;padding:4px 12px }
+  .flow .ar{ color:var(--brand-lite); opacity:.7 }
+
+  .sect-h{ display:flex;align-items:baseline;gap:12px;margin:40px 0 16px }
+  .sect-h h2{ font-size:17px; letter-spacing:.4px }
+  .sect-h span{ font-size:11.5px; color:var(--t3) }
+  .sect-h::after{ content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent) }
+
+  .sheets{ display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:15px }
+  .sc{
+    display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:12px;
+    background:linear-gradient(170deg,rgba(30,24,96,.5),rgba(16,12,46,.6));overflow:hidden;
+    transition:.18s; position:relative;
+  }
+  .sc:hover{ transform:translateY(-3px);border-color:var(--line-3);box-shadow:0 16px 38px rgba(0,0,0,.42) }
+  .sc-top{ height:118px;position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:linear-gradient(135deg,#1c1670,#2c22a0 55%,#3f2fc4) }
+  .sc-top::after{ content:"";position:absolute;inset:0;
+    background:radial-gradient(300px 140px at 80% 0%,rgba(237,184,28,.3),transparent 62%),
+               radial-gradient(240px 120px at 10% 100%,rgba(95,205,150,.26),transparent 60%) }
+  .sc-top .mini{ position:absolute;inset:12px 12px auto 12px;height:94px;z-index:1 }
+  .sc-body{ padding:13px 15px 15px }
+  .sc-body .no{ font-family:var(--mono);font-size:10px;color:var(--t4);letter-spacing:1.4px }
+  .sc-body h3{ font-size:14px;margin:4px 0 6px;font-weight:600;letter-spacing:.3px }
+  .sc-body p{ font-size:11.5px;color:var(--t2);line-height:1.6;min-height:37px }
+  .sc-meta{ display:flex;gap:6px;flex-wrap:wrap;margin-top:10px }
+  .sc-go{ margin-top:11px;font-size:11.5px;color:var(--brand-lite);display:flex;align-items:center;gap:5px }
+  .sc-go svg{ width:12px;height:12px;transition:.18s }
+  .sc:hover .sc-go svg{ transform:translateX(3px) }
+
+  .note-box{ margin-top:34px;padding:16px 20px;border-radius:12px;border:1px dashed var(--line-2);
+    background:rgba(10,7,32,.5);display:flex;gap:26px;flex-wrap:wrap }
+  .note-box dl{ display:flex;gap:10px;align-items:baseline;font-size:11.5px }
+  .note-box dt{ color:var(--t3) }
+  .note-box dd{ color:var(--t1) }
+  .sw{ width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-2px;margin-right:5px }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <section class="hero">
+    <div class="hero-in">
+      <div class="hero-l">
+        <div class="eyebrow"><i></i>JINAN AGRICULTURAL BROADCASTING SCHOOL · 2026</div>
+        <h1>齐鲁农创客学员全过程管理系统<br><span>界面设计稿 · 全端高保真</span></h1>
+        <p>以「学员全息画像 × 政策资源要素化解构」为双核，通过评估—匹配—触达—反馈智能闭环，把政策与课程精准滴灌到每一位农创客。共 9 张界面，覆盖学员端 App 四个 Tab 与管理端 Web 后台六大模块。</p>
+        <div class="flow">
+          <span class="st"><b>评估</b> Evaluate</span><span class="ar">▸</span>
+          <span class="st"><b>匹配</b> Match</span><span class="ar">▸</span>
+          <span class="st"><b>触达</b> Reach</span><span class="ar">▸</span>
+          <span class="st"><b>反馈</b> Feedback</span>
+          <span style="margin-left:6px;color:#9c93d6">底座：T-I-P-S 全息画像引擎　｜　政策标签库　｜　规则+余弦相似度匹配</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div><b>2,884</b><span>全市在册学员</span></div>
+        <div><b>12</b><span>区县</span></div>
+        <div><b>168</b><span>在库政策</span></div>
+        <div><b>11</b><span>开班课程</span></div>
+        <div><b>73.8</b><span>平均能力分</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sect-h"><h2>学员端 App（PWA）</h2><span>移动优先 · 千人千面 · 双 Tab 起步、V1.2 扩展为四 Tab</span></div>
+  <div class="sheets">
+    <a class="sc" href="01-login.html">
+      <div class="sc-top"><div class="mini" id="m1"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 01</div><h3>门户入口 / 登录</h3>
+        <p>学员与管理员双入口分流，手机号 + 密码登录，平台概览与角色引导。</p>
+        <div class="sc-meta"><span class="tag">未登录</span><span class="tag dim">Landing</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="02-student-home.html">
+      <div class="sc-top"><div class="mini" id="m2"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 02</div><h3>学员首页 · 专属适配中心</h3>
+        <p>三档优先级推荐清单、匹配理由、我的课表、强匹配红点提醒、成长档案摘要。</p>
+        <div class="sc-meta"><span class="tag y">核心页</span><span class="tag dim">首页 Tab</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="03-student-profile.html">
+      <div class="sc-top"><div class="mini" id="m3"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 03</div><h3>我的 · 全息画像</h3>
+        <p>T-I-P-S 四象限、能力雷达、标签修正、发展阶段诊断与建议、学习档案检索。</p>
+        <div class="sc-meta"><span class="tag">我的 Tab</span><span class="tag c">画像引擎</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="04-course.html">
+      <div class="sc-top"><div class="mini" id="m4"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 04</div><h3>课程 · 选学主阵地</h3>
+        <p>选课中心匹配度星级、日历课表、扫码考勤、照片时间轴、AI 语音笔记与学情调查。</p>
+        <div class="sc-meta"><span class="tag">课程 Tab</span><span class="tag dim">过程留痕</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="05-achievement.html">
+      <div class="sc-top"><div class="mini" id="m5"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 05</div><h3>成果 · 价值验证</h3>
+        <p>我的成长档案、荣誉室徽章、产业动态追踪、案例展示墙与社群贡献分。</p>
+        <div class="sc-meta"><span class="tag">成果 Tab</span><span class="tag g">成效归因</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="sect-h"><h2>管理端 Web 后台（Avo · /avo）</h2><span>市 / 区县 / 系统三级权限 · 区县数据隔离</span></div>
+  <div class="sheets">
+    <a class="sc" href="06-admin-city.html">
+      <div class="sc-top"><div class="mini" id="m6"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 06</div><h3>市级管理后台 · 全市汇总视图</h3>
+        <p>学员总数、成长阶段分布、报名状态矩阵、区县横向对比，一页看清全市盘。</p>
+        <div class="sc-meta"><span class="tag">city_admin</span><span class="tag dim">总览</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="07-admin-cockpit.html">
+      <div class="sc-top"><div class="mini" id="m7"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 07</div><h3>精准匹配驾驶舱</h3>
+        <p>需求词云、政策触达漏斗、匹配热力图、资源缺口告警、核心指标与预警中心。</p>
+        <div class="sc-meta"><span class="tag y">核心大屏</span><span class="tag c">数智看板</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="08-admin-students.html">
+      <div class="sc-top"><div class="mini" id="m8"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 08</div><h3>学员档案 · 审核录取</h3>
+        <p>待我审核录取、区办班报名只读队列、案例展示墙、Excel 批量导入与凭据清单。</p>
+        <div class="sc-meta"><span class="tag">district_manager</span><span class="tag dim">批量操作</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+    <a class="sc" href="09-admin-resource.html">
+      <div class="sc-top"><div class="mini" id="m9"></div></div>
+      <div class="sc-body">
+        <div class="no">SHEET 09</div><h3>政策资源库 · 标签管理</h3>
+        <p>政策 PDF 智能解析与人工校准、六大类标签库维护、匹配学员数与触达转化效果。</p>
+        <div class="sc-meta"><span class="tag c">标签引擎</span><span class="tag dim">供给池</span></div>
+        <div class="sc-go">查看界面 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="note-box">
+    <dl><dt>品牌主色</dt><dd><i class="sw" style="background:#4737cc"></i>#4737CC 靛紫（取自现有系统实屏）</dd></dl>
+    <dl><dt>辅助色</dt><dd><i class="sw" style="background:#edb81c"></i>#EDB81C 政策金　<i class="sw" style="background:#5fcd96"></i>#5FCD96 成效绿　<i class="sw" style="background:#45c4d8"></i>#45C4D8 数据青</dd></dl>
+    <dl><dt>图形语言</dt><dd>深靛底 + 细网格 + 品牌光晕，等宽数字（tabular-nums）</dd></dl>
+    <dl><dt>图表</dt><dd>全部手写 SVG，无外部依赖，离线可渲染</dd></dl>
+  </div>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  /* miniature previews on the cover cards */
+  const B='#4737cc', B2='#6b5bf2', G='#5fcd96', Y='#edb81c';
+  const mini=(id,fn)=>fn(document.getElementById(id));
+  mini('m1',c=>{c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px">
+    <rect x="0" y="26" width="220" height="9" rx="2" fill="rgba(255,255,255,.13)"/>
+    <rect x="0" y="41" width="140" height="7" rx="2" fill="rgba(255,255,255,.09)"/>
+    <rect x="10" y="58" width="94" height="32" rx="4" fill="rgba(255,255,255,.1)"/>
+    <rect x="112" y="58" width="94" height="32" rx="4" fill="rgba(255,255,255,.1)"/>
+    <rect x="20" y="68" width="34" height="12" rx="3" fill="${B2}"/><rect x="122" y="68" width="34" height="12" rx="3" fill="${Y}"/>
+    <rect x="10" y="6" width="8" height="8" rx="2" fill="${Y}"/></svg>`;});
+  mini('m2',c=>{let h='';[0,1,2,3,4].forEach(i=>{h+=`<rect x="${8}" y="${8+i*17}" width="${200-i*16}" height="12" rx="2" fill="${i===0?Y:'rgba(255,255,255,'+(0.12-i*0.015)+')'}"/>`;});
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px"><rect x="0" y="0" width="220" height="8" fill="${B}"/>${h}</svg>`;});
+  mini('m3',c=>{let g='';[4,3,3,2,3,4,3,2,3].forEach((v,i)=>{g+=`<rect x="${6+i*11}" y="${90-v*13}" width="7" height="${v*13}" fill="${B2}" opacity="${0.35+v*0.08}" rx="1"/>`;});
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px"><rect x="0" y="60" width="110" height="34" rx="3" fill="rgba(255,255,255,.07)"/>${g}</svg>`;});
+  mini('m4',c=>{let r='';[0,1,2].forEach(i=>[0,1,2].forEach(j=>{const on=(i+j)%2===0;
+      r+=`<rect x="${6+j*72}" y="${8+i*28}" width="66" height="22" rx="3" fill="${on?B2:'rgba(255,255,255,.08)'}" opacity="${on?.55:.9}"/>`;}));
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px">${r}</svg>`;});
+  mini('m5',c=>{let s='';for(let i=0;i<12;i++)s+=`<circle cx="${18+(i%4)*22}" cy="${20+Math.floor(i/4)*38}" r="7" fill="${[Y,G,B2,C='#45c4d8'][i%4]}" opacity=".8"/>`;
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px"><rect x="0" y="0" width="220" height="94" fill="rgba(255,255,255,.04)"/>${s}</svg>`;});
+  mini('m6',c=>{let h='';const d=[52,44,38,31,28,24,20,17,14,12,10,9];
+    d.forEach((v,i)=>{h+=`<rect x="${8+i*18}" y="${88-v*1.45}" width="12" height="${v*1.45}" rx="2" fill="${B2}" opacity="${.4+v/90}"/>`;});
+    h+=`<line x1="0" y1="88" x2="220" y2="88" stroke="rgba(255,255,255,.2)"/>`;
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px">${h}</svg>`;});
+  mini('m7',c=>{let r='';for(let i=0;i<44;i++){const x=6+(i%22)*9.6,y=6+Math.floor(i/22)*42;
+      const v=(i*7)%5;r+=`<rect x="${x}" y="${y}" width="8" height="8" rx="1.5" fill="${B}" opacity="${.2+v*.19}"/>`;}
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px"><rect x="0" y="0" width="220" height="94" fill="rgba(255,255,255,.03)"/>${r}</svg>`;});
+  mini('m8',c=>{let r='';for(let i=0;i<6;i++)r+=`<rect x="6" y="${6+i*15}" width="208" height="11" rx="2" fill="rgba(255,255,255,${i===1?.16:.08})"/>`;
+    r+=`<rect x="120" y="${6+15}" width="86" height="11" rx="2" fill="${Y}" opacity=".3"/>`;
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px">${r}</svg>`;});
+  mini('m9',c=>{let r='';['#4737cc','#6b5bf2','#8f80ff','#a79bff','#c9c0ff'].forEach((col,i)=>{
+      for(let j=0;j<5;j++)r+=`<rect x="${6+j*17}" y="${6+i*17}" width="13" height="13" rx="2.5" fill="${col}" opacity="${.9-i*.14}"/>`;});
+    c.innerHTML=`<svg viewBox="0 0 220 94" class="chart" style="height:94px">${r}</svg>`;});
+</script>
+</body>
+</html>

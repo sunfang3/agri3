@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 学员档案与审核录取</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .pending-i{ display:flex;gap:10px;align-items:center;padding:10px 15px;border-bottom:1px solid rgba(124,111,255,.075);transition:.12s }
+  .pending-i:hover{ background:rgba(124,111,255,.05) }
+  .pending-i:last-child{ border-bottom:none }
+  .ckb{ width:15px;height:15px;border-radius:3px;border:1px solid var(--line-3);background:rgba(10,7,32,.6);
+    cursor:pointer;flex:0 0 auto;display:grid;place-items:center;transition:.12s }
+  .ckb.on{ background:linear-gradient(180deg,var(--brand-2),var(--brand));border-color:var(--brand-lite) }
+  .ckb svg{ width:11px;height:11px;color:#fff;opacity:0 }
+  .ckb.on svg{ opacity:1 }
+  .stu-i{ display:flex;gap:10px;align-items:center;padding:9px 15px;border-bottom:1px solid rgba(124,111,255,.075);transition:.12s }
+  .stu-i:hover{ background:rgba(124,111,255,.05) }
+  .stu-i:last-child{ border-bottom:none }
+  .sav{ width:28px;height:28px;border-radius:7px;flex:0 0 auto;display:grid;place-items:center;font-size:11px;font-weight:700;
+    background:linear-gradient(145deg,#3a2fb0,#1d1682);color:#c9c0ff;box-shadow:inset 0 0 0 1px rgba(167,155,255,.24) }
+  .btn-s{ height:24px;padding:0 9px;border-radius:4px;font-size:11px;cursor:pointer;border:1px solid var(--line-2);
+    background:rgba(124,111,255,.1);color:var(--t2);display:inline-flex;align-items:center;gap:4px;font-family:var(--sans);transition:.12s }
+  .btn-s svg{ width:11px;height:11px }
+  .btn-s:hover{ background:rgba(124,111,255,.2);color:var(--t1) }
+  .btn-s.pri{ background:linear-gradient(180deg,var(--brand-2),var(--brand));border-color:rgba(167,155,255,.4);color:#fff;font-weight:600 }
+  .btn-s.gold{ background:linear-gradient(180deg,#e8a90f,#c8901a);border-color:rgba(255,220,120,.45);color:#2b1f00;font-weight:700 }
+  .btn-s.dg{ background:var(--red-soft);border-color:rgba(229,97,95,.3);color:var(--red) }
+  .case-i{ display:flex;align-items:center;gap:10px;padding:9px 15px;border-bottom:1px solid rgba(124,111,255,.075);transition:.12s }
+  .case-i:hover{ background:rgba(124,111,255,.05) }
+  .case-i:last-child{ border-bottom:none }
+  .case-i .rk{ font-family:var(--mono);font-size:15px;font-weight:700;width:32px;flex:0 0 auto;text-align:center }
+  .drop{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:16px;text-align:center;cursor:pointer;transition:.15s;
+    background:rgba(10,7,32,.35) }
+  .drop:hover{ border-color:var(--brand-lite);background:rgba(71,55,204,.12) }
+  .drop svg{ width:26px;height:26px;color:var(--t3);margin-bottom:7px }
+  .drop:hover svg{ color:var(--brand-lite) }
+  .drop .t{ font-size:12px;color:var(--t2) }
+  .drop .s{ font-size:10px;color:var(--t4);margin-top:3px }
+  .cred{ font-family:var(--mono);font-size:11px }
+  .cred-row{ display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px dashed rgba(124,111,255,.12) }
+  .cred-row:last-child{ border-bottom:none }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>历城区农广校</b><span>district_manager</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">本区工作台</div>
+        <a class="nav-i on" href="08-admin-students.html" id="n1"></a>
+        <a class="nav-i" href="06-admin-city.html" id="n2"></a>
+        <a class="nav-i" href="07-admin-cockpit.html" id="n3"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">学员管理</div>
+        <a class="nav-i" href="#list" id="n4"></a>
+        <a class="nav-i" href="#enroll" id="n5"></a>
+        <a class="nav-i" href="#import" id="n6"></a>
+        <a class="nav-i" href="#pwd" id="n7"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">资源与引擎</div>
+        <a class="nav-i" href="09-admin-resource.html" id="n8"></a>
+        <a class="nav-i" href="07-admin-cockpit.html#engine" id="n9"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">隔离提示</div>
+        <div style="padding:0 18px">
+          <div class="why y" style="font-size:10.5px">您只能看到<b>历城区</b>的学员画像与报名记录，其余 11 个区县不可见。</div>
+        </div>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">历</div><div class="who"><b>刘建国</b><span><i class="dot"></i>历城区 · 管理员</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>历城区学员管理台</b><i>/</i><span>汇总看板 / 批量导入 / 审核录取 / 案例墙</span></div>
+      <div class="top-tools">
+        <div class="seg"><button class="on">本区（历城区）</button><button>全市只读</button></div>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- 本区汇总 -->
+      <div class="g4">
+        <div class="kpi"><div class="k-lbl" id="k1"></div><div class="k-val">486<small> 人</small></div>
+          <div class="k-foot"><span class="delta up">▲ 12</span> 较上月</div></div>
+        <div class="kpi gold"><div class="k-lbl" id="k2"></div><div class="k-val">2,146<small> 条</small></div>
+          <div class="k-foot">已推送强匹配推荐</div></div>
+        <div class="kpi green"><div class="k-lbl" id="k3"></div><div class="k-val">76.2<small>%</small></div>
+          <div class="k-foot"><span class="delta up">▲ 1.8pt</span> 消息打开率</div></div>
+        <div class="kpi cyan"><div class="k-lbl" id="k4"></div><div class="k-val" style="font-size:22px;padding-top:6px">
+          <span style="color:var(--green)">enrolled 92</span> · <span style="color:var(--brand-lite)">completed 341</span> · <span style="color:var(--t3)">dropped 23</span></div>
+          <div class="k-foot">报名状态分布</div></div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:flex-start">
+        <!-- 待我审核录取 -->
+        <div class="card" style="flex:1;min-width:0">
+          <div class="card-h"><i class="bar" style="background:var(--gold)"></i><h3>待我审核录取</h3>
+            <span class="sub">市级录取：仅市直班，区办班见下方只读列表，不可在此处批量确认</span>
+            <div class="r"><span class="tag y" id="cntPend">3 条 pending</span></div></div>
+          <div id="pendBox"></div>
+          <div style="padding:11px 15px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center">
+            <span style="font-size:10.5px;color:var(--t3)">已选 <b id="selCnt" style="color:var(--brand-lite);font-family:var(--mono)">0</b> 条</span>
+            <button class="btn-s gold" style="margin-left:auto" id="bBatch">批量确认录取</button>
+            <button class="btn-s">批量标记 completed</button>
+          </div>
+        </div>
+
+        <!-- 案例展示墙 -->
+        <div class="card" style="flex:0 0 322px">
+          <div class="card-h"><i class="bar"></i><h3>案例展示墙</h3><span class="sub">贡献分排序</span>
+            <div class="r"><span class="tag">本区 68 篇</span></div></div>
+          <div id="caseBox"></div>
+          <div style="padding:10px 15px;border-top:1px solid var(--line);text-align:center">
+            <button class="btn-s" style="width:100%;justify-content:center">推荐本区学员案例</button></div>
+        </div>
+      </div>
+
+      <!-- 区办班报名（只读） -->
+      <div class="card mt" id="enroll">
+        <div class="card-h"><i class="bar" style="background:var(--gold)"></i><h3>区办班报名（只读）</h3>
+          <span class="sub">各区开班级的报名由开班区县审核录取。市级可查看，不可在此处批量确认。</span>
+          <div class="r"><span class="tag">4 条 pending</span></div></div>
+        <div class="card-b flush">
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th>学员</th><th>学员区县</th><th>课程</th><th>开班区</th><th>录取状态</th><th>区备案</th><th>报名时间</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:500">李四</td><td><span class="tag dim">市中区</span></td><td>小麦高产技术培训</td><td>历城区</td>
+                <td><span class="tag y">pending</span></td><td><span class="tag dim">not_required</span></td><td class="sm">10-10 09:12</td></tr>
+              <tr><td style="font-weight:500">张三</td><td><span class="tag dim">历城区</span></td><td>莱芜生姜绿色防控课堂</td><td>莱芜区</td>
+                <td><span class="tag y">pending</span></td><td><span class="tag dim">not_required</span></td><td class="sm">10-09 16:40</td></tr>
+              <tr><td style="font-weight:500">张三</td><td><span class="tag dim">历城区</span></td><td>农创客品牌营销实务</td><td>历下区</td>
+                <td><span class="tag y">pending</span></td><td><span class="tag dim">not_required</span></td><td class="sm">10-08 11:05</td></tr>
+              <tr><td style="font-weight:500">张三</td><td><span class="tag dim">历城区</span></td><td>小麦高产技术培训</td><td>历城区</td>
+                <td><span class="tag y">pending</span></td><td><span class="tag dim">not_required</span></td><td class="sm">10-08 10:22</td></tr>
+              <tr><td style="font-weight:500">吴春生</td><td><span class="tag dim">天桥区</span></td><td>设施蔬菜水肥一体化</td><td>济阳区</td>
+                <td><span class="tag g">enrolled</span></td><td><span class="tag dim">not_required</span></td><td class="sm">10-07 14:31</td></tr>
+            </tbody></table></div>
+        </div>
+      </div>
+
+      <div class="row mt" style="gap:14px;align-items:flex-start">
+        <!-- 学员档案列表 -->
+        <div class="card" style="flex:1;min-width:0" id="list">
+          <div class="card-h"><i class="bar"></i><h3>本区学员画像</h3><span class="sub">按画像标签与区县交叉筛选，精准组建培育对象库</span>
+            <div class="r">
+              <input class="field" placeholder="搜索姓名 / 手机号" style="width:150px">
+              <select class="field" style="width:120px"><option>全部产业</option><option>粮食种植</option><option>蔬菜种植</option><option>畜牧养殖</option></select>
+              <select class="field" style="width:120px"><option>全部阶段</option><option>成长期</option><option>起步期</option><option>成熟期</option></select>
+              <select class="field" style="width:132px"><option>能力分 ≥ 60</option><option>能力分 &lt; 60</option><option>画像未完成</option></select>
+              <button class="btn-s" id="bExp2">导出 CSV</button>
+              <button class="btn-s dg" id="bReset">重置学员密码</button>
+            </div></div>
+          <div class="card-b flush">
+            <div class="tbl-wrap" style="max-height:376px;overflow-y:auto">
+              <table class="tbl">
+                <thead><tr><th style="width:28px"></th><th>姓名</th><th>手机号</th><th>主业</th>
+                  <th class="num">规模</th><th>年收入</th><th>荣誉</th><th class="num">能力分</th><th>阶段</th><th>画像</th><th class="num">操作</th></tr></thead>
+                <tbody id="stuTbl"></tbody></table></div>
+          </div>
+          <div style="padding:9px 15px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;font-size:10.5px;color:var(--t3)">
+            <span>显示 12 / 486 条</span>
+            <span style="margin-left:auto">区县隔离已启用 · 您无法查看其他区县数据</span></div>
+        </div>
+
+        <!-- 导入 -->
+        <div style="flex:0 0 322px;display:flex;flex-direction:column;gap:14px" id="import">
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>批量导入学员</h3>
+              <div class="r"><span class="tag dim">.xlsx / .xls / .csv</span></div></div>
+            <div class="card-b">
+              <div class="drop" id="drop">
+                <div id="icUp"></div>
+                <div class="t">拖拽文件到此处，或点击选择</div>
+                <div class="s">第 1 行须为表头，含「手机号」必填列</div>
+              </div>
+              <div class="mt-s" style="font-size:10.5px;color:var(--t3);margin-bottom:5px">必要表头</div>
+              <div class="cred-row"><span class="cred" style="width:64px;color:var(--gold)">手机号 *</span><span style="font-size:10.5px;color:var(--t2)">11 位、1 开头</span></div>
+              <div class="cred-row"><span class="cred" style="width:64px;color:var(--t2)">姓名</span><span style="font-size:10.5px;color:var(--t2)">推荐填写</span></div>
+              <div class="cred-row"><span class="cred" style="width:64px;color:var(--t2)">主业</span><span style="font-size:10.5px;color:var(--t2)">粮油 / 蔬菜…</span></div>
+              <div class="cred-row"><span class="cred" style="width:64px;color:var(--t2)">规模</span><span style="font-size:10.5px;color:var(--t2)">数字 + 单位（亩/头/棚）</span></div>
+              <div class="cred-row"><span class="cred" style="width:64px;color:var(--t2)">区县代码</span><span style="font-size:10.5px;color:var(--t2)">留空则绑定本区</span></div>
+              <button class="btn-s pri mt" style="width:100%;justify-content:center;height:28px" id="bUp">选择文件并预览</button>
+              <div class="why mt-s"><b>幂等：</b>已存在的手机号会被跳过，不覆盖已有密码；导入后自动生成 8 位随机初始密码，凭据清单<b>只显示一次</b>。</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><i class="bar"></i><h3>今日操作清单</h3>
+              <div class="r"><span class="tag g">已完成 3/5</span></div></div>
+            <div class="card-b" style="padding-top:4px;padding-bottom:4px" id="todoBox"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>日常节奏</b> 培训前：导入新学员 + 看汇总看板　｜　培训后：批量确认 completed 触发画像更新</span>
+        <span><b>每月</b> 导出 CSV 做统计汇报 · 对比原始 Excel 核查数据</span>
+        <span><b>重置密码</b> 生成一次性重置链接 CSV，线下分发，勿群发</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['n1','本区汇总看板','gauge'],['n2','全市视图（只读）','grid'],['n3','匹配驾驶舱','radar'],
+ ['n4','学员画像列表','users'],['n5','报名记录 Enrollments','checkc'],['n6','批量导入','upload'],
+ ['n7','重置学员密码','refresh'],['n8','政策资源库','doc'],['n9','引擎运维','bolt']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+[['k1','本区学员数','users'],['k2','已推送推荐','bell'],['k3','消息打开率','eye'],['k4','报名状态分布','layers']].forEach(([id,t,ic])=>$('#'+id).innerHTML=I[ic]+t);
+$('#icUp').innerHTML=I.upload;
+$('#bUp').innerHTML=I.upload+'<span>选择文件并预览</span>';
+$('#bExp2').innerHTML=I.down+'<span>导出 CSV</span>';
+$('#bReset').innerHTML=I.refresh+'<span>重置学员密码</span>';
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* pending approval */
+const PEND=[
+  {n:'李四',p:'13987654321',d:'市中区',c:'市直·农创客品牌营销实务',cls:'市直班',lv:'pending',at:'10-11 10:24'},
+  {n:'王守粮',p:'13912340012',d:'历城区',c:'市直·政策解读与申报辅导',cls:'市直班',lv:'pending',at:'10-11 09:48'},
+  {n:'孙园丁',p:'13922331188',d:'济阳区',c:'市直·高素质农民培育示范班',cls:'市直班',lv:'pending',at:'10-10 17:12'},
+];
+let sel=new Set();
+$('#pendBox').innerHTML=PEND.map((p,i)=>`<div class="pending-i">
+  <div class="ckb" data-i="${i}">${I.check}</div>
+  <div class="sav">${p.n[0]}</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:12.5px;font-weight:500">${p.n} <span style="font-family:var(--mono);font-size:11px;color:var(--t3);font-weight:400">${p.p}</span>
+      <span class="tag dim" style="margin-left:5px">${p.d}</span></div>
+    <div style="font-size:10.5px;color:var(--t3);margin-top:3px">→ ${p.c} <span class="tag" style="height:16px;font-size:9.5px">${p.cls}</span> · 报名于 ${p.at}</div>
+  </div>
+  <div class="rt" style="display:flex;gap:6px;align-items:center">
+    <span class="tag y">pending</span>
+    <button class="btn-s pri">确认录取</button>
+    <button class="btn-s">驳回</button>
+  </div></div>`).join('');
+$$('.ckb').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;c.classList.toggle('on');
+  c.classList.contains('on')?sel.add(i):sel.delete(i);$('#selCnt').textContent=sel.size;});
+
+/* case wall */
+$('#caseBox').innerHTML=D.cases.slice(0,6).map((c,i)=>`<div class="case-i">
+  <span class="rk" style="color:${i<3?'var(--gold)':'var(--t3)'}">${c.sc}</span>
+  <div style="flex:1;min-width:0"><div style="font-size:12px">${c.t}</div>
+    <div style="font-size:10px;color:var(--t3);margin-top:2px">贡献分 ${c.sc} · ${['粮食','玫瑰','林果','大蒜','黄瓜','农旅'][i]}</div></div>
+  <button class="btn-s">查看</button></div>`).join('');
+
+/* student table */
+const STU=[
+  ['张长河','13912345678','粮食种植','1,280','高收入','市级种粮大户、省级示范家庭农场','78.4','成长期',1],
+  ['王守粮','13912340012','小麦种植','420','高收入','市级种粮大户','81.2','成熟期',1],
+  ['吴市农','13901234567','都市农业','86','中等收入','—','64.3','起步期',1],
+  ['刘长河','13898765432','蔬菜种植','120','中等收入','—','58.6','起步期',0],
+  ['陈建国','13712345678','畜牧养殖','2,400','高收入','省级龙头企业','86.1','成熟期',1],
+  ['杨秀英','13622334455','花卉苗木','68','中等收入','—','61.2','起步期',1],
+  ['孙明远','13533445566','粮油种植','320','中等收入','市级示范社','74.9','成长期',1],
+  ['赵建军','13444556677','蔬菜种植','95','低收入','—','52.4','起步期',0],
+  ['周淑芬','13355667788','果树种植','540','中等收入','—','70.2','成长期',1],
+  ['吴长江','13266778899','水产养殖','180','高收入','市级能手','82.6','成熟期',1],
+  ['郑红梅','13177889900','食用菌','62','低收入','—','47.8','起步期',0],
+  ['王大锤','13088990011','粮食种植','76','低收入','—','55.4','转型期',0],
+];
+$('#stuTbl').innerHTML=STU.map((s,i)=>`<tr>
+  <td><div class="ckb ${''}" style="width:14px;height:14px">${I.check}</div></td>
+  <td><div style="display:flex;align-items:center;gap:7px"><span class="sav" style="width:22px;height:22px;border-radius:6px;font-size:10px">${s[0][0]}</span>
+    <span style="font-weight:500">${s[0]}</span></div></td>
+  <td class="mono sm">${s[1]}</td>
+  <td class="sm">${s[2]}</td>
+  <td class="num">${s[3]} <span class="sm">亩</span></td>
+  <td><span class="tag ${s[4]==='高收入'?'g':s[4]==='低收入'?'dim':''}">${s[4]}</span></td>
+  <td class="sm" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s[5]}</td>
+  <td class="num"><b style="color:${s[6]>=75?'var(--green)':s[6]>=60?'var(--gold)':'var(--red)'}">${s[6]}</b></td>
+  <td><span class="tag ${s[7]==='成熟期'?'g':s[7]==='成长期'?'':s[7]==='转型期'?'c':'dim'}">${s[7]}</span></td>
+  <td>${s[8]?'<span class="tag g">已完成</span>':'<span class="tag y">待完善</span>'}</td>
+  <td class="num"><div style="display:flex;gap:5px;justify-content:flex-end">
+    <button class="btn-s">${I.edit}编辑</button></div></td></tr>`).join('');
+
+/* todo */
+const TODO=[
+  {t:'导出本月学员 CSV 做汇报',d:'每月',ok:1},
+  {t:'批量确认 8 条 completed 报名',d:'培训后',ok:1},
+  {t:'查看 41 条画像待完善学员',d:'本周',ok:1},
+  {t:'导入新学员 12 名（Excel）',d:'培训前',ok:0},
+  {t:'重置 2 名学员密码（CSV 下发）',d:'按需',ok:0},
+];
+$('#todoBox').innerHTML=TODO.map(t=>`<div class="engine-i" style="border-bottom:1px solid rgba(124,111,255,.075)">
+  <div class="ckb ${t.ok?'on':''}" style="width:14px;height:14px">${I.check}</div>
+  <div class="n"><b style="${t.ok?'color:var(--t2);text-decoration:line-through':''}">${t.t}</b><span>${t.d}</span></div>
+  <span class="tag ${t.ok?'g':'y'}">${t.ok?'已完成':'待办'}</span></div>`).join('');
+</script>
+</body>
+</html>

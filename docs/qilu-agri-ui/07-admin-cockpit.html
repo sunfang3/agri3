@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>齐鲁农创客 · 精准匹配驾驶舱</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .big-kpi{
+    border-radius:var(--r-lg);padding:14px 16px;position:relative;overflow:hidden;
+    background:linear-gradient(165deg,rgba(30,24,96,.72),rgba(16,12,46,.78));
+    border:1px solid var(--line)
+  }
+  .big-kpi::after{ content:"";position:absolute;right:-18px;top:-18px;width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle,var(--kc,rgba(71,55,204,.3)),transparent 70%) }
+  .big-kpi .l{ font-size:11px;color:var(--t2);display:flex;align-items:center;gap:6px }
+  .big-kpi .l svg{ width:12px;height:12px;opacity:.7 }
+  .big-kpi .v{ font-family:var(--mono);font-size:31px;font-weight:600;line-height:1.15;margin-top:4px;letter-spacing:-.8px }
+  .big-kpi .v small{ font-size:12px;color:var(--t2);font-weight:400 }
+  .big-kpi .f{ font-size:10px;color:var(--t3);margin-top:3px;display:flex;gap:6px;align-items:center }
+  .warn-i{ display:flex;gap:10px;padding:10px 15px;border-bottom:1px solid rgba(124,111,255,.075);align-items:flex-start }
+  .warn-i:last-child{ border-bottom:none }
+  .warn-i .lv{ width:3px;border-radius:2px;align-self:stretch;flex:0 0 auto }
+  .warn-i .t{ font-size:12px;font-weight:500 }
+  .warn-i .m{ font-size:11px;color:var(--t2);margin-top:3px;line-height:1.55 }
+  .warn-i .rt{ margin-left:auto;flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px }
+  .heatwrap{ display:grid;grid-template-columns:118px 1fr 46px;gap:5px;align-items:center;font-size:10.5px }
+  .heatwrap .lb{ color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:6px }
+  .heatwrap .tot{ font-family:var(--mono);color:var(--t2);text-align:right;font-size:10px }
+  .hgrid{ display:grid;gap:2px }
+  .hgrid i{ aspect-ratio:1;border-radius:2px;background:rgba(124,111,255,.07) }
+  .hgrid i.h0{ background:rgba(124,111,255,.05) !important }
+  .hgrid i.h1{ background:rgba(71,55,204,.36) !important }
+  .hgrid i.h2{ background:rgba(71,55,204,.62) !important }
+  .hgrid i.h3{ background:rgba(107,91,242,.82) !important }
+  .hgrid i.h4{ background:#8f80ff !important }
+  .hgrid i.h5{ background:#c9c0ff !important }
+  .q3{ display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px }
+  .q3b{ display:grid;grid-template-columns:1fr 1fr;gap:14px }
+  .glow-line{ height:2px;background:linear-gradient(90deg,var(--brand),var(--brand-lite),transparent);border-radius:2px }
+  .engine-i{ display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(124,111,255,.075) }
+  .engine-i:last-child{ border-bottom:none }
+  .engine-i .n{ font-size:11.5px;flex:1;min-width:0 }
+  .engine-i .n b{ display:block;font-size:12px;font-weight:500 }
+  .engine-i .n span{ font-size:10px;color:var(--t3) }
+  .dot2{ width:7px;height:7px;border-radius:50%;flex:0 0 auto }
+  .gap-i{ display:flex;gap:9px;align-items:center;padding:9px 0;border-bottom:1px dashed rgba(124,111,255,.11) }
+  .gap-i:last-child{ border-bottom:none }
+  .gap-i .k{ font-size:12px;flex:1;min-width:0 }
+  .gap-i .k b{ display:block }
+  .gap-i .k span{ font-size:10px;color:var(--t3) }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="rail-brand"><div class="mark" id="brandMark"></div><div class="brand-txt"><b>Avo 管理后台</b><span>齐鲁农创客</span></div></div>
+    <div class="rail-scroll">
+      <div class="nav-grp">
+        <div class="nav-lbl">总览</div>
+        <a class="nav-i" href="06-admin-city.html" id="n1"></a>
+        <a class="nav-i on" href="07-admin-cockpit.html" id="n2"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">资源管理</div>
+        <a class="nav-i" href="08-admin-students.html" id="n3"></a>
+        <a class="nav-i" href="09-admin-resource.html" id="n5"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">引擎运维</div>
+        <a class="nav-i" href="#engine" id="n7"></a>
+        <a class="nav-i" href="09-admin-resource.html#queue" id="n8"></a>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">切换到学员端</div>
+        <a class="nav-i" href="02-student-home.html" id="n11"></a>
+        <a class="nav-i" href="01-login.html" id="n12"></a>
+      </div>
+    </div>
+    <div class="rail-foot"><div class="avatar">市</div><div class="who"><b>济南市农广校</b><span><i class="dot"></i>city_admin</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb"><b>精准匹配驾驶舱</b><i>/</i><span>匹配热力 · 触达漏斗 · 资源缺口 · 预警中心</span></div>
+      <div class="top-tools">
+        <div class="seg" id="segRange"><button class="on">近 10 个月</button><button>本年度</button><button>全部</button></div>
+        <button class="tbtn" id="bRefresh"></button>
+        <button class="tbtn" id="bExport"></button>
+        <span class="clock" id="clk"></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- 核心指标 -->
+      <div class="g5">
+        <div class="big-kpi" style="--kc:rgba(71,55,204,.34)">
+          <div class="l" id="l1"></div>
+          <div class="v" style="color:var(--brand-lite)">78.3<small>%</small></div>
+          <div class="f"><span class="delta up">▲ 4.2pt</span> 精准匹配率 · 目标 75%</div>
+        </div>
+        <div class="big-kpi" style="--kc:rgba(237,184,28,.3)">
+          <div class="l" id="l2"></div>
+          <div class="v" style="color:var(--gold)">69.3<small>%</small></div>
+          <div class="f"><span class="delta up">▲ 6.8pt</span> 政策有效触达率</div>
+        </div>
+        <div class="big-kpi" style="--kc:rgba(95,205,150,.3)">
+          <div class="l" id="l3"></div>
+          <div class="v" style="color:var(--green)">91.4<small>%</small></div>
+          <div class="f"><span class="delta up">▲ 1.9pt</span> 画像准确度</div>
+        </div>
+        <div class="big-kpi" style="--kc:rgba(69,196,216,.3)">
+          <div class="l" id="l4"></div>
+          <div class="v" style="color:var(--cyan)">18,420</div>
+          <div class="f"><span class="delta up">▲ 1,204</span> 本季累计推送</div>
+        </div>
+        <div class="big-kpi" style="--kc:rgba(229,97,95,.3)">
+          <div class="l" id="l5"></div>
+          <div class="v" style="color:var(--red)">5</div>
+          <div class="f"><span class="tag r">2 高 · 2 中 · 1 低</span> 待处理预警</div>
+        </div>
+      </div>
+
+      <!-- 三单联动 -->
+      <div class="q3 mt">
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>学员需求词云</h3><span class="sub">来自画像 I 象限 · 本季 TOP 12</span>
+            <div class="r"><span class="tag c">1,247 条需求</span></div></div>
+          <div class="card-b">
+            <div class="cloud" id="cloud"></div>
+            <div class="glow-line mt"></div>
+            <div class="why mt-s"><b>最大缺口：直播带货（264 人次）</b> —— 标签库中仅有 2 项相关课程，缺少对应服务供给，建议补充资源标签。</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>最新政策入库</h3>
+            <div class="r"><button class="tbtn" id="bMore">全部 168 条</button></div></div>
+          <div class="lst" id="latestPol"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>服务供给热度</h3><span class="sub">被对接 / 申请频次</span></div>
+          <div class="card-b"><div id="svcChart"></div>
+            <div class="why y mt-s"><b>供需比健康：</b>农资团购、白果仁技术服务供给充足；直播电商、订单农业对接明显不足。</div></div>
+        </div>
+      </div>
+
+      <!-- 培育成效 + 漏斗 -->
+      <div class="q3b mt">
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>政策触达转化漏斗</h3><span class="sub">推送 → 查看 → 收藏 → 咨询 → 申报 → 获批</span>
+            <div class="r"><span class="tag g">整体转化 7.4%</span></div></div>
+          <div class="card-b"><div id="funnel"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>全市学员能力分布</h3><span class="sub">各区县平均分对比</span></div>
+          <div class="card-b"><div id="abilityChart"></div>
+            <div class="legend mt-s"><span><i style="background:#4737cc"></i>本年平均分</span><span><i style="background:#45c4d8"></i>去年同期</span><span><i style="background:#edb81c"></i>市域均线</span></div></div>
+        </div>
+      </div>
+
+      <!-- 匹配热力图 -->
+      <div class="card mt">
+        <div class="card-h"><i class="bar"></i><h3>政策 × 区县 匹配热力图</h3>
+          <span class="sub">颜色越亮代表匹配人数越多，用于定位"受众广但未被充分触达"的政策</span>
+          <div class="r">
+            <span class="phonehint" style="margin-right:8px">低</span>
+            <span style="display:flex;gap:2px"><i style="width:13px;height:13px;border-radius:2px;background:rgba(124,111,255,.07)"></i>
+            <i style="width:13px;height:13px;border-radius:2px;background:rgba(71,55,204,.36)"></i>
+            <i style="width:13px;height:13px;border-radius:2px;background:rgba(71,55,204,.62)"></i>
+            <i style="width:13px;height:13px;border-radius:2px;background:rgba(107,91,242,.82)"></i>
+            <i style="width:13px;height:13px;border-radius:2px;background:#8f80ff"></i>
+            <i style="width:13px;height:13px;border-radius:2px;background:#c9c0ff"></i></span>
+            <span class="phonehint">高</span>
+          </div></div>
+        <div class="card-b">
+          <div id="heat"></div>
+          <div class="why mt-s"><b>触达不足预警：</b>「平阴玫瑰产业扶持」匹配 291 人但仅推送 187 人（64.3%），低于 80% 阈值；「农机购置补贴」覆盖全部 12 区县，是本季受众最广的政策，建议优先二次触达未查看的 126 人。</div>
+        </div>
+      </div>
+
+      <div class="q3 mt">
+        <!-- 资源缺口 -->
+        <div class="card">
+          <div class="card-h"><i class="bar" style="background:var(--red)"></i><h3>资源缺口分析</h3><span class="sub">需求集中但供给不足</span>
+            <div class="r"><span class="tag r">3 项待补</span></div></div>
+          <div class="card-b" id="gapBox"></div>
+        </div>
+        <!-- 能力成长 -->
+        <div class="card">
+          <div class="card-h"><i class="bar"></i><h3>能力成长曲线</h3><span class="sub">全市平均 · 2026</span></div>
+          <div class="card-b"><div id="growth"></div>
+            <div class="legend mt-s"><span><i style="background:#6b5bf2"></i>全市平均能力分</span><span><i style="background:#edb81c"></i>政策有效触达率（%）</span></div></div>
+        </div>
+        <!-- 引擎监控 -->
+        <div class="card" id="engine">
+          <div class="card-h"><i class="bar"></i><h3>匹配引擎运维</h3>
+            <div class="r"><button class="tbtn pri" id="bRun">手动刷新</button></div></div>
+          <div class="card-b" id="engBox"></div>
+        </div>
+      </div>
+
+      <!-- 预警中心 -->
+      <div class="card mt">
+        <div class="card-h"><i class="bar" style="background:var(--red)"></i><h3>预警中心</h3>
+          <span class="sub">能力分持续下降 / 需求集中爆发 / 触达不足 自动高亮</span>
+          <div class="r"><span class="tag r">2 高优先级</span><span class="tag y">2 中</span><span class="tag dim">1 低</span></div></div>
+        <div id="warnBox"></div>
+      </div>
+
+      <div class="foot-bar">
+        <span><b>匹配算法</b> 标签余弦相似度 + 规则过滤，高并发实时计算（初期 T+1，逐步迭代实时）</span>
+        <span><b>触发点</b> 新政策入库 / 新课程上线 / 画像显著变化 / 学员主动搜索</span>
+        <span><b>幂等性</b> 重复跑批不会产生重复推荐记录</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const {I,Chart,D,$,$$}=QL;
+$('#brandMark').innerHTML=I.leaf;
+[['n1','区县汇总 · 全市视图','gauge'],['n2','精准匹配驾驶舱','radar'],['n3','学员档案','users'],
+ ['n5','政策库 Policies','doc'],['n7','推荐引擎运维','bolt'],['n8','GoodJob 队列','layers'],
+ ['n11','学员端首页','home'],['n12','退出登录','out']]
+ .forEach(([id,t,ic])=>{const e=$('#'+id);e.insertAdjacentHTML('afterbegin',I[ic]);e.append(t);});
+[['l1','精准匹配率','target'],['l2','政策有效触达率','trend'],['l3','画像准确度','shield'],['l4','本季累计推送','bell'],['l5','待处理预警','alert']]
+ .forEach(([id,t,ic])=>$('#'+id).innerHTML=I[ic]+t);
+$('#bRefresh').innerHTML=I.refresh+'<span>刷新数据</span>';
+$('#bExport').innerHTML=I.down+'<span>导出看板</span>';
+$('#bRun').innerHTML=I.bolt+'<span>手动跑全量</span>';
+$('#bMore').textContent='全部 168 条';
+
+(function(){const c=$('#clk'),p=n=>String(n).padStart(2,'0');
+  const t=()=>{const d=new Date();c.innerHTML=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} <em>${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}</em>`;};
+  t();setInterval(t,1000);})();
+
+/* word cloud */
+$('#cloud').innerHTML=D.demand.map(d=>{
+  const t=Math.min(26,10+d.v/14);
+  const col=d.v>250?'var(--gold)':d.v>150?'var(--brand-lite)':d.v>90?'var(--cyan)':'var(--t2)';
+  return `<span style="font-size:${t.toFixed(1)}px;color:${col};font-weight:${d.v>200?600:400}">${d.k}</span>`;
+}).join('');
+
+/* latest policies */
+$('#latestPol').innerHTML=D.policies.slice(0,6).map(p=>`<div class="lst-i" style="padding:9px 15px">
+  <div class="ico y">${I.doc}</div>
+  <div style="flex:1;min-width:0">
+    <div class="ttl" style="font-size:11.5px">${p.t}</div>
+    <div class="meta" style="font-size:10px"><span>命中 ${p.reach} 人</span><span>申报 ${p.apply}</span>
+      <span class="tag ${p.sc>=85?'g':'dim'}" style="height:16px;font-size:9.5px">${p.sc}%</span></div>
+  </div>
+  <div class="rt"><span style="font-size:9.5px;color:var(--t4)">${p.d.slice(5)}</span></div></div>`).join('');
+
+/* service heat */
+Chart.hbar($('#svcChart'),{w:340,rowH:24,labelW:82,unit:' 次',data:[
+  {k:'农资团购',v:428,c:'#4737cc'},{k:'农机具维保',v:316,c:'#5fcd96'},
+  {k:'电商代运营',v:242,c:'#45c4d8'},{k:'绿色防控',v:186,c:'#6b5bf2'},
+  {k:'订单农业',v:74,c:'#edb81c'},{k:'直播电商',v:38,c:'#e5615f'},
+]});
+
+/* funnel */
+Chart.funnel($('#funnel'),{w:520,steps:D.funnel});
+
+/* ability by district */
+Chart.bar($('#abilityChart'),{w:470,h:212,labels:D.districts.map(d=>d.n.replace(/[区县县]/,'')),
+  series:[{name:'本年',color:'#4737cc',data:[78.4,74.1,70.2,81.6,69.8,64.3,76.5,54.2,66.1,60.4,72.8,57.8]},
+          {name:'去年',color:'#45c4d8',data:[70.2,66.8,63.1,73.4,62.5,57.6,68.9,48.6,59.4,54.2,65.3,51.4],o:.75}],
+  avg:72,avgLabel:'市域均线 72',vfmt:v=>v});
+
+/* growth */
+Chart.line($('#growth'),{w:400,h:186,labels:D.months,
+  series:[{name:'能力分',color:'#6b5bf2',data:D.growth.data},
+          {name:'触达率',color:'#edb81c',data:D.reachTrend.data,w:1.6,dash:'4 3',o:.85}],
+  min:35,max:85});
+
+/* heatmap */
+(function(){
+  const cols=D.districts.map(d=>d.n.replace(/[区县县]/,''));
+  let h=`<div style="display:grid;grid-template-columns:minmax(150px,1.5fr) repeat(12,1fr) 60px;gap:3px;margin-bottom:3px">
+    <div></div>${cols.map(c=>`<div style="font-size:9.5px;color:var(--t3);text-align:center;writing-mode:vertical-rl;height:42px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px">${c}</div>`).join('')}<div></div></div>`;
+  D.heatRows.forEach(r=>{
+    const tot=r.v.reduce((a,b)=>a+b,0);
+    h+=`<div class="heatwrap">
+      <div class="lb">${r.k}</div>
+      <div class="hgrid" style="grid-template-columns:repeat(12,1fr)">${r.v.map((v,i)=>`<i class="h${v}" title="${cols[i]} · 约 ${v*18} 人"></i>`).join('')}</div>
+      <div class="tot">${tot*18} 人</div></div>`;
+  });
+  $('#heat').innerHTML=h;
+})();
+
+/* resource gap */
+const GAP=[
+  {k:'直播电商实操',n:264,s:'课程 2 项 / 服务 0 项',r:'高'},
+  {k:'订单农业对接',n:186,s:'服务 1 项 / 覆盖不足',r:'高'},
+  {k:'农产品冷链仓储',n:96,s:'服务 1 项 / 需求集中',r:'中'},
+  {k:'农机具维保',n:62,s:'服务 4 项',r:'已缓解'},
+];
+$('#gapBox').innerHTML=GAP.map(g=>`<div class="gap-i">
+  <div class="ico ${g.r==='高'?'r':g.r==='中'?'y':'g'}">${I.alert}</div>
+  <div class="k"><b>${g.k}</b><span>${g.n} 人次需求 · ${g.s}</span></div>
+  <span class="tag ${g.r==='高'?'r':g.r==='中'?'y':'g'}">${g.r}</span>
+  <button class="btn-s">补充资源</button></div>`).join('');
+
+/* engine */
+const ENG=[
+  {n:'每日全量刷新',s:'GoodJob cron · 02:00',st:'ok',v:'最近成功 10-12 02:04'},
+  {n:'单学员重算',s:'RecommendationRefreshForStudentJob',st:'ok',v:'今日 186 次'},
+  {n:'标签库容量',s:'Tag · 6 类 312 条',st:'ok',v:'identity 6 / industry 8 / …'},
+  {n:'政策库有效数',s:'Policy.active',st:'ok',v:'141 / 168'},
+  {n:'GoodJob 队列',s:'enqueued / failed',st:'ok',v:'0 / 0'},
+  {n:'Worker 进程',s:'Processes · heartbeat',st:'ok',v:'2 active · 12s 前'},
+];
+$('#engBox').innerHTML=ENG.map(e=>`<div class="engine-i">
+  <span class="dot2" style="background:var(--green);box-shadow:0 0 7px var(--green)"></span>
+  <div class="n"><b>${e.n}</b><span>${e.s} · ${e.v}</span></div>
+  <span class="tag g">正常</span></div>`).join('');
+
+/* alerts */
+const LC={high:'var(--red)',mid:'var(--gold)',low:'var(--t4)'};
+$('#warnBox').innerHTML=D.alerts.map(a=>`<div class="warn-i">
+  <span class="lv" style="background:${LC[a.lv]}"></span>
+  <div style="flex:1;min-width:0">
+    <div class="t">${a.t}</div>
+    <div class="m">${a.m}</div>
+  </div>
+  <div class="rt">
+    <span class="tag ${a.lv==='high'?'r':a.lv==='mid'?'y':'dim'}">${a.lv==='high'?'高':a.lv==='mid'?'中':'低'}</span>
+    <button class="btn-s ${a.lv==='high'?'pri':''}">${a.act}</button>
+  </div></div>`).join('');
+</script>
+</body>
+</html>
