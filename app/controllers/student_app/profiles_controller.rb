@@ -18,6 +18,7 @@ module StudentApp
 
       if student.update(profile_params)
         Tips::StageEvaluator.new.apply!(student)
+        Matching::Runner.new(student).run!
         redirect_to student_me_path, notice: "画像已更新"
       else
         render_profile(student:, status: :unprocessable_entity)
@@ -27,11 +28,7 @@ module StudentApp
     private
 
     def render_profile(student: current_student, notice: nil, status: :ok)
-      render Views::StudentApp::Profiles::Show.new(
-        student:,
-        tags: Tag.order(:category, :name),
-        notice:
-      ), status:
+      render Views::StudentApp::Workspace.new(student: student, page: :profile), status: status
     end
 
     def profile_params

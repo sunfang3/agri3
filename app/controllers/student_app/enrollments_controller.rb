@@ -7,6 +7,7 @@ module StudentApp
 
     def create
       course = Course.published.find(params[:course_id])
+      return redirect_to student_courses_path, alert: "该课程名额已满" if course.full?
       enrollment = current_student.enrollments.find_or_initialize_by(course: course)
       if enrollment.new_record?
         enrollment.status = "pending"

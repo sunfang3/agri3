@@ -9,8 +9,8 @@ class StudentProfileForm < ApplicationForm
   end
 
   def fields
-    field :name, label: "姓名"
-    field :primary_industry, label: "主业"
+    field :name, :text, label: "姓名"
+    field :primary_industry, :text, label: "主业"
     field :scale, :number, label: "规模", step: :any
     field :annual_income, :number, label: "年收入", step: :any
     field :honors, as: :textarea, label: "荣誉"

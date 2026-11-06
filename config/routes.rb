@@ -20,6 +20,15 @@ Rails.application.routes.draw do
     get "register", to: "registrations#new"
     post "register", to: "registrations#create"
     get "home", to: "home#show"
+    resources :courses, only: [ :index, :show ]
+    get "achievements", to: "workspace#achievements"
+    get "achievements/report", to: "workspace#report", as: :achievement_report
+    post "needs", to: "workspace#create_need", as: :needs
+    post "honors", to: "workspace#create_honor", as: :honors
+    post "showcases", to: "workspace#create_showcase", as: :showcases
+    post "voice_notes", to: "workspace#create_voice_note", as: :voice_notes
+    post "photos", to: "workspace#create_photo", as: :photos
+    resources :policies, only: [ :show, :update ]
     get "me", to: "profiles#show"
     patch "me", to: "profiles#update"
     resources :enrollments, only: [ :create ]
