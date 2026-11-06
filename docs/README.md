@@ -24,6 +24,7 @@
 | Doc | Purpose |
 |-----|---------|
 | [plans/litestack-port-plan.md](plans/litestack-port-plan.md) | 自 `react_demo_2` 全量业务移植单元 |
+| [plans/qilu-ui-migration.md](plans/qilu-ui-migration.md) | 齐鲁界面原型迁移、页面映射与模型调整 |
 | [plans/react_demo_2_legacy/](plans/react_demo_2_legacy/) | 历史 kamal-proxy 笔记（网关仍可参考） |
 
 ## Archive / reference only

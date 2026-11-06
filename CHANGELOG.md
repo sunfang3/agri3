@@ -11,6 +11,11 @@ Dates are **author dates** from `git log` unless noted as **production deploy** 
 
 ### Added
 
+- 齐鲁界面原型接入 Rails：门户、学员四大页面、管理概览/学员档案/资源库/匹配驾驶舱，响应式深靛紫主题。
+- 真实需求跟进、荣誉与作品审核、政策收藏及申报登记、六维能力评估与成长图表。
+- 课程筛选与月历、容量限制、签名签到码、照片与语音/文本笔记归档；补齐 Active Storage 表。
+- 页面、数据模型与权限迁移说明见 `docs/plans/qilu-ui-migration.md`。
+
 - **公共聊天大厅 `/chat`**（Litecable + Turbo Streams + phlex-reactive）
   - 游客 session 昵称；已登录学员/管理员用系统姓名
   - 单房间 `lobby`，最近 50 条历史，实时广播
