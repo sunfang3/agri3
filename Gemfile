@@ -84,3 +84,6 @@ gem "tomo"
 gem "avo", "~> 3.0"
 gem "roo", "~> 3.0"
 gem "caxlsx", "~> 4.5"
+
+# Named seed datasets shared by development and selected tests.
+gem "oaken", "~> 1.0"
