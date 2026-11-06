@@ -8,6 +8,8 @@ module AdminApp
       confirmed = Enrollment.bulk_confirm!(scope.pluck(:id))
       track_admin_action!("bulk_confirm", { count: confirmed.size })
       redirect_to admin_root_path, notice: "已确认录取 #{confirmed.size} 条报名"
+    rescue ArgumentError => e
+      redirect_to admin_students_path, alert: e.message
     end
 
     # 区县：对本区学员的市直班报名做知会/备案（不改变录取状态）

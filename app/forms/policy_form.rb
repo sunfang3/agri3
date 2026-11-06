@@ -9,9 +9,13 @@ class PolicyForm < ApplicationForm
   end
 
   def fields
-    field :title, label: "标题", required: true
+    field :title, :text, label: "标题", required: true
+    field :document_number, :text, label: "政策文号"
+    field :issuing_authority, :text, label: "发布单位"
     field :content_text, as: :textarea, label: "正文"
-    field :valid_until, label: "有效期至"
+    field :pdf_text, as: :textarea, label: "政策原文（用于提取与校对）"
+    field :published, as: :boolean, label: "发布给学员"
+    field :valid_until, :date, label: "有效期至"
     field :district_id, label: "区县", as: :select,
       choices: District.jinan_active.order(:name).map { |d| [ d.name, d.id ] },
       include_blank: "全市"

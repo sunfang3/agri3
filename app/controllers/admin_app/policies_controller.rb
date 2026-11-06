@@ -3,7 +3,21 @@
 module AdminApp
   class PoliciesController < AdminApp::BaseController
     def index
-      render Views::AdminApp::Policies::Index.new(policies: Policy.order(created_at: :desc).includes(:tags))
+      redirect_to admin_resources_path
+    end
+
+    def edit
+      render Views::AdminApp::Policies::Edit.new(policy: Policy.find(params[:id]), tags: Tag.order(:category, :name))
+    end
+
+    def update
+      policy = Policy.find(params[:id])
+      if policy.update(policy_params)
+        policy.update!(parse_status: "approved") if params[:approve_parse] == "1"
+        redirect_to admin_resources_path, notice: "政策已保存"
+      else
+        render Views::AdminApp::Policies::Edit.new(policy: policy, tags: Tag.order(:category, :name)), status: :unprocessable_entity
+      end
     end
 
     def new
@@ -24,6 +38,10 @@ module AdminApp
 
     def parse_pdf
       policy = Policy.find(params[:id])
+      if policy.pdf_text.blank? && policy.content_text.blank?
+        return redirect_to edit_admin_policy_path(policy), alert: "请先补充政策原文，再提取字段"
+      end
+      policy.update!(pdf_text: policy.content_text) if policy.pdf_text.blank?
       Policies::PdfParser.new.parse(policy)
       track_admin_action!("policy_parse", { id: policy.id })
       redirect_to admin_policies_path, notice: "PDF 已解析，待人工校对"
@@ -38,7 +56,7 @@ module AdminApp
     private
 
     def policy_params
-      params.require(:policy).permit(:title, :content_text, :valid_until, :district_id, :published, :pdf_text, tag_ids: [])
+      params.require(:policy).permit(:title, :document_number, :issuing_authority, :content_text, :valid_until, :district_id, :published, :pdf_text, tag_ids: [])
     end
   end
 end

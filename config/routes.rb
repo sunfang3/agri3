@@ -48,10 +48,23 @@ Rails.application.routes.draw do
     post "login", to: "sessions#create"
     delete "logout", to: "sessions#destroy"
     root to: "dashboard#show"
+    get "students", to: "workspace#students"
+    get "students/:id", to: "workspace#student", as: :student
+    get "cockpit", to: "workspace#cockpit"
+    get "resources", to: "workspace#resources"
+    post "matching", to: "workspace#matching", as: :matching
+    patch "needs/:id", to: "workspace#respond_need", as: :need
+    patch "honors/:id", to: "workspace#review_honor", as: :honor
+    patch "showcases/:id", to: "workspace#review_showcase", as: :showcase
+    patch "mentor_answers/:id", to: "workspace#answer_question", as: :mentor_answer
+    post "tags", to: "workspace#create_tag", as: :tags
+    patch "tags/:id", to: "workspace#update_tag", as: :tag
+    patch "policy_interactions/:id", to: "workspace#review_application", as: :policy_interaction
+    post "students/:id/assessments", to: "workspace#assess", as: :student_assessments
     post "enrollments/bulk_confirm", to: "enrollments#bulk_confirm", as: :bulk_confirm_enrollments
     post "enrollments/bulk_ack", to: "enrollments#bulk_ack", as: :bulk_ack_enrollments
     resources :imports, only: [ :new, :create ]
-    resources :policies, only: [ :index, :new, :create ] do
+    resources :policies, only: [ :index, :new, :create, :edit, :update ] do
       member do
         post :parse_pdf
         post :approve_parse
