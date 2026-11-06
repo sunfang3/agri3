@@ -18,6 +18,7 @@
 | [handbook.md](handbook.md) | 架构 / 使用者 / 运维手册（含 seed 账号与登录后能力） |
 | [exports/agri3-handbook.html](exports/agri3-handbook.html) | 手册 HTML 导出（系统中文字体；浏览器可打印） |
 | [er-diagram.md](er-diagram.md) | 业务 ER（语义）；物理类型见 tech-stack |
+| [seeds.md](seeds.md) | Oaken 数据集、八倍演示规模与按场景维护 |
 
 ## Plans
 

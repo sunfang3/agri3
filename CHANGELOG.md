@@ -11,6 +11,9 @@ Dates are **author dates** from `git log` unless noted as **production deploy** 
 
 ### Added
 
+- Oaken 1.0 场景化种子数据：基础字典、区县账户与学员、资源、报名、画像、学习档案及转化统计分开维护；按需复用命名记录用于测试。
+- 默认八倍演示集：192 学员、72 政策、88 课程、72 师资及 1,152 条能力评估；补齐需求、荣誉、政策进度和本地附件，重复加载保留已修改业务数据。
+
 - 齐鲁界面原型接入 Rails：门户、学员四大页面、管理概览/学员档案/资源库/匹配驾驶舱，响应式深靛紫主题。
 - 真实需求跟进、荣誉与作品审核、政策收藏及申报登记、六维能力评估与成长图表。
 - 课程筛选与月历、容量限制、签名签到码、照片与语音/文本笔记归档；补齐 Active Storage 表。
@@ -20,6 +23,10 @@ Dates are **author dates** from `git log` unless noted as **production deploy** 
   - 游客 session 昵称；已登录学员/管理员用系统姓名
   - 单房间 `lobby`，最近 50 条历史，实时广播
   - 表 `chat_messages`；首页入口链接
+
+### Fixed
+
+- `LITESTACK_DATA_PATH` 可覆盖默认存储根目录，支持隔离加载演示/测试库。
 
 ### Planned / backlog
 

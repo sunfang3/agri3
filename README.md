@@ -7,6 +7,8 @@
 
 **移植状态：** Phase 1–3 业务已在本仓库落地（Litestack AIO）。计划见 [`docs/plans/litestack-port-plan.md`](docs/plans/litestack-port-plan.md)。
 
+**种子数据：** 使用 Oaken 按场景加载，默认 192 名学员、72 条政策、88 门课程；`SEED_MULTIPLIER=1 bin/rails db:seed` 使用小规模数据集。加载与维护方式见 [`docs/seeds.md`](docs/seeds.md)。
+
 **演示登录（`bin/rails db:seed` 后）：**
 
 | 角色 | 账号 | 密码 |
