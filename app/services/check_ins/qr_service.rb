@@ -6,14 +6,17 @@ module CheckIns
     DEFAULT_RADIUS_M = 500
 
     def generate_token(course, expires_in: 1.hour)
-      payload = { course_id: course.id, exp: expires_in.from_now.to_i }
-      Base64.urlsafe_encode64(payload.to_json)
+      verifier.generate(course.id, expires_in: expires_in, purpose: :course_check_in)
     end
 
     def check_in!(student:, course:, token:, latitude:, longitude:, radius_m: DEFAULT_RADIUS_M)
       verify_token!(token, course)
       enrollment = Enrollment.find_by!(student: student, course: course)
-      raise ArgumentError, "must be enrolled" unless enrollment.status.in?(%w[enrolled completed])
+      raise ArgumentError, "请先完成课程录取" unless enrollment.status.in?(%w[enrolled completed])
+
+      lat = Float(latitude, exception: false)
+      lng = Float(longitude, exception: false)
+      raise ArgumentError, "请提供有效的经纬度" unless lat&.between?(-90, 90) && lng&.between?(-180, 180)
 
       distance = haversine_m(
         latitude.to_f, longitude.to_f,
@@ -45,9 +48,12 @@ module CheckIns
     private
 
     def verify_token!(token, course)
-      data = JSON.parse(Base64.urlsafe_decode64(token))
-      raise ArgumentError, "token course mismatch" unless data["course_id"].to_i == course.id
-      raise ArgumentError, "token expired" if data["exp"].to_i < Time.current.to_i
+      course_id = verifier.verified(token, purpose: :course_check_in)
+      raise ArgumentError, "签到码无效或已过期" unless course_id == course.id
+    end
+
+    def verifier
+      Rails.application.message_verifier("course_check_in")
     end
 
     def to_rad(deg)
