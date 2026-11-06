@@ -2,8 +2,12 @@
 
 module AdminApp
   class CoursesController < AdminApp::BaseController
-    before_action :set_course, only: %i[show edit update]
-    before_action :require_manageable_course!, only: %i[edit update]
+    before_action :set_course, only: %i[show edit update check_in_code]
+    before_action :require_manageable_course!, only: %i[edit update check_in_code]
+
+    def check_in_code
+      render Views::AdminApp::CheckInCode.new(course: @course, token: CheckIns::QrService.new.generate_token(@course))
+    end
 
     def index
       courses = current_admin.scoped_courses.includes(:district, :mentor).order(starts_at: :desc, id: :desc)

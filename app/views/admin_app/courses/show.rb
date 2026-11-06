@@ -34,6 +34,7 @@ class Views::AdminApp::Courses::Show < Views::Base
       div(class: "flex gap-2") do
         if @manageable
           a(href: edit_admin_course_path(@course), class: "btn btn-sm") { "编辑课程" }
+          a(href: check_in_code_admin_course_path(@course), class: "btn btn-sm") { "现场签到码" }
         else
           span(class: "badge badge-warning") { "只读（非开班主体）" }
         end

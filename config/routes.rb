@@ -71,6 +71,7 @@ Rails.application.routes.draw do
       end
     end
     resources :courses, only: %i[index show new create edit update] do
+      member { get :check_in_code }
       resources :enrollments, only: %i[create update destroy], controller: "course_enrollments"
     end
     resources :surveys, only: [ :index, :new, :create ]
