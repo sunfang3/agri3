@@ -81,7 +81,7 @@ gem "litestack", github: "sunfang3/litestack"
 gem "tomo"
 
 # Admin CRUD (Avo) + spreadsheet import/export for the product surface.
-gem "avo", "~> 3.0"
+gem "avo", "~> 4.1"
 gem "roo", "~> 3.0"
 gem "caxlsx", "~> 4.5"
 
