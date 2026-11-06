@@ -11,7 +11,7 @@ module Agri3
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
     # Persist Litestack SQLite files under storage/ (linked in production deploys).
-    config.litestack.data_path = Rails.root.join("storage")
+    config.litestack.data_path = ENV.fetch("LITESTACK_DATA_PATH") { Rails.root.join("storage") }
 
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
