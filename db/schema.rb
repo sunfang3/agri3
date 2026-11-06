@@ -10,7 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_000000) do
+  create_table "active_storage_attachments", id: :integer, default: nil, force: :cascade do |t|
+    t.integer "blob_id", null: false
+    t.text "created_at", limit: 6, null: false
+    t.text "name", null: false
+    t.integer "record_id", null: false
+    t.text "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", id: :integer, default: nil, force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.text "checksum"
+    t.text "content_type"
+    t.text "created_at", limit: 6, null: false
+    t.text "filename", null: false
+    t.text "key", null: false
+    t.text "metadata"
+    t.text "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", id: :integer, default: nil, force: :cascade do |t|
+    t.integer "blob_id", null: false
+    t.text "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index ["blob_id"], name: "index_active_storage_variant_records_on_blob_id"
+  end
+
   create_table "admins", id: :integer, default: nil, force: :cascade do |t|
     t.text "created_at", limit: 6, null: false
     t.integer "district_id"
@@ -75,6 +104,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.index ["student_id"], name: "index_attributions_on_student_id"
   end
 
+  create_table "capability_assessments", id: :integer, default: nil, force: :cascade do |t|
+    t.text "assessed_on", null: false
+    t.text "created_at", limit: 6, null: false
+    t.text "scores", default: "{}", null: false
+    t.integer "student_id", null: false
+    t.text "updated_at", limit: 6, null: false
+    t.index ["student_id"], name: "index_capability_assessments_on_student_id"
+  end
+
   create_table "chat_messages", id: :integer, default: nil, force: :cascade do |t|
     t.text "author", null: false
     t.text "body", null: false
@@ -113,6 +151,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
   end
 
   create_table "courses", id: :integer, default: nil, force: :cascade do |t|
+    t.integer "capacity"
     t.text "created_at", limit: 6, null: false
     t.text "deep_tags", default: "[]"
     t.text "description"
@@ -176,6 +215,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.index ["student_id"], name: "index_feedback_signals_on_student_id"
   end
 
+  create_table "honors", id: :integer, default: nil, force: :cascade do |t|
+    t.text "awarded_on"
+    t.text "created_at", limit: 6, null: false
+    t.text "status", default: "pending", null: false
+    t.integer "student_id", null: false
+    t.text "title", null: false
+    t.text "updated_at", limit: 6, null: false
+    t.index ["student_id"], name: "index_honors_on_student_id"
+  end
+
   create_table "knowledge_articles", id: :integer, default: nil, force: :cascade do |t|
     t.text "body", null: false
     t.text "category"
@@ -222,6 +271,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.text "content_text"
     t.text "created_at", limit: 6, null: false
     t.integer "district_id"
+    t.text "document_number"
+    t.text "issuing_authority"
     t.text "parse_status", default: "manual"
     t.text "parsed_fields", default: "{}"
     t.text "pdf_text"
@@ -230,6 +281,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.text "updated_at", limit: 6, null: false
     t.text "valid_until"
     t.index ["district_id"], name: "index_policies_on_district_id"
+  end
+
+  create_table "policy_interactions", id: :integer, default: nil, force: :cascade do |t|
+    t.text "application_status", default: "none", null: false
+    t.text "created_at", limit: 6, null: false
+    t.integer "policy_id", null: false
+    t.integer "saved", default: 0, null: false
+    t.integer "student_id", null: false
+    t.text "updated_at", limit: 6, null: false
+    t.text "viewed_at", limit: 6
+    t.index ["policy_id"], name: "index_policy_interactions_on_policy_id"
+    t.index ["student_id", "policy_id"], name: "index_policy_interactions_on_student_id_and_policy_id", unique: true
+    t.index ["student_id"], name: "index_policy_interactions_on_student_id"
   end
 
   create_table "policy_tags", id: :integer, default: nil, force: :cascade do |t|
@@ -297,6 +361,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.text "updated_at", limit: 6, null: false
     t.index ["district_id"], name: "index_showcase_cases_on_district_id"
     t.index ["student_id"], name: "index_showcase_cases_on_student_id"
+  end
+
+  create_table "student_needs", id: :integer, default: nil, force: :cascade do |t|
+    t.text "body", null: false
+    t.text "created_at", limit: 6, null: false
+    t.text "response"
+    t.text "status", default: "pending", null: false
+    t.integer "student_id", null: false
+    t.text "updated_at", limit: 6, null: false
+    t.index ["student_id"], name: "index_student_needs_on_student_id"
   end
 
   create_table "student_tags", id: :integer, default: nil, force: :cascade do |t|
@@ -400,10 +474,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
     t.index ["student_id"], name: "index_voice_notes_on_student_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admins", "districts"
   add_foreign_key "alerts", "districts"
   add_foreign_key "app_messages", "students"
   add_foreign_key "attributions", "students"
+  add_foreign_key "capability_assessments", "students"
   add_foreign_key "check_ins", "courses"
   add_foreign_key "check_ins", "enrollments"
   add_foreign_key "check_ins", "students"
@@ -414,10 +491,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
   add_foreign_key "enrollments", "courses"
   add_foreign_key "enrollments", "students"
   add_foreign_key "feedback_signals", "students"
+  add_foreign_key "honors", "students"
   add_foreign_key "mentor_answers", "mentors"
   add_foreign_key "mentor_answers", "students"
   add_foreign_key "mentors", "districts"
   add_foreign_key "policies", "districts"
+  add_foreign_key "policy_interactions", "policies"
+  add_foreign_key "policy_interactions", "students"
   add_foreign_key "policy_tags", "policies"
   add_foreign_key "policy_tags", "tags"
   add_foreign_key "push_deliveries", "students"
@@ -425,6 +505,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
   add_foreign_key "resource_matches", "students"
   add_foreign_key "showcase_cases", "districts"
   add_foreign_key "showcase_cases", "students"
+  add_foreign_key "student_needs", "students"
   add_foreign_key "student_tags", "students"
   add_foreign_key "student_tags", "tags"
   add_foreign_key "students", "districts"
@@ -436,6 +517,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_110000) do
   add_foreign_key "training_photos", "students"
   add_foreign_key "voice_notes", "courses"
   add_foreign_key "voice_notes", "students"
-
-  # Litesearch FTS virtual tables are created at runtime (not dumped).
 end
