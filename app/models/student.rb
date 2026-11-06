@@ -21,6 +21,11 @@ class Student < ApplicationRecord
   has_many :attributions, dependent: :destroy
   has_many :showcase_cases, dependent: :destroy
   has_many :mentor_answers, dependent: :destroy
+  has_many :student_needs, dependent: :destroy
+  has_many :honor_records, class_name: "Honor", dependent: :destroy
+  has_many :policy_interactions, dependent: :destroy
+  has_many :capability_assessments, dependent: :destroy
+  has_many :training_photos, dependent: :nullify
 
   # Internal codes stay T/I/P/S; UI always uses Chinese labels for 基层用户.
   TIPS_STAGES = %w[T I P S].freeze

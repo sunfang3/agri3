@@ -6,6 +6,8 @@ class Policy < ApplicationRecord
   belongs_to :district, optional: true
   has_many :policy_tags, dependent: :destroy
   has_many :tags, through: :policy_tags
+  has_many :policy_interactions, dependent: :destroy
+  attribute :valid_until, :date
   has_one_attached :pdf
 
   PARSE_STATUSES = %w[manual pending_review approved].freeze
