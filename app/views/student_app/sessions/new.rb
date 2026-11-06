@@ -1,30 +1,20 @@
-# frozen_string_literal: true
-
-class Views::StudentApp::Sessions::New < Views::Base
+class Views::StudentApp::Sessions::New < Views::WorkspaceBase
   def initialize(login: StudentLogin.new, alert: nil)
-    @login = login
-    @alert = alert
+    @login, @alert = login, alert
   end
 
   def view_template
-    div(class: "mx-auto max-w-md px-4 py-10") do
-      div(class: "card bg-base-100 shadow") do
-        div(class: "card-body") do
-          h1(class: "card-title") { "学员登录" }
-          render Components::Ui::FlashBanner.new(alert: @alert)
-
-          # scope: false → bare phone/password params (controller contract)
-          Form(model: @login, url: student_login_path, method: :post, scope: false, class: "flex flex-col gap-3") do |f|
-            f.field :phone, label: "手机号", required: true
-            f.field :password, label: "密码", required: true
-            f.submit(:primary) { "登录" }
-          end
-
-          p(class: "text-sm") do
-            a(href: student_register_path, class: "link") { "没有账号？注册" }
-          end
-        end
+    div(class: "card auth-card") do
+      chip("我的培育空间", "y")
+      h1 { "学员登录" }
+      p(class: "muted") { "欢迎回来，查看属于您的政策与课程。" }
+      render Components::Ui::FlashBanner.new(alert: @alert)
+      Form(url: student_login_path, method: :post, scope: false, class: "form-stack mt") do
+        text_field("phone", "手机号", value: @login.phone, type: "tel", required: true, autocomplete: "username")
+        text_field("password", "密码", type: "password", required: true, autocomplete: "current-password")
+        button(type: "submit", class: "tbtn pri") { "登录培育空间 →" }
       end
+      div(class: "actions mt") { action("注册新账号", student_register_path); action("管理员登录", admin_login_path) }
     end
   end
 end

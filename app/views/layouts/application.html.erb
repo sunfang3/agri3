@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="light">
+<html lang="zh-CN" data-theme="qilu">
   <head>
     <title><%= content_for(:title) || "齐鲁农创客管理系统" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,14 +19,48 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "application", "qilu", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-dvh bg-base-200/50 text-base-content antialiased">
+  <body class="qilu-ui <%= 'portal-ui' if workspace_portal? %>">
     <div id="<%= Phlex::Reactive.flash_target %>" class="toast toast-top toast-center z-50"></div>
-    <main class="min-h-dvh w-full">
-      <%= yield %>
-    </main>
+    <% if workspace_portal? %>
+      <header class="portal-top"><a href="/" class="rail-brand"><span class="mark">禾</span><span class="brand-txt"><b>齐鲁农创客</b><span>QILU AGRICULTURAL INNOVATORS</span></span></a><span class="muted">济南市农业广播电视学校</span></header>
+      <main class="portal-content"><%= yield %></main>
+    <% else %>
+      <% admin_mode = request.path.start_with?('/admin') %>
+      <% person = admin_mode ? workspace_admin : workspace_student %>
+      <div class="app">
+        <aside class="rail">
+          <a class="rail-brand" href="/"><span class="mark">禾</span><span class="brand-txt"><b>齐鲁农创客</b><span>AGRI INNOVATORS · JINAN</span></span></a>
+          <nav class="rail-scroll" aria-label="主导航">
+            <div class="nav-lbl"><%= admin_mode ? '管理工作台' : '我的培育空间' %></div>
+            <% workspace_navigation.each do |label, path, icon| %>
+              <a href="<%= path %>" class="nav-i <%= 'on' if workspace_active?(path) %>" <%= 'aria-current=page' if workspace_active?(path) %>><span class="nav-icon" aria-hidden="true"><%= icon %></span><%= label %></a>
+            <% end %>
+            <div class="nav-lbl mt">交流与服务</div>
+            <a class="nav-i" href="/chat">◌　公共交流大厅</a>
+            <a class="nav-i" href="<%= admin_mode ? student_home_path : admin_root_path %>"><%= admin_mode ? '学员端入口' : '管理端入口' %> ↗</a>
+            <% if person %><%= button_to '退出登录', admin_mode ? admin_logout_path : student_logout_path, method: :delete, class: 'nav-i logout' %><% end %>
+          </nav>
+          <div class="rail-foot"><div class="avatar"><%= person&.name&.first || '禾' %></div><div class="who"><b><%= person&.name || '访客' %></b><span><i class="dot"></i><%= person&.district&.name || '济南市' %> · <%= admin_mode ? '管理工作台' : person&.tips_stage_label %></span></div></div>
+        </aside>
+        <div class="main">
+          <header class="topbar"><div class="crumb"><span>培育服务平台</span><i>/</i><b><%= workspace_title %></b></div><div class="top-tools"><time class="clock"><%= Date.current.strftime('%Y-%m-%d') %></time><a href="<%= admin_mode ? admin_students_path : student_messages_path %>" class="tbtn"><%= admin_mode ? '审核工作台' : '消息中心' %></a></div></header>
+          <main class="body" id="main-content">
+            <% flash.each do |kind, message| %><div role="status" class="note flash <%= kind %>"><%= message %></div><% end %>
+            <%= yield %>
+          </main>
+          <% if !admin_mode && workspace_student %>
+            <nav class="mobile-tabs" aria-label="学员快捷导航">
+              <% [['首页', student_home_path, '◈'], ['课程', student_courses_path, '▣'], ['成果', student_achievements_path, '◇'], ['我的', student_me_path, '◎']].each do |label, path, icon| %>
+                <a href="<%= path %>" class="<%= 'on' if workspace_active?(path) %>"><span aria-hidden="true"><%= icon %></span><%= label %></a>
+              <% end %>
+            </nav>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </body>
 </html>
