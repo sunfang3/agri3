@@ -153,13 +153,21 @@ bin/rails db:migrate
 # Tests
 bin/rails test
 
-# Security / style (optional)
+# Mutation testing (mandatory business-rule gate)
+bin/mutant
+
+# Complete checks, required before merge / deployment
+bin/ci
+
+# Individual security / style checks
 bin/brakeman
 bin/rubocop
 
 # phlex-reactive health
 bin/rails phlex_reactive:doctor
 ```
+
+变异测试范围、扩展方法与数据库隔离见 [`docs/testing.md`](docs/testing.md)。
 
 ### Action Cable mount
 
@@ -203,4 +211,4 @@ Important production details:
 
 ## License
 
-Application code follows the project’s own license; third-party gems keep their respective licenses.
+Application code is released under the [MIT License](LICENSE); third-party gems keep their respective licenses.
