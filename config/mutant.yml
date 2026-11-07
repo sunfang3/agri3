@@ -1,0 +1,28 @@
+---
+usage: opensource
+includes:
+  - test
+requires:
+  - ./config/environment
+environment_variables:
+  RAILS_ENV: test
+  MUTANT: "1"
+integration:
+  name: minitest
+jobs: 1
+selection:
+  strategy: expression
+coverage_criteria:
+  timeout: false
+  process_abort: false
+  test_result: true
+hooks:
+  - config/mutant/hooks.rb
+matcher:
+  subjects:
+    - Admin#city_admin?
+    - Admin#can_manage_course?
+    - Enrollment#can_transition_to?
+    - Matching::RuleEngine#match_status
+    - ResourceMatch#priority_tier
+    - ResourceMatch#priority_label

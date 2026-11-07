@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "tmpdir"
+
+Dir.chdir(File.expand_path("..", __dir__)) do
+  FileUtils.mkdir_p("tmp")
+  Dir.mktmpdir("mutant-", "tmp") do |directory|
+    environment = {
+      "RAILS_ENV" => "test",
+      "MUTANT" => "1",
+      "MUTANT_JOBS" => "1",
+      "LITESTACK_DATA_PATH" => File.expand_path(directory),
+      "TEST_STORAGE_PATH" => File.expand_path("uploads", directory)
+    }
+    abort "Mutant database preparation failed" unless system(environment, "bin/rails", "db:schema:load")
+    exit_code = system(environment, "bundle", "exec", "mutant", "run", *ARGV) ? 0 : 1
+    exit exit_code
+  end
+end
