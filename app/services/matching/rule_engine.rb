@@ -35,9 +35,7 @@ module Matching
 
     def match_status(score)
       case score
-      when 80..100 then "recommended"
-      when 50...80 then "recommended"
-      when 1...50 then "recommended"
+      when 1..100 then "recommended"
       else "dismissed"
       end
     end

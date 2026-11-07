@@ -21,14 +21,13 @@ class ResourceMatch < ApplicationRecord
 
   # D3 three-priority hierarchy for student home recommendations
   def priority_tier
-    case score
-    when 80..100 then 1 # 强烈推荐
-    when 50...80 then 2 # 建议关注
-    else 3              # 可了解
-    end
+    return 3 if score.nil? || score > 100
+    return 1 if score >= 80 # 强烈推荐
+
+    score >= 50 ? 2 : 3 # 建议关注 / 可了解
   end
 
   def priority_label
-    { 1 => "强烈推荐", 2 => "建议关注", 3 => "可了解" }[priority_tier]
+    { 1 => "强烈推荐", 2 => "建议关注", 3 => "可了解" }.fetch(priority_tier)
   end
 end

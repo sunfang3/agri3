@@ -36,10 +36,10 @@ class Admin < ApplicationRecord
 
   # Full manage (edit course + enrollments CRUD / admit).
   def can_manage_course?(course)
-    if city_admin?
-      course.city_direct?
+    if course.city_direct?
+      city_admin?
     else
-      course.district_id.present? && course.district_id == district_id
+      !city_admin? && course.district_id == district_id
     end
   end
 
