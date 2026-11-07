@@ -58,7 +58,7 @@ class RecommendationMutationContractTest < ActiveSupport::TestCase
   end
 
   test "recommendation tier and label change at 50 and 80" do
-    { -1 => 3, 0 => 3, 1 => 3, 49 => 3, 50 => 2, 79 => 2, 80 => 1, 100 => 1, 101 => 3 }.each do |score, tier|
+    { nil => 3, -1 => 3, 0 => 3, 1 => 3, 49 => 3, 50 => 2, 79 => 2, 80 => 1, 100 => 1, 101 => 3 }.each do |score, tier|
       match = ResourceMatch.new(score: score)
       assert_equal tier, match.priority_tier
       assert_equal({ 1 => "强烈推荐", 2 => "建议关注", 3 => "可了解" }.fetch(tier), match.priority_label)
